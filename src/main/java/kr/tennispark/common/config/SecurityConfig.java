@@ -2,6 +2,7 @@ package kr.tennispark.common.config;
 
 import kr.tennispark.common.security.filters.JwtAuthenticationFilter;
 import kr.tennispark.common.security.filters.SecurityExceptionFilter;
+import kr.tennispark.common.security.handler.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ public class SecurityConfig {
 
     private final SecurityExceptionFilter securityExceptionFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
