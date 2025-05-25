@@ -29,6 +29,7 @@ public class JwtTokenProvider {
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
+    // TODO : authority는 enum으로 변경
     public String createAccessToken(final String payload, final String authority) {
         return createToken(payload, accessTokenValidityInMilliseconds, authority.toString());
     }
