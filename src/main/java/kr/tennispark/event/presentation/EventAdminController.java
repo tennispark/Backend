@@ -5,14 +5,17 @@ import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.event.application.EventAdminUseCase;
 import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
+import kr.tennispark.event.presentation.dto.response.GetEventResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventAdminController {
 
     private final EventAdminUseCase eventAdminUseCase;
+
+    @GetMapping("/events")
+    public ResponseEntity<ApiResult<GetEventResponseDTO>> getAllEvents(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(ApiUtils.success(eventAdminUseCase.getAllEvents(page, size)));
+    }
 
     @PostMapping("/events")
     public ResponseEntity<ApiResult<?>> registerEvent(@Valid @RequestBody ManageEventRequestDTO request) {

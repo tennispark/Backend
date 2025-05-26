@@ -4,7 +4,10 @@ import kr.tennispark.event.application.EventAdminUseCase;
 import kr.tennispark.event.domain.Event;
 import kr.tennispark.event.infrastructure.repository.EventRepository;
 import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
+import kr.tennispark.event.presentation.dto.response.GetEventResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventAdminService implements EventAdminUseCase {
 
     private final EventRepository eventRepository;
+
+    @Override
+    public GetEventResponseDTO getAllEvents(int page, int size) {
+        Page<Event> eventPage = eventRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
+        return GetEventResponseDTO.of(eventPage);
+    }
 
     @Override
     @Transactional
