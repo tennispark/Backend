@@ -11,7 +11,6 @@ import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
-import kr.tennispark.members.common.domain.entity.vo.Email;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.common.domain.exception.InvalidMemberException;
 import lombok.AccessLevel;
@@ -25,9 +24,6 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE member SET status = false WHERE id = ?")
 @SQLRestriction("status = true")
 public class Member extends BaseEntity {
-
-    @Embedded
-    private Email email;
 
     @Embedded
     private Phone phone;
@@ -59,10 +55,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
 
-    private Member(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
+    private Member(Phone phone, String name, int year, String tennisCareer, String recommender,
                    String instagramId, Gender gender, RegistrationSource registrationSource) {
         validateRecommender(registrationSource, recommender);
-        this.email = email;
         this.phone = phone;
         this.name = name;
         this.year = year;
@@ -73,10 +68,9 @@ public class Member extends BaseEntity {
         this.registrationSource = registrationSource;
     }
 
-    public static Member of(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
+    public static Member of(Phone phone, String name, int year, String tennisCareer, String recommender,
                             String instagramId, Gender gender, RegistrationSource registrationSource) {
         return new Member(
-                email,
                 phone,
                 name,
                 year,
