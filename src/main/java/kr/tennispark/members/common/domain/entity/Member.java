@@ -73,8 +73,8 @@ public class Member extends BaseEntity {
         this.registrationSource = registrationSource;
     }
 
-    public Member of(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
-                     String instagramId, Gender gender, RegistrationSource registrationSource) {
+    public static Member of(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
+                            String instagramId, Gender gender, RegistrationSource registrationSource) {
         return new Member(
                 email,
                 phone,
