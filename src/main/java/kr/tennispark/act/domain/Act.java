@@ -1,16 +1,10 @@
 package kr.tennispark.act.domain;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
 import java.time.LocalTime;
 import java.util.List;
-import kr.tennispark.act.domain.enums.Days;
 import kr.tennispark.act.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -37,15 +31,6 @@ public class Act extends BaseEntity {
     @Embedded
     private ScheduledTime actTime;
 
-    @ElementCollection(targetClass = Days.class)
-    @CollectionTable(
-            name = "active_days",
-            joinColumns = @JoinColumn(name = "act_id")
-    )
-    @Column(name = "active_day")
-    @Enumerated(EnumType.STRING)
-    private List<Days> activeDays;
-
     @Column(nullable = false)
     private Boolean isRecurring;
 
@@ -53,18 +38,17 @@ public class Act extends BaseEntity {
     private Integer participantCount;
 
     public static Act of(String courtName, String address, LocalTime beginAt, LocalTime endAt,
-                         List<Days> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Act(courtName, address, ScheduledTime.of(beginAt, endAt), activeDays, isRecurring,
+                         List<String> activeDays, Boolean isRecurring, Integer participantCount) {
+        return new Act(courtName, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
                 participantCount);
     }
 
     public void modifyActDetails(
             String courtName, String address, LocalTime beginAt, LocalTime endAt,
-            List<Days> activeDays, Boolean isRecurring, Integer participantCount) {
+            List<String> activeDays, Boolean isRecurring, Integer participantCount) {
         this.courtName = courtName;
         this.address = address;
-        this.actTime = ScheduledTime.of(beginAt, endAt);
-        this.activeDays = activeDays;
+        this.actTime = ScheduledTime.of(beginAt, endAt, activeDays);
         this.isRecurring = isRecurring;
         this.participantCount = participantCount;
     }
