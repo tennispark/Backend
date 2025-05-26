@@ -1,5 +1,6 @@
 package kr.tennispark.members.common.domain.entity;
 
+import static io.micrometer.common.util.StringUtils.isBlank;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -12,6 +13,7 @@ import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
 import kr.tennispark.members.common.domain.entity.vo.Email;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
+import kr.tennispark.members.common.domain.exception.InvalidMemberException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -59,6 +61,7 @@ public class Member extends BaseEntity {
 
     private Member(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
                    String instagramId, Gender gender, RegistrationSource registrationSource) {
+        validateRecommender(registrationSource, recommender);
         this.email = email;
         this.phone = phone;
         this.name = name;
@@ -84,4 +87,12 @@ public class Member extends BaseEntity {
                 registrationSource
         );
     }
+
+    private void validateRecommender(RegistrationSource registrationSource, String recommender) {
+        if (registrationSource == RegistrationSource.FRIEND_RECOMMENDATION
+                && (isBlank(recommender))) {
+            throw new InvalidMemberException("가입 경로가 친구 추천인 경우, 추천인 아이디는 필수입니다.");
+        }
+    }
+
 }
