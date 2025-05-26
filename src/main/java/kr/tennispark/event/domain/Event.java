@@ -36,9 +36,23 @@ public class Event extends BaseEntity {
         return new Event(name, detail, point, imageUrl);
     }
 
-    public static void validatePoint(Integer point) {
+    private static void validatePoint(Integer point) {
         if (point < 0) {
             throw new InvalidEventException("포인트는 0 이상이어야 합니다.");
         }
     }
+
+    public void modifyEventDetails(
+            String name,
+            String detail,
+            Integer point,
+            String imageUrl
+    ) {
+        validatePoint(point);
+        this.name = name;
+        this.detail = detail;
+        this.point = point;
+        this.imageUrl = imageUrl;
+    }
+
 }
