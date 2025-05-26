@@ -8,5 +8,7 @@ public interface EventAdminUseCase {
 
     void modifyEventDetails(Long eventId, ManageEventRequestDTO request);
 
+    void removeEvent(Long eventId);
+
 
 }

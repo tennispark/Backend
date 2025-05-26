@@ -7,6 +7,7 @@ import kr.tennispark.event.application.EventAdminUseCase;
 import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,6 +33,14 @@ public class EventAdminController {
             @PathVariable Long eventId,
             @Valid @RequestBody ManageEventRequestDTO request) {
         eventAdminUseCase.modifyEventDetails(eventId, request);
+        return ResponseEntity.ok(ApiUtils.success());
+    }
+
+    @DeleteMapping("/events/{eventId}")
+    public ResponseEntity<ApiResult<?>> removeEvent(
+            @PathVariable Long eventId
+    ) {
+        eventAdminUseCase.removeEvent(eventId);
         return ResponseEntity.ok(ApiUtils.success());
     }
 

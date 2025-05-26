@@ -43,4 +43,12 @@ public class EventAdminService implements EventAdminUseCase {
         eventRepository.save(event);
 
     }
+
+    @Override
+    @Transactional
+    public void removeEvent(Long eventId) {
+        Event event = eventRepository.getById(eventId);
+
+        eventRepository.delete(event);
+    }
 }
