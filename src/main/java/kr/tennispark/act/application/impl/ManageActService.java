@@ -43,8 +43,6 @@ public class ManageActService implements ManageActUseCase {
                 request.activeDays(),
                 request.isRecurring(),
                 request.participantCount());
-
-        actRepository.save(act);
     }
 
     @Override
