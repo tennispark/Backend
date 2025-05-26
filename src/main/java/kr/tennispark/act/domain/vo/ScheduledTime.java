@@ -1,8 +1,15 @@
 package kr.tennispark.act.domain.vo;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import java.time.LocalTime;
+import java.util.List;
+import kr.tennispark.act.domain.enums.Days;
 import kr.tennispark.act.domain.exception.InvalidActTimeException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,9 +28,19 @@ public class ScheduledTime {
     @Column(nullable = false)
     private LocalTime endAt;
 
-    public static ScheduledTime of(LocalTime beginAt, LocalTime endAt) {
+    @ElementCollection(targetClass = Days.class)
+    @CollectionTable(
+            name = "active_days",
+            joinColumns = @JoinColumn(name = "act_id")
+    )
+    @Column(name = "active_day")
+    @Enumerated(EnumType.STRING)
+    private List<Days> activeDays;
+
+
+    public static ScheduledTime of(LocalTime beginAt, LocalTime endAt, List<String> activeDays) {
         validateActTime(beginAt, endAt);
-        return new ScheduledTime(beginAt, endAt);
+        return new ScheduledTime(beginAt, endAt, Days.from(activeDays));
     }
 
     private static void validateActTime(LocalTime beginAt, LocalTime endAt) {
