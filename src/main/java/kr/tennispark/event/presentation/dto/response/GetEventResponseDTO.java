@@ -10,8 +10,8 @@ public record GetEventResponseDTO(Page<EventDetails> events) {
         Page<EventDetails> eventDetails = events.map(event ->
                 EventDetails.of(
                         event.getId(),
-                        event.getName(),
-                        event.getDetail(),
+                        event.getTitle(),
+                        event.getContent(),
                         event.getPoint(),
                         event.getImageUrl()
                 )
@@ -22,19 +22,19 @@ public record GetEventResponseDTO(Page<EventDetails> events) {
 
     public record EventDetails(
             Long id,
-            String name,
-            String detail,
+            String title,
+            String content,
             Integer point,
             String imageUrl
     ) {
         public static EventDetails of(
                 Long id,
-                String name,
-                String detail,
+                String title,
+                String content,
                 Integer point,
                 String imageUrl
         ) {
-            return new EventDetails(id, name, detail, point, imageUrl);
+            return new EventDetails(id, title, content, point, imageUrl);
         }
     }
 }

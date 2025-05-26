@@ -28,8 +28,8 @@ public class EventAdminService implements EventAdminUseCase {
     @Transactional
     public void registerEvent(ManageEventRequestDTO request) {
         Event event = Event.of(
-                request.name(),
-                request.detail(),
+                request.title(),
+                request.content(),
                 request.point(),
                 request.imageUrl()
         );
@@ -43,8 +43,8 @@ public class EventAdminService implements EventAdminUseCase {
         Event event = eventRepository.getById(eventId);
 
         event.modifyEventDetails(
-                request.name(),
-                request.detail(),
+                request.title(),
+                request.content(),
                 request.point(),
                 request.imageUrl()
         );

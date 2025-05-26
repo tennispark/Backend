@@ -20,10 +20,10 @@ import org.hibernate.annotations.SQLRestriction;
 public class Event extends BaseEntity {
 
     @Column(nullable = false, length = 20)
-    private String name;
+    private String title;
 
     @Column(nullable = false, length = 50)
-    private String detail;
+    private String content;
 
     @Column(nullable = false)
     private Integer point;
@@ -31,9 +31,9 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private String imageUrl;
 
-    public static Event of(String name, String detail, Integer point, String imageUrl) {
+    public static Event of(String title, String detail, Integer point, String imageUrl) {
         validatePoint(point);
-        return new Event(name, detail, point, imageUrl);
+        return new Event(title, detail, point, imageUrl);
     }
 
     private static void validatePoint(Integer point) {
@@ -43,14 +43,14 @@ public class Event extends BaseEntity {
     }
 
     public void modifyEventDetails(
-            String name,
+            String title,
             String detail,
             Integer point,
             String imageUrl
     ) {
         validatePoint(point);
-        this.name = name;
-        this.detail = detail;
+        this.title = title;
+        this.content = detail;
         this.point = point;
         this.imageUrl = imageUrl;
     }
