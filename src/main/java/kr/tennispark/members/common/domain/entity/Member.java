@@ -41,7 +41,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String career;
 
-    @Column(nullable = false)
     private String recommender;
 
     @Column(nullable = false)
