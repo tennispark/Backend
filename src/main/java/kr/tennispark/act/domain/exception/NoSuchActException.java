@@ -4,7 +4,7 @@ import kr.tennispark.common.exception.base.NotFoundException;
 
 public class NoSuchActException extends NotFoundException {
 
-    private static final String MESSAGE = "존재하지 않는 활동입니다.";
+    private static final String MESSAGE = "해당하는 활동을 찾을 수 없습니다.";
 
     public NoSuchActException() {
         super(MESSAGE);
