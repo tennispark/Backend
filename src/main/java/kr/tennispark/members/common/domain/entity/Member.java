@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     private int year;
 
     @Column(nullable = false)
-    private String career;
+    private String tennisCareer;
 
     private String recommender;
 
