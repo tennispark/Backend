@@ -15,6 +15,13 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    public void registerMember(RegisterMemberRequest request) {
+        // 1. 핸드폰 인증 완료 확인 (redis)
+        // 2. 핸드폰 존재 여부 확인
+        // 3. 회원가입
+        createMember(request);
+    }
+
     private void createMember(RegisterMemberRequest request) {
         Phone phone = Phone.of(request.phoneNumber());
 
