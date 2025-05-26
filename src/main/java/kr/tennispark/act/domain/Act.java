@@ -28,8 +28,10 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("status = true")
 public class Act extends BaseEntity {
 
+    @Column(nullable = false)
     private String courtName;
 
+    @Column(nullable = false)
     private String address;
 
     @Embedded
@@ -44,13 +46,15 @@ public class Act extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private List<Days> activeDays;
 
+    @Column(nullable = false)
     private Boolean isRecurring;
 
+    @Column(nullable = false)
     private Integer participantCount;
 
     public static Act of(String courtName, String address, LocalTime beginAt, LocalTime endAt,
                          List<Days> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Act(courtName, address, new ScheduledTime(beginAt, endAt), activeDays, isRecurring,
+        return new Act(courtName, address, ScheduledTime.of(beginAt, endAt), activeDays, isRecurring,
                 participantCount);
     }
 
@@ -59,7 +63,7 @@ public class Act extends BaseEntity {
             List<Days> activeDays, Boolean isRecurring, Integer participantCount) {
         this.courtName = courtName;
         this.address = address;
-        this.actTime = new ScheduledTime(beginAt, endAt);
+        this.actTime = ScheduledTime.of(beginAt, endAt);
         this.activeDays = activeDays;
         this.isRecurring = isRecurring;
         this.participantCount = participantCount;
