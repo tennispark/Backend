@@ -1,4 +1,4 @@
-package kr.tennispark.act.common.domain.vo;
+package kr.tennispark.activity.common.domain.vo;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -9,8 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import java.time.LocalTime;
 import java.util.List;
-import kr.tennispark.act.common.domain.enums.Days;
-import kr.tennispark.act.common.domain.exception.InvalidActTimeException;
+import kr.tennispark.activity.common.domain.enums.Days;
+import kr.tennispark.activity.common.domain.exception.InvalidActivityTimeException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,10 +45,10 @@ public class ScheduledTime {
 
     private static void validateActTime(LocalTime beginAt, LocalTime endAt) {
         if (beginAt == null || endAt == null) {
-            throw new InvalidActTimeException("시작 시간과 종료 시간은 필수 입력값입니다.");
+            throw new InvalidActivityTimeException("시작 시간과 종료 시간은 필수 입력값입니다.");
         }
         if (beginAt.isAfter(endAt)) {
-            throw new InvalidActTimeException("시작 시간이 종료 시간보다 늦을 수 없습니다.");
+            throw new InvalidActivityTimeException("시작 시간이 종료 시간보다 늦을 수 없습니다.");
         }
     }
 }

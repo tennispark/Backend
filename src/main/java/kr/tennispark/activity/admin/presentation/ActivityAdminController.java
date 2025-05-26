@@ -1,9 +1,9 @@
-package kr.tennispark.act.admin.presentation;
+package kr.tennispark.activity.admin.presentation;
 
 import jakarta.validation.Valid;
-import kr.tennispark.act.admin.application.ActAdminUseCase;
-import kr.tennispark.act.admin.presentation.dto.request.ManageActRequestDTO;
-import kr.tennispark.act.admin.presentation.dto.response.GetActResponseDTO;
+import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import lombok.RequiredArgsConstructor;
@@ -20,28 +20,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-public class ActAdminController {
+public class ActivityAdminController {
 
-    private final ActAdminUseCase actUseCase;
+    private final ActivityAdminUseCase actUseCase;
 
-    @GetMapping("/acts")
-    public ResponseEntity<ApiResult<GetActResponseDTO>> getActDetails(
+    @GetMapping("/activities")
+    public ResponseEntity<ApiResult<GetActivityResponseDTO>> getActivityDetails(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        GetActResponseDTO response = actUseCase.getActList(page, size);
+        GetActivityResponseDTO response = actUseCase.getActivityList(page, size);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
-    @PostMapping("/acts")
-    public ResponseEntity<ApiResult<?>> registerAct(@RequestBody @Valid ManageActRequestDTO request) {
-        actUseCase.registerAct(request);
+    @PostMapping("/activities")
+    public ResponseEntity<ApiResult<?>> registerActivity(@RequestBody @Valid ManageActivityRequestDTO request) {
+        actUseCase.registerActivity(request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 
-    @PutMapping("/acts/{actId}")
-    public ResponseEntity<ApiResult<?>> registerAct(@PathVariable Long actId,
-                                                    @RequestBody @Valid ManageActRequestDTO request) {
-        actUseCase.modifyActDetails(actId, request);
+    @PutMapping("/activities/{activityId}")
+    public ResponseEntity<ApiResult<?>> registerActivity(@PathVariable Long activityId,
+                                                         @RequestBody @Valid ManageActivityRequestDTO request) {
+        actUseCase.modifyActivityDetails(activityId, request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 }

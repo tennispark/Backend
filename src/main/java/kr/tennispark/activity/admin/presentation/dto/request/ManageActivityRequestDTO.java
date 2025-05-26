@@ -1,4 +1,4 @@
-package kr.tennispark.act.admin.presentation.dto.request;
+package kr.tennispark.activity.admin.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.List;
 
-public record ManageActRequestDTO(
+public record ManageActivityRequestDTO(
         @NotNull(message = "활동 시작 시간은 필수입니다.") LocalTime beginAt,
         @NotNull(message = "활동 종료 시간은 필수입니다.") LocalTime endAt,
         @NotEmpty(message = "활동 반복 요일은 필수입니다.") List<String> activeDays,
