@@ -1,16 +1,16 @@
-package kr.tennispark.act.common.domain.exception;
+package kr.tennispark.activity.common.domain.exception;
 
 import kr.tennispark.common.exception.base.NotFoundException;
 
-public class NoSuchActException extends NotFoundException {
+public class NoSuchActivityException extends NotFoundException {
 
     private static final String MESSAGE = "해당하는 활동을 찾을 수 없습니다.";
 
-    public NoSuchActException() {
+    public NoSuchActivityException() {
         super(MESSAGE);
     }
 
-    public NoSuchActException(String message) {
+    public NoSuchActivityException(String message) {
         super(message);
     }
 

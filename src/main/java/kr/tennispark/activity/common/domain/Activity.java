@@ -1,11 +1,11 @@
-package kr.tennispark.act.common.domain;
+package kr.tennispark.activity.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import java.time.LocalTime;
 import java.util.List;
-import kr.tennispark.act.common.domain.vo.ScheduledTime;
+import kr.tennispark.activity.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,11 +16,11 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
-@SQLDelete(sql = "UPDATE act SET status = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE activity SET status = false WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLRestriction("status = true")
-public class Act extends BaseEntity {
+public class Activity extends BaseEntity {
 
     @Column(nullable = false)
     private String courtName;
@@ -37,13 +37,13 @@ public class Act extends BaseEntity {
     @Column(nullable = false)
     private Integer participantCount;
 
-    public static Act of(String courtName, String address, LocalTime beginAt, LocalTime endAt,
+    public static Activity of(String courtName, String address, LocalTime beginAt, LocalTime endAt,
                          List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Act(courtName, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
+        return new Activity(courtName, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
                 participantCount);
     }
 
-    public void modifyActDetails(
+    public void modifyActivityDetails(
             String courtName, String address, LocalTime beginAt, LocalTime endAt,
             List<String> activeDays, Boolean isRecurring, Integer participantCount) {
         this.courtName = courtName;
