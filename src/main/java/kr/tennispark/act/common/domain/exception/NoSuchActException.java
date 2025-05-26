@@ -1,4 +1,4 @@
-package kr.tennispark.act.domain.exception;
+package kr.tennispark.act.common.domain.exception;
 
 import kr.tennispark.common.exception.base.NotFoundException;
 

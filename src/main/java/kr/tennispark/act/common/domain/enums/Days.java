@@ -1,9 +1,9 @@
-package kr.tennispark.act.domain.enums;
+package kr.tennispark.act.common.domain.enums;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import kr.tennispark.act.domain.exception.InvalidActTimeException;
+import kr.tennispark.act.common.domain.exception.InvalidActTimeException;
 
 public enum Days {
 

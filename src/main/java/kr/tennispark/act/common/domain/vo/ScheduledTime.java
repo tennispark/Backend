@@ -1,4 +1,4 @@
-package kr.tennispark.act.domain.vo;
+package kr.tennispark.act.common.domain.vo;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -9,8 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import java.time.LocalTime;
 import java.util.List;
-import kr.tennispark.act.domain.enums.Days;
-import kr.tennispark.act.domain.exception.InvalidActTimeException;
+import kr.tennispark.act.common.domain.enums.Days;
+import kr.tennispark.act.common.domain.exception.InvalidActTimeException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package kr.tennispark.act.presentation.dto.response;
+package kr.tennispark.act.admin.presentation.dto.response;
 
 import java.time.LocalTime;
-import kr.tennispark.act.domain.Act;
+import kr.tennispark.act.common.domain.Act;
 import org.springframework.data.domain.Page;
 
 public record GetActResponseDTO(Page<ActDetails> acts) {
