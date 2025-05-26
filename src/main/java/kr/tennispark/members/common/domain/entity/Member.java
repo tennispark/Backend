@@ -13,7 +13,6 @@ import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
 import kr.tennispark.members.common.domain.entity.vo.Email;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
@@ -21,7 +20,6 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLDelete(sql = "UPDATE member SET status = false WHERE id = ?")
 @SQLRestriction("status = true")
 public class Member extends BaseEntity {
@@ -58,4 +56,32 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
+
+    private Member(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
+                   String instagramId, Gender gender, RegistrationSource registrationSource) {
+        this.email = email;
+        this.phone = phone;
+        this.name = name;
+        this.year = year;
+        this.tennisCareer = tennisCareer;
+        this.recommender = recommender;
+        this.instagramId = instagramId;
+        this.gender = gender;
+        this.registrationSource = registrationSource;
+    }
+
+    public Member of(Email email, Phone phone, String name, int year, String tennisCareer, String recommender,
+                     String instagramId, Gender gender, RegistrationSource registrationSource) {
+        return new Member(
+                email,
+                phone,
+                name,
+                year,
+                tennisCareer,
+                recommender,
+                instagramId,
+                gender,
+                registrationSource
+        );
+    }
 }
