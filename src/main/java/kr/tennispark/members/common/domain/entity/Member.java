@@ -7,6 +7,8 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
@@ -21,6 +23,12 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "member",
+        indexes = {
+                @Index(name = "idx_member_phone_number", columnList = "phone_number")
+        }
+)
 @SQLDelete(sql = "UPDATE member SET status = false WHERE id = ?")
 @SQLRestriction("status = true")
 public class Member extends BaseEntity {
