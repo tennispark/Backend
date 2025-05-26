@@ -8,8 +8,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
-import kr.tennispark.members.common.domain.entity.enums.JoinPath;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
+import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
 import kr.tennispark.members.common.domain.entity.vo.Email;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import lombok.AccessLevel;
@@ -57,5 +57,5 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private JoinPath joinPath;
+    private RegistrationSource registrationSource;
 }
