@@ -2,7 +2,6 @@ package kr.tennispark.act.application.impl;
 
 import kr.tennispark.act.application.ManageActUseCase;
 import kr.tennispark.act.domain.Act;
-import kr.tennispark.act.domain.exception.NoSuchActException;
 import kr.tennispark.act.infrastructure.repository.ActRepository;
 import kr.tennispark.act.presentation.dto.request.ManageActRequestDTO;
 import kr.tennispark.act.presentation.dto.response.GetActResponseDTO;
@@ -49,14 +48,6 @@ public class ManageActService implements ManageActUseCase {
     public GetActResponseDTO getActList(Integer page, Integer size) {
         Page<Act> actPage = actRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
 
-        checkActPageIsEmpty(actPage);
-
         return GetActResponseDTO.of(actPage);
-    }
-
-    private void checkActPageIsEmpty(Page<Act> actPage) {
-        if (actPage.isEmpty()) {
-            throw new NoSuchActException();
-        }
     }
 }
