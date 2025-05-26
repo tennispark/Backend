@@ -1,7 +1,7 @@
-package kr.tennispark.act.infrastructure.repository;
+package kr.tennispark.act.admin.infrastructure.repository;
 
-import kr.tennispark.act.domain.Act;
-import kr.tennispark.act.domain.exception.NoSuchActException;
+import kr.tennispark.act.common.domain.Act;
+import kr.tennispark.act.common.domain.exception.NoSuchActException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

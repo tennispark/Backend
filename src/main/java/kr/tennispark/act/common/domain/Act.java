@@ -1,11 +1,11 @@
-package kr.tennispark.act.domain;
+package kr.tennispark.act.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import java.time.LocalTime;
 import java.util.List;
-import kr.tennispark.act.domain.vo.ScheduledTime;
+import kr.tennispark.act.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

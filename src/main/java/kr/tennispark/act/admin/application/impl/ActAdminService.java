@@ -1,10 +1,10 @@
-package kr.tennispark.act.application.impl;
+package kr.tennispark.act.admin.application.impl;
 
-import kr.tennispark.act.application.ManageActUseCase;
-import kr.tennispark.act.domain.Act;
-import kr.tennispark.act.infrastructure.repository.ActRepository;
-import kr.tennispark.act.presentation.dto.request.ManageActRequestDTO;
-import kr.tennispark.act.presentation.dto.response.GetActResponseDTO;
+import kr.tennispark.act.admin.application.ActAdminUseCase;
+import kr.tennispark.act.admin.infrastructure.repository.ActRepository;
+import kr.tennispark.act.admin.presentation.dto.request.ManageActRequestDTO;
+import kr.tennispark.act.admin.presentation.dto.response.GetActResponseDTO;
+import kr.tennispark.act.common.domain.Act;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ManageActService implements ManageActUseCase {
+public class ActAdminService implements ActAdminUseCase {
 
     private final ActRepository actRepository;
 

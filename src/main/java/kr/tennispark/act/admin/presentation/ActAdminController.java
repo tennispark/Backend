@@ -1,9 +1,9 @@
-package kr.tennispark.act.presentation;
+package kr.tennispark.act.admin.presentation;
 
 import jakarta.validation.Valid;
-import kr.tennispark.act.application.ManageActUseCase;
-import kr.tennispark.act.presentation.dto.request.ManageActRequestDTO;
-import kr.tennispark.act.presentation.dto.response.GetActResponseDTO;
+import kr.tennispark.act.admin.application.ActAdminUseCase;
+import kr.tennispark.act.admin.presentation.dto.request.ManageActRequestDTO;
+import kr.tennispark.act.admin.presentation.dto.response.GetActResponseDTO;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import lombok.RequiredArgsConstructor;
@@ -18,30 +18,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
-public class ActController {
+public class ActAdminController {
 
-    private final ManageActUseCase manageActUseCase;
+    private final ActAdminUseCase actUseCase;
 
-    @GetMapping("/admin/acts")
+    @GetMapping("/acts")
     public ResponseEntity<ApiResult<GetActResponseDTO>> getActDetails(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        GetActResponseDTO response = manageActUseCase.getActList(page, size);
+        GetActResponseDTO response = actUseCase.getActList(page, size);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
-    @PostMapping("/admin/acts")
+    @PostMapping("/acts")
     public ResponseEntity<ApiResult<?>> registerAct(@RequestBody @Valid ManageActRequestDTO request) {
-        manageActUseCase.registerAct(request);
+        actUseCase.registerAct(request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 
-    @PutMapping("/admin/acts/{actId}")
+    @PutMapping("/acts/{actId}")
     public ResponseEntity<ApiResult<?>> registerAct(@PathVariable Long actId,
                                                     @RequestBody @Valid ManageActRequestDTO request) {
-        manageActUseCase.modifyActDetails(actId, request);
+        actUseCase.modifyActDetails(actId, request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 }
