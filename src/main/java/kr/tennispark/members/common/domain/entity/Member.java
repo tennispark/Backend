@@ -56,7 +56,7 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("GUEST")
+    @ColumnDefault("'GUEST'")
     private MemberShipType memberShipType = MemberShipType.GUEST;
 
     @Column(nullable = false)
