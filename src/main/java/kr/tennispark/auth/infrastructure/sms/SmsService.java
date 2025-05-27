@@ -30,7 +30,7 @@ public class SmsService {
     }
 
     public void sendSms(String to, String text) {
-        Message message = createMessage(to, text + "1");
+        Message message = createMessage(to, text);
 
         try {
             messageService.sendOne(new SingleMessageSendingRequest(message));
