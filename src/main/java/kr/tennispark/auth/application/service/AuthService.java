@@ -26,6 +26,7 @@ public class AuthService {
     private final SmsService smsService;
     private final RedisAuthService redisAuthService;
 
+    @Transactional
     public RegisterMemberResponse registerMember(RegisterMemberRequest request) {
         if (!redisAuthService.isVerified(request.phoneNumber())) {
             throw new PhoneNotVerifiedException();
@@ -56,6 +57,8 @@ public class AuthService {
             TokenDTO tokens = jwtTokenProvider.issueTokensFor(req.phoneNumber());
             return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
         }
+
+        redisAuthService.saveVerifiedStatus(req.phoneNumber());
         return VerifyPhoneResponse.needSignUp();
     }
 }
