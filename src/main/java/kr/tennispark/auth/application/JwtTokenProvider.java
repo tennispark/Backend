@@ -8,7 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import kr.tennispark.auth.application.dto.TokenDTO;
 import kr.tennispark.auth.application.exception.InvalidTokenException;
+import kr.tennispark.members.common.domain.entity.Member;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,14 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
+    }
+
+    private TokenDTO issueTokensFor(Member member) {
+        // 논의필요
+        return TokenDTO.builder()
+                .accessToken(createAccessToken(String.valueOf(member.getId()), "USER"))
+                .refreshToken(createRefreshToken(String.valueOf(member.getId()), "USER"))
+                .build();
     }
 
     // TODO : authority는 enum으로 변경
@@ -49,7 +59,6 @@ public class JwtTokenProvider {
             throw new InvalidTokenException();
         }
     }
-
 
     private String createToken(String payload, Long validityInMilliseconds, String roles) {
         Date now = new Date();
