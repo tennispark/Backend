@@ -1,11 +1,14 @@
 package kr.tennispark.auth.application.service;
 
 import kr.tennispark.auth.application.JwtTokenProvider;
+import kr.tennispark.auth.application.dto.TokenDTO;
+import kr.tennispark.auth.application.exception.PhoneVerificationFailedException;
 import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
+import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
+import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
-import kr.tennispark.members.user.presentation.dto.response.LoginMemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +29,18 @@ public class AuthService {
         redisAuthService.saveCode(number, code.getValue());
     }
 
-    public LoginMemberResponse login() {
-        // 1. 핸드폰 인증번호로 인증 -> 인증 확인 처리 (redis)
-        // 2. 핸드폰 번호로 member 객체 찾기
-        Member member = memberRepository.getMemberByPhone_Number(request.phoneNumber());
-        // 3. 토큰 발급
-        return issueTokensFor(member);
+    public VerifyPhoneResponse verifyPhone(VerifyPhoneRequest req) {
+        if (!redisAuthService.isCodeMatched(req.phoneNumber(), req.code())) {
+            throw new PhoneVerificationFailedException();
+        }
+
+        return memberRepository.findByPhone_Number(req.phoneNumber())
+                .map(this::loginFlow)
+                .orElseGet(VerifyPhoneResponse::needSignUp);
     }
 
-    private LoginMemberResponse issueTokensFor(Member member) {
-        // 논의필요
-        return LoginMemberResponse.of(
-                jwtTokenProvider.createAccessToken(String.valueOf(member.getId()), "USER"),
-                jwtTokenProvider.createRefreshToken(String.valueOf(member.getId()), "USER")
-        );
+    private VerifyPhoneResponse loginFlow(Member member) {
+        TokenDTO tokens = jwtTokenProvider.issueTokensFor(member);
+        return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
     }
 }
