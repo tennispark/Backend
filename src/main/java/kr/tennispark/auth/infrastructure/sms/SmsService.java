@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SmsService {
 
+    private static final String AUTH_MESSAGE_TEMPLATE =
+            "[테니스파크] 인증번호는 %s 입니다. 정확히 입력해주세요.";
     private final SmsProperties smsProperties;
-
     private DefaultMessageService messageService;
 
     @PostConstruct
@@ -30,8 +31,12 @@ public class SmsService {
         Message message = new Message();
         message.setFrom(smsProperties.fromNumber());
         message.setTo(to);
-        message.setText(text);
+        message.setText(buildAuthMessage(text));
 
         return this.messageService.sendOne(new SingleMessageSendingRequest(message));
+    }
+
+    private String buildAuthMessage(String value) {
+        return String.format(AUTH_MESSAGE_TEMPLATE, value);
     }
 }
