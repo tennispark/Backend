@@ -40,11 +40,11 @@ public class JwtTokenProvider {
     }
 
     // TODO : authority는 enum으로 변경
-    public String createAccessToken(final String payload, final String authority) {
+    private String createAccessToken(final String payload, final String authority) {
         return createToken(payload, accessTokenValidityInMilliseconds, authority.toString());
     }
 
-    public String createRefreshToken(final String payload, final String authority) {
+    private String createRefreshToken(final String payload, final String authority) {
         return createToken(payload, refreshTokenValidityInMilliseconds, authority.toString());
     }
 
