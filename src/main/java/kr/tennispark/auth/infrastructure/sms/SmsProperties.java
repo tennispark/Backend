@@ -1,4 +1,4 @@
-package kr.tennispark.auth.infrastructure;
+package kr.tennispark.auth.infrastructure.sms;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
