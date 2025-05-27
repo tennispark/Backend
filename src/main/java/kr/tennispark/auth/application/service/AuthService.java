@@ -2,6 +2,8 @@ package kr.tennispark.auth.application.service;
 
 import kr.tennispark.auth.application.JwtTokenProvider;
 import kr.tennispark.auth.application.dto.TokenDTO;
+import kr.tennispark.auth.application.exception.MemberAlreadyExistsException;
+import kr.tennispark.auth.application.exception.PhoneNotVerifiedException;
 import kr.tennispark.auth.application.exception.PhoneVerificationFailedException;
 import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
@@ -22,6 +24,18 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final SmsService smsService;
     private final RedisAuthService redisAuthService;
+
+    public void registerMember(RegisterMemberRequest request) {
+        if (!redisAuthService.isVerified(request.phoneNumber())) {
+            throw new PhoneNotVerifiedException();
+        }
+
+        if (memberService.existsMemberByPhone(request.phoneNumber())) {
+            throw new MemberAlreadyExistsException();
+        }
+
+        memberService.createMember(request);
+    }
 
     public void sendAuthCode(String number) {
         VerificationCode code = VerificationCode.generateCode();
@@ -44,12 +58,5 @@ public class AuthService {
     private VerifyPhoneResponse loginFlow(String phoneNumber) {
         TokenDTO tokens = jwtTokenProvider.issueTokensFor(phoneNumber);
         return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
-    }
-
-    public void registerMember(RegisterMemberRequest request) {
-        // 1. 핸드폰 인증 완료 확인 (redis)
-        // 2. 핸드폰 존재 여부 확인
-        // 3. 회원가입
-        memberService.createMember(request);
     }
 }
