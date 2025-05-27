@@ -1,5 +1,6 @@
 package kr.tennispark.auth.presentation.exception;
 
+import kr.tennispark.auth.application.exception.MemberAlreadyExistsException;
 import kr.tennispark.auth.application.exception.PhoneNotVerifiedException;
 import kr.tennispark.auth.application.exception.PhoneVerificationFailedException;
 import kr.tennispark.common.utils.ApiUtils;
@@ -19,6 +20,12 @@ public class AuthExceptionHandler {
     @ExceptionHandler(PhoneNotVerifiedException.class)
     public ResponseEntity<ApiUtils.ApiResult<?>> phoneNotVerifiedException(
             PhoneNotVerifiedException exception) {
+        return new ResponseEntity<>(exception.body(), exception.status());
+    }
+
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<ApiUtils.ApiResult<?>> memberAlreadyExistsException(
+            MemberAlreadyExistsException exception) {
         return new ResponseEntity<>(exception.body(), exception.status());
     }
 }
