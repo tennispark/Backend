@@ -1,7 +1,9 @@
 package kr.tennispark.auth.domain.vo;
 
 import java.security.SecureRandom;
+import lombok.Getter;
 
+@Getter
 public class VerificationCode {
 
     private static final int CODE_LENGTH = 6;
@@ -22,10 +24,6 @@ public class VerificationCode {
     public static String generateCode() {
         int code = secureRandom.nextInt(CODE_MAX) + CODE_MIN;
         return String.valueOf(code);
-    }
-
-    public String getValue() {
-        return value;
     }
 }
 
