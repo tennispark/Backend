@@ -8,7 +8,8 @@ import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
+import kr.tennispark.members.user.application.service.MemberService;
+import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
     private final SmsService smsService;
     private final RedisAuthService redisAuthService;
@@ -34,7 +35,7 @@ public class AuthService {
             throw new PhoneVerificationFailedException();
         }
 
-        return memberRepository.findByPhone_Number(req.phoneNumber())
+        return memberService.findMemberByPhone(req.phoneNumber())
                 .map(this::loginFlow)
                 .orElseGet(VerifyPhoneResponse::needSignUp);
     }
@@ -42,5 +43,12 @@ public class AuthService {
     private VerifyPhoneResponse loginFlow(Member member) {
         TokenDTO tokens = jwtTokenProvider.issueTokensFor(member);
         return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
+    }
+
+    public void registerMember(RegisterMemberRequest request) {
+        // 1. 핸드폰 인증 완료 확인 (redis)
+        // 2. 핸드폰 존재 여부 확인
+        // 3. 회원가입
+        memberService.createMember(request);
     }
 }

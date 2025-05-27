@@ -1,5 +1,6 @@
 package kr.tennispark.members.user.application.service;
 
+import java.util.Optional;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
@@ -15,14 +16,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public void registerMember(RegisterMemberRequest request) {
-        // 1. 핸드폰 인증 완료 확인 (redis)
-        // 2. 핸드폰 존재 여부 확인
-        // 3. 회원가입
-        createMember(request);
-    }
-
-    private void createMember(RegisterMemberRequest request) {
+    public void createMember(RegisterMemberRequest request) {
         Phone phone = Phone.of(request.phoneNumber());
 
         Member member = Member.of(
@@ -36,5 +30,9 @@ public class MemberService {
                 request.registrationSource()
         );
         memberRepository.save(member);
+    }
+
+    public Optional<Member> findMemberByPhone(String phoneNumber) {
+        return memberRepository.findByPhone_Number(phoneNumber);
     }
 }
