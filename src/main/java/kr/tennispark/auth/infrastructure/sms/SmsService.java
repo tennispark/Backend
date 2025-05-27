@@ -1,14 +1,16 @@
 package kr.tennispark.auth.infrastructure.sms;
 
 import jakarta.annotation.PostConstruct;
+import kr.tennispark.auth.infrastructure.exception.SmsSendFailedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class SmsService {
@@ -27,13 +29,23 @@ public class SmsService {
         );
     }
 
-    public SingleMessageSentResponse sendSms(String to, String text) {
+    public void sendSms(String to, String text) {
+        Message message = createMessage(to, text + "1");
+
+        try {
+            messageService.sendOne(new SingleMessageSendingRequest(message));
+        } catch (Exception e) {
+            log.error("[SMS] 인증번호 전송 실패 ", e);
+            throw new SmsSendFailedException();
+        }
+    }
+
+    private Message createMessage(String to, String text) {
         Message message = new Message();
         message.setFrom(smsProperties.fromNumber());
         message.setTo(to);
         message.setText(buildAuthMessage(text));
-
-        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        return message;
     }
 
     private String buildAuthMessage(String value) {
