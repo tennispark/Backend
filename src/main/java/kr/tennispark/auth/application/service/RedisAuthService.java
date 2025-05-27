@@ -9,28 +9,39 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RedisAuthService {
+    private static final String CODE_PREFIX = "auth:code:";
+    private static final String STATUS_PREFIX = "auth:status:";
 
-    private static final String PREFIX = "auth:code:";
-    private static final Duration TTL = Duration.ofMinutes(5);
+    private static final Duration CODE_TTL = Duration.ofMinutes(5);
+    private static final Duration STATUS_TTL = Duration.ofMinutes(10);
 
     private final RedisRepository redisRepository;
 
     public void saveCode(String phoneNumber, String code) {
-        String key = buildKey(phoneNumber);
-        redisRepository.save(key, code, TTL);
+        redisRepository.save(buildCodeKey(phoneNumber), code, CODE_TTL);
     }
 
     public String getCode(String phoneNumber) {
-        String key = buildKey(phoneNumber);
-        return redisRepository.find(key);
+        return redisRepository.find(buildCodeKey(phoneNumber));
     }
 
     public void deleteCode(String phoneNumber) {
-        String key = buildKey(phoneNumber);
-        redisRepository.delete(key);
+        redisRepository.delete(buildCodeKey(phoneNumber));
     }
 
-    private String buildKey(String phoneNumber) {
-        return PREFIX + phoneNumber;
+    public void saveVerifiedStatus(String phoneNumber) {
+        redisRepository.save(buildStatusKey(phoneNumber), "VERIFIED", STATUS_TTL);
+    }
+
+    public boolean isVerified(String phoneNumber) {
+        return "VERIFIED".equals(redisRepository.find(buildStatusKey(phoneNumber)));
+    }
+
+    private String buildCodeKey(String phoneNumber) {
+        return CODE_PREFIX + phoneNumber;
+    }
+
+    private String buildStatusKey(String phoneNumber) {
+        return STATUS_PREFIX + phoneNumber;
     }
 }
