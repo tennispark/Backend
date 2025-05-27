@@ -35,6 +35,7 @@ public class AuthService {
         }
 
         memberService.createMember(request);
+        return;
     }
 
     public void sendAuthCode(String number) {

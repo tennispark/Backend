@@ -15,6 +15,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public void createMember(RegisterMemberRequest request) {
         Phone phone = Phone.of(request.phoneNumber());
 
