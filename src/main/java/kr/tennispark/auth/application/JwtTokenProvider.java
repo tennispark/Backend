@@ -31,7 +31,7 @@ public class JwtTokenProvider {
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
-    private TokenDTO issueTokensFor(Member member) {
+    public TokenDTO issueTokensFor(Member member) {
         // 논의필요
         return TokenDTO.builder()
                 .accessToken(createAccessToken(String.valueOf(member.getId()), "USER"))
