@@ -1,6 +1,5 @@
 package kr.tennispark.members.user.application.service;
 
-import java.util.Optional;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
@@ -32,7 +31,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Optional<Member> findMemberByPhone(String phoneNumber) {
-        return memberRepository.findByPhone_Number(phoneNumber);
+    public boolean existsMemberByPhone(String phoneNumber) {
+        return memberRepository.existsByPhone_Number(phoneNumber);
     }
 }

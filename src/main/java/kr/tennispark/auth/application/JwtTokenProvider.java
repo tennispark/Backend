@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import kr.tennispark.auth.application.dto.TokenDTO;
 import kr.tennispark.auth.application.exception.InvalidTokenException;
-import kr.tennispark.members.common.domain.entity.Member;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,11 +30,11 @@ public class JwtTokenProvider {
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
-    public TokenDTO issueTokensFor(Member member) {
-        // 논의필요
+    public TokenDTO issueTokensFor(String payload) {
+        // authority를 유지할 지 논의 필요
         return TokenDTO.builder()
-                .accessToken(createAccessToken(String.valueOf(member.getId()), "USER"))
-                .refreshToken(createRefreshToken(String.valueOf(member.getId()), "USER"))
+                .accessToken(createAccessToken(String.valueOf(payload), "USER"))
+                .refreshToken(createRefreshToken(String.valueOf(payload), "USER"))
                 .build();
     }
 

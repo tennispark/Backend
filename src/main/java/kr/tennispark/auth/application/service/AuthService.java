@@ -7,7 +7,6 @@ import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
-import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +34,15 @@ public class AuthService {
             throw new PhoneVerificationFailedException();
         }
 
-        return memberService.findMemberByPhone(req.phoneNumber())
-                .map(this::loginFlow)
-                .orElseGet(VerifyPhoneResponse::needSignUp);
+        if (memberService.existsMemberByPhone(req.phoneNumber())) {
+            TokenDTO tokens = jwtTokenProvider.issueTokensFor(req.phoneNumber());
+            return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
+        }
+        return VerifyPhoneResponse.needSignUp();
     }
 
-    private VerifyPhoneResponse loginFlow(Member member) {
-        TokenDTO tokens = jwtTokenProvider.issueTokensFor(member);
+    private VerifyPhoneResponse loginFlow(String phoneNumber) {
+        TokenDTO tokens = jwtTokenProvider.issueTokensFor(phoneNumber);
         return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
     }
 
