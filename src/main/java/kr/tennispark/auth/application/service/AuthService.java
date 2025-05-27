@@ -8,6 +8,7 @@ import kr.tennispark.auth.application.exception.PhoneVerificationFailedException
 import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
+import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
 import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
@@ -25,7 +26,7 @@ public class AuthService {
     private final SmsService smsService;
     private final RedisAuthService redisAuthService;
 
-    public void registerMember(RegisterMemberRequest request) {
+    public RegisterMemberResponse registerMember(RegisterMemberRequest request) {
         if (!redisAuthService.isVerified(request.phoneNumber())) {
             throw new PhoneNotVerifiedException();
         }
@@ -35,7 +36,9 @@ public class AuthService {
         }
 
         memberService.createMember(request);
-        return;
+
+        TokenDTO tokens = jwtTokenProvider.issueTokensFor(request.phoneNumber());
+        return new RegisterMemberResponse(tokens.accessToken(), tokens.refreshToken());
     }
 
     public void sendAuthCode(String number) {

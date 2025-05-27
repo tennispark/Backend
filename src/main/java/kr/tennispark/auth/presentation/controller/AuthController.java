@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.tennispark.auth.application.service.AuthService;
 import kr.tennispark.auth.presentation.dto.request.SendAuthCodeRequest;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
+import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
@@ -24,10 +25,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping
-    public ResponseEntity<ApiResult<String>> registerMember(@Valid @RequestBody RegisterMemberRequest request) {
-        authService.registerMember(request);
+    public ResponseEntity<ApiResult<RegisterMemberResponse>> registerMember(
+            @Valid @RequestBody RegisterMemberRequest request) {
+        RegisterMemberResponse response = authService.registerMember(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiUtils.success());
+                .body(ApiUtils.success(response));
     }
 
     @PostMapping("/auth/phones/code")
