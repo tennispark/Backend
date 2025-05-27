@@ -3,6 +3,9 @@ package kr.tennispark.auth.infrastructure.sms;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +24,14 @@ public class SmsService {
                 smsProperties.apiSecret(),
                 smsProperties.apiUrl()
         );
+    }
+
+    public SingleMessageSentResponse sendSms(String to, String text) {
+        Message message = new Message();
+        message.setFrom(smsProperties.fromNumber());
+        message.setTo(to);
+        message.setText(text);
+
+        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 }
