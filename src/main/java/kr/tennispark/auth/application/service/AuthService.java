@@ -43,7 +43,7 @@ public class AuthService {
 
     public void sendAuthCode(String number) {
         VerificationCode code = VerificationCode.generateCode();
-        smsService.sendSms(code.getValue(), number);
+        smsService.sendSms(number, code.getValue());
         redisAuthService.saveCode(number, code.getValue());
     }
 
@@ -57,10 +57,5 @@ public class AuthService {
             return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
         }
         return VerifyPhoneResponse.needSignUp();
-    }
-
-    private VerifyPhoneResponse loginFlow(String phoneNumber) {
-        TokenDTO tokens = jwtTokenProvider.issueTokensFor(phoneNumber);
-        return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
     }
 }
