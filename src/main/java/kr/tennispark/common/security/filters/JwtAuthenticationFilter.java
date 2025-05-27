@@ -82,6 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPermitAllRequest(HttpServletRequest request) {
+        // 나중에 수정 필요 -> whiteList 선언하면 헤더는?
         return true;
     }
 

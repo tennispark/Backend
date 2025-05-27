@@ -32,7 +32,8 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/health").permitAll()
-
+                        .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
+                        .requestMatchers("/api/members/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(eh -> eh.accessDeniedHandler(customAccessDeniedHandler))
