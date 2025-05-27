@@ -1,4 +1,4 @@
-package kr.tennispark.auth.infrastructure.redis;
+package kr.tennispark.common.infrastructure.redis;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
