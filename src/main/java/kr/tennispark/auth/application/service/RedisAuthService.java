@@ -21,8 +21,9 @@ public class RedisAuthService {
         redisRepository.save(buildCodeKey(phoneNumber), code, CODE_TTL);
     }
 
-    public String getCode(String phoneNumber) {
-        return redisRepository.find(buildCodeKey(phoneNumber));
+    public boolean isCodeMatched(String phoneNumber, String inputCode) {
+        String savedCode = redisRepository.find(buildCodeKey(phoneNumber));
+        return inputCode != null && inputCode.equals(savedCode);
     }
 
     public void deleteCode(String phoneNumber) {
