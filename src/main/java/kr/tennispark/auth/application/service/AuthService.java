@@ -5,7 +5,6 @@ import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
-import kr.tennispark.members.user.presentation.dto.request.LoginMemberRequest;
 import kr.tennispark.members.user.presentation.dto.response.LoginMemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,14 +18,15 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final SmsService smsService;
+    private final RedisAuthService redisAuthService;
 
     public void sendAuthCode(String number) {
         VerificationCode code = VerificationCode.generateCode();
         smsService.sendSms(code.getValue(), number);
-        // redis에 인증코드 저장
+        redisAuthService.saveCode(number, code.getValue());
     }
 
-    public LoginMemberResponse login(LoginMemberRequest request) {
+    public LoginMemberResponse login() {
         // 1. 핸드폰 인증번호로 인증 -> 인증 확인 처리 (redis)
         // 2. 핸드폰 번호로 member 객체 찾기
         Member member = memberRepository.getMemberByPhone_Number(request.phoneNumber());
