@@ -1,6 +1,8 @@
 package kr.tennispark.auth.application.service;
 
 import kr.tennispark.auth.application.JwtTokenProvider;
+import kr.tennispark.auth.domain.vo.VerificationCode;
+import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.members.user.presentation.dto.request.LoginMemberRequest;
@@ -16,6 +18,13 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final SmsService smsService;
+
+    public void sendAuthCode(String number) {
+        VerificationCode code = VerificationCode.generateCode();
+        smsService.sendSms(code.getValue(), number);
+        // redis에 인증코드 저장
+    }
 
     public LoginMemberResponse login(LoginMemberRequest request) {
         // 1. 핸드폰 인증번호로 인증 -> 인증 확인 처리 (redis)

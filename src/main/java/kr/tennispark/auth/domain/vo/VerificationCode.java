@@ -21,9 +21,9 @@ public class VerificationCode {
         this.value = value;
     }
 
-    public static String generateCode() {
+    public static VerificationCode generateCode() {
         int code = secureRandom.nextInt(CODE_MAX) + CODE_MIN;
-        return String.valueOf(code);
+        return new VerificationCode(String.valueOf(code));
     }
 }
 
