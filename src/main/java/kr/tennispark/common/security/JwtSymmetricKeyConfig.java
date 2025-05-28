@@ -1,9 +1,9 @@
 package kr.tennispark.common.security;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class JwtSymmetricKeyConfig {
 
     @Bean
     public SecretKey jwtSecretKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
 
     @Bean
