@@ -11,13 +11,12 @@ public class TokenService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTokenService redisTokenService;
 
-
-    public TokenDTO issueTokensFor(String payload) {
-        // authority를 유지할 지 논의 필요
-        return TokenDTO.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(String.valueOf(payload), "USER"))
-                .refreshToken(jwtTokenProvider.createRefreshToken(String.valueOf(payload), "USER"))
+    public TokenDTO issueTokensFor(String phoneNumber) {
+        TokenDTO tokens = TokenDTO.builder()
+                .accessToken(jwtTokenProvider.createAccessToken(phoneNumber, "USER"))
+                .refreshToken(jwtTokenProvider.createRefreshToken(phoneNumber, "USER"))
                 .build();
+        redisTokenService.saveRefreshToken(phoneNumber, tokens.refreshToken());
+        return tokens;
     }
-
 }
