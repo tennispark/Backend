@@ -28,4 +28,8 @@ public class TokenService {
         redisTokenService.validateRefreshToken(userPhone, refreshToken);
         return issueTokensFor(userPhone);
     }
+
+    public void expireTokens(String phoneNumber) {
+        redisTokenService.deleteRefreshToken(phoneNumber);
+    }
 }

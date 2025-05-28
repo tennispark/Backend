@@ -33,6 +33,10 @@ public class RedisTokenService {
         }
     }
 
+    public void deleteRefreshToken(String phoneNumber) {
+        redisRepository.delete(buildRefreshKey(phoneNumber));
+    }
+
     public void blacklistAccessToken(String accessToken) {
         redisRepository.save(buildBlacklistKey(accessToken), "blacklisted", Duration.ofMillis(accessTokenExpireMillis));
     }
