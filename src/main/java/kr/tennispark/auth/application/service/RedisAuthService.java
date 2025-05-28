@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RedisAuthService {
+
     private static final String CODE_PREFIX = "auth:code:";
     private static final String STATUS_PREFIX = "auth:status:";
 
