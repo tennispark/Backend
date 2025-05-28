@@ -8,6 +8,7 @@ import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
+import kr.tennispark.auth.presentation.dto.response.ReissueTokenResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
 import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
@@ -59,5 +60,10 @@ public class AuthService {
 
         redisAuthService.saveVerifiedStatus(req.phoneNumber());
         return VerifyPhoneResponse.needSignUp();
+    }
+
+    public ReissueTokenResponse reissueLoginTokens(String refreshToken) {
+        TokenDTO tokens = tokenService.reissueTokens(refreshToken);
+        return new ReissueTokenResponse(tokens.accessToken(), tokens.refreshToken());
     }
 }
