@@ -16,12 +16,14 @@ import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.common.domain.exception.InvalidMemberException;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
         name = "member",

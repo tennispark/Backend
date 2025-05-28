@@ -10,6 +10,7 @@ import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
 import kr.tennispark.auth.presentation.dto.response.ReissueTokenResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
+import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
 import lombok.RequiredArgsConstructor;
@@ -65,5 +66,9 @@ public class AuthService {
     public ReissueTokenResponse reissueLoginTokens(String refreshToken) {
         TokenDTO tokens = tokenService.reissueTokens(refreshToken);
         return new ReissueTokenResponse(tokens.accessToken(), tokens.refreshToken());
+    }
+
+    public void logout(Member member) {
+        tokenService.expireTokens(member.getPhone().getNumber());
     }
 }
