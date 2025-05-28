@@ -2,6 +2,7 @@ package kr.tennispark.auth.application.service;
 
 
 import java.time.Duration;
+import kr.tennispark.auth.application.exception.ExpiredTokenException;
 import kr.tennispark.common.infrastructure.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,17 +26,21 @@ public class RedisTokenService {
         redisRepository.save(buildRefreshKey(phoneNumber), refreshToken, Duration.ofMillis(refreshTokenExpireMillis));
     }
 
-    public boolean isRefreshTokenMatched(String phoneNumber, String refreshToken) {
+    public void validateRefreshToken(String phoneNumber, String refreshToken) {
         String existedToken = redisRepository.find(buildRefreshKey(phoneNumber));
-        return refreshToken != null && refreshToken.equals(existedToken);
+        if (!refreshToken.equals(existedToken)) {
+            throw new ExpiredTokenException();
+        }
     }
 
     public void blacklistAccessToken(String accessToken) {
         redisRepository.save(buildBlacklistKey(accessToken), "blacklisted", Duration.ofMillis(accessTokenExpireMillis));
     }
 
-    public boolean isAccessTokenBlacklisted(String accessToken) {
-        return redisRepository.find(buildBlacklistKey(accessToken)) != null;
+    public void validateAccessTokenNotBlacklisted(String accessToken) {
+        if (redisRepository.find(buildBlacklistKey(accessToken)) != null) {
+            throw new ExpiredTokenException();
+        }
     }
 
     private String buildRefreshKey(String value) {
