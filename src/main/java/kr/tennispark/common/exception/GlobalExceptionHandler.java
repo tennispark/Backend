@@ -3,6 +3,7 @@ package kr.tennispark.common.exception;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.util.stream.Collectors;
+import kr.tennispark.auth.application.exception.ExpiredTokenException;
 import kr.tennispark.common.exception.base.InvalidException;
 import kr.tennispark.common.exception.base.NotFoundException;
 import kr.tennispark.common.exception.base.UnsupportedTypeException;
@@ -20,6 +21,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<ApiUtils.ApiResult<?>> handleExpiredTokenException(
+            ExpiredTokenException exception) {
+        return new ResponseEntity<>(exception.body(), exception.status());
+    }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
