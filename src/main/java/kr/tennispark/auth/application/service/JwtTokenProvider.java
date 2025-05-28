@@ -4,6 +4,7 @@ import static kr.tennispark.common.constant.JwtConstants.ROLE_CLAIM;
 
 import java.time.Duration;
 import java.time.Instant;
+import kr.tennispark.auth.application.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -57,7 +58,7 @@ public class JwtTokenProvider {
         try {
             return jwtDecoder.decode(token).getSubject();
         } catch (JwtException e) {
-            throw new RuntimeException("토큰이 이상해요");
+            throw new InvalidTokenException();
         }
     }
 }
