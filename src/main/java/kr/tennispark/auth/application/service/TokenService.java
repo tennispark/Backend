@@ -19,4 +19,13 @@ public class TokenService {
         redisTokenService.saveRefreshToken(phoneNumber, tokens.refreshToken());
         return tokens;
     }
+
+    public TokenDTO reissueTokens(String refreshToken) {
+        // 나중에 tokenProvider 리팩토링하면 수정 예정
+        jwtTokenProvider.validateToken(refreshToken);
+        String userPhone = jwtTokenProvider.getPayload(refreshToken);
+
+        redisTokenService.validateRefreshToken(userPhone, refreshToken);
+        return issueTokensFor(userPhone);
+    }
 }
