@@ -1,6 +1,5 @@
 package kr.tennispark.auth.application.service;
 
-import kr.tennispark.auth.application.JwtTokenProvider;
 import kr.tennispark.auth.application.dto.TokenDTO;
 import kr.tennispark.auth.application.exception.MemberAlreadyExistsException;
 import kr.tennispark.auth.application.exception.PhoneNotVerifiedException;
@@ -22,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final MemberService memberService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final SmsService smsService;
     private final RedisAuthService redisAuthService;
+    private final TokenService tokenService;
 
     @Transactional
     public RegisterMemberResponse registerMember(RegisterMemberRequest request) {
@@ -38,7 +37,7 @@ public class AuthService {
 
         memberService.createMember(request);
 
-        TokenDTO tokens = jwtTokenProvider.issueTokensFor(request.phoneNumber());
+        TokenDTO tokens = tokenService.issueTokensFor(request.phoneNumber());
         return new RegisterMemberResponse(tokens.accessToken(), tokens.refreshToken());
     }
 
@@ -54,7 +53,7 @@ public class AuthService {
         }
 
         if (memberService.existsMemberByPhone(req.phoneNumber())) {
-            TokenDTO tokens = jwtTokenProvider.issueTokensFor(req.phoneNumber());
+            TokenDTO tokens = tokenService.issueTokensFor(req.phoneNumber());
             return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
         }
 
