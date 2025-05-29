@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import javax.imageio.ImageIO;
 import kr.tennispark.qr.application.exception.BadQrCreateException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QrService {
@@ -26,6 +28,7 @@ public class QrService {
             byte[] qrBytes = generateQrImageBytes(text);
             return s3UploadService.uploadQrImage(qrBytes, QR_PREFIX + LocalDate.now());
         } catch (Exception e) {
+            log.error("QR 코드 생성 중 오류 발생: {}", e.getMessage(), e);
             throw new BadQrCreateException();
         }
     }
