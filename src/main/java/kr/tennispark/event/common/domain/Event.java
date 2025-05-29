@@ -1,9 +1,9 @@
-package kr.tennispark.event.domain;
+package kr.tennispark.event.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import kr.tennispark.common.domain.BaseEntity;
-import kr.tennispark.event.domain.exception.InvalidEventException;
+import kr.tennispark.event.common.domain.exception.InvalidEventException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

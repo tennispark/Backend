@@ -1,4 +1,4 @@
-package kr.tennispark.event.presentation.dto.request;
+package kr.tennispark.event.admin.presentation.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

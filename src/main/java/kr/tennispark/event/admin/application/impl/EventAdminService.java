@@ -1,18 +1,20 @@
-package kr.tennispark.event.application.impl;
+package kr.tennispark.event.admin.application.impl;
 
-import kr.tennispark.event.application.EventAdminUseCase;
-import kr.tennispark.event.domain.Event;
-import kr.tennispark.event.infrastructure.repository.EventRepository;
-import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
-import kr.tennispark.event.presentation.dto.response.GetEventResponseDTO;
+import kr.tennispark.event.admin.application.EventAdminUseCase;
+import kr.tennispark.event.admin.infrastructure.repository.EventRepository;
+import kr.tennispark.event.admin.presentation.dto.request.ManageEventRequestDTO;
+import kr.tennispark.event.admin.presentation.dto.response.GetEventResponseDTO;
+import kr.tennispark.event.common.domain.Event;
 import kr.tennispark.qr.application.QrService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

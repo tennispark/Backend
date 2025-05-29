@@ -1,11 +1,11 @@
-package kr.tennispark.event.presentation;
+package kr.tennispark.event.admin.presentation;
 
 import jakarta.validation.Valid;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
-import kr.tennispark.event.application.EventAdminUseCase;
-import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
-import kr.tennispark.event.presentation.dto.response.GetEventResponseDTO;
+import kr.tennispark.event.admin.application.EventAdminUseCase;
+import kr.tennispark.event.admin.presentation.dto.request.ManageEventRequestDTO;
+import kr.tennispark.event.admin.presentation.dto.response.GetEventResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

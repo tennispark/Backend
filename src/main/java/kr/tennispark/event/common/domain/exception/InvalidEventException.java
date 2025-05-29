@@ -1,4 +1,4 @@
-package kr.tennispark.event.domain.exception;
+package kr.tennispark.event.common.domain.exception;
 
 import kr.tennispark.common.exception.base.InvalidException;
 
