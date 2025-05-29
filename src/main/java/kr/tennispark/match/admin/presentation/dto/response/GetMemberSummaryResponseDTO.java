@@ -14,5 +14,8 @@ public record GetMemberSummaryResponseDTO(
             Long memberId,
             String name
     ) {
+        public static MemberSummaryDTO of(Long memberId, String name) {
+            return new MemberSummaryDTO(memberId, name);
+        }
     }
 }

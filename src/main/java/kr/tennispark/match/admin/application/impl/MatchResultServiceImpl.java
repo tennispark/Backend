@@ -54,7 +54,7 @@ public class MatchResultServiceImpl implements MatchResultService {
 
     private static GetMemberSummaryResponseDTO convertMembersToDTO(List<Member> members) {
         List<MemberSummaryDTO> memberSummaryDTOS = members.stream()
-                .map(member -> new MemberSummaryDTO(member.getId(), member.getName()))
+                .map(member -> MemberSummaryDTO.of(member.getId(), member.getName()))
                 .toList();
         return GetMemberSummaryResponseDTO.of(memberSummaryDTOS);
     }
