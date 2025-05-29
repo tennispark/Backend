@@ -8,7 +8,7 @@ import kr.tennispark.record.admin.infrastructure.MatchResultRepository;
 import kr.tennispark.record.admin.infrastructure.MemberRecordRepository;
 import kr.tennispark.record.admin.presentation.dto.request.SaveMatchResultRequestDTO;
 import kr.tennispark.record.common.domain.entity.MatchResult;
-import kr.tennispark.record.common.domain.entity.association.MemberRecord;
+import kr.tennispark.record.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.record.common.domain.entity.exception.InvalidMatchResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class MatchResultServiceImpl implements MatchResultService {
 
     private void saveMemberRecords(List<Member> members, MatchResult matchResult, boolean isWinner, int score) {
         members.forEach(member -> {
-            MemberRecord record = MemberRecord.of(member, matchResult, isWinner, score);
+            MatchParticipation record = MatchParticipation.of(member, matchResult, isWinner, score);
             memberRecordRepository.save(record);
         });
     }

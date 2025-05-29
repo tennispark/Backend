@@ -14,16 +14,16 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
-@SQLDelete(sql = "UPDATE record SET status = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE match_result SET status = false WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLRestriction("status = true")
 public class MatchResult extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "team_a_score")
     private Integer teamAScore;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "team_b_score")
     private Integer teamBScore;
 
     @Column(nullable = false)

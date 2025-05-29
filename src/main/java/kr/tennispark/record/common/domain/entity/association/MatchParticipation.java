@@ -18,11 +18,11 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
-@SQLDelete(sql = "UPDATE record SET status = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE member_participation SET status = false WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLRestriction("status = true")
-public class MemberRecord extends BaseEntity {
+public class MatchParticipation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -38,9 +38,9 @@ public class MemberRecord extends BaseEntity {
     @Column(nullable = false)
     private Integer score;
 
-    public static MemberRecord of(Member member, MatchResult matchResult, Boolean isWinner, Integer score) {
+    public static MatchParticipation of(Member member, MatchResult matchResult, Boolean isWinner, Integer score) {
         validateScore(score);
-        return new MemberRecord(member, matchResult, isWinner, score);
+        return new MatchParticipation(member, matchResult, isWinner, score);
     }
 
     private static void validateScore(Integer score) {
