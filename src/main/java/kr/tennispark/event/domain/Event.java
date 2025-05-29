@@ -28,12 +28,12 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private Integer point;
 
-    @Column(nullable = false)
+    @Column
     private String imageUrl;
 
-    public static Event of(String title, String detail, Integer point, String imageUrl) {
+    public static Event of(String title, String detail, Integer point) {
         validatePoint(point);
-        return new Event(title, detail, point, imageUrl);
+        return new Event(title, detail, point, null);
     }
 
     private static void validatePoint(Integer point) {
@@ -45,14 +45,16 @@ public class Event extends BaseEntity {
     public void modifyEventDetails(
             String title,
             String detail,
-            Integer point,
-            String imageUrl
+            Integer point
     ) {
         validatePoint(point);
         this.title = title;
         this.content = detail;
         this.point = point;
-        this.imageUrl = imageUrl;
+    }
+
+    public void attachQrImageUrl(String qrImageUrl) {
+        this.imageUrl = qrImageUrl;
     }
 
 }

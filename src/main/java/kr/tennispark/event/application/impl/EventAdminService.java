@@ -5,7 +5,9 @@ import kr.tennispark.event.domain.Event;
 import kr.tennispark.event.infrastructure.repository.EventRepository;
 import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
 import kr.tennispark.event.presentation.dto.response.GetEventResponseDTO;
+import kr.tennispark.qr.application.QrService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class EventAdminService implements EventAdminUseCase {
 
+    @Value("${qr.url.prefix}")
+    private String qrImageUrlPrefix;
+
+    @Value("${qr.url.suffix}")
+    private String URL_SUFFIX;
+
     private final EventRepository eventRepository;
+    private final QrService qrService;
 
     @Override
     public GetEventResponseDTO getAllEvents(int page, int size) {
@@ -30,9 +39,13 @@ public class EventAdminService implements EventAdminUseCase {
         Event event = Event.of(
                 request.title(),
                 request.content(),
-                request.point(),
-                request.imageUrl()
+                request.point()
         );
+
+        eventRepository.save(event);
+
+        String qrImageUrl = generateQrImageUrl(event.getId());
+        event.attachQrImageUrl(qrImageUrl);
 
         eventRepository.save(event);
     }
@@ -45,8 +58,7 @@ public class EventAdminService implements EventAdminUseCase {
         event.modifyEventDetails(
                 request.title(),
                 request.content(),
-                request.point(),
-                request.imageUrl()
+                request.point()
         );
 
         eventRepository.save(event);
@@ -59,5 +71,10 @@ public class EventAdminService implements EventAdminUseCase {
         Event event = eventRepository.getById(eventId);
 
         eventRepository.delete(event);
+    }
+
+    private String generateQrImageUrl(Long eventId) {
+        String targetUrl = qrImageUrlPrefix + URL_SUFFIX + eventId;
+        return qrService.generateAndUploadQr(targetUrl);
     }
 }
