@@ -29,7 +29,7 @@ public class MemberRecord extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "match_result_id", nullable = false)
     private MatchResult matchResult;
 
     @Column(nullable = false)
