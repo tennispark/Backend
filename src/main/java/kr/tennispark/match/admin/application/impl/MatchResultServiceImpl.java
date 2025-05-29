@@ -60,9 +60,7 @@ public class MatchResultServiceImpl implements MatchResultService {
     }
 
     private List<Member> fetchMembersByIds(List<Long> ids) {
-        return ids.stream()
-                .map(memberRepository::getById)
-                .toList();
+        return memberRepository.findAllById(ids);
     }
 
     private void validateMemberDuplication(List<Long> teamAIds, List<Long> teamBIds) {

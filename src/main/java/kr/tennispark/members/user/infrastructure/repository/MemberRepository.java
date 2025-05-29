@@ -13,6 +13,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findByNameContaining(String name);
 
+    List<Member> findAllById(List<Long> ids);
+
     default Member getById(Long id) {
         return findById(id)
                 .orElseThrow(NoSuchMemberException::new);
