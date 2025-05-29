@@ -37,16 +37,6 @@ public class RedisTokenService {
         redisRepository.delete(buildRefreshKey(phoneNumber));
     }
 
-    public void blacklistAccessToken(String accessToken) {
-        redisRepository.save(buildBlacklistKey(accessToken), "blacklisted", Duration.ofMillis(accessTokenExpireMillis));
-    }
-
-    public void validateAccessTokenNotBlacklisted(String accessToken) {
-        if (redisRepository.find(buildBlacklistKey(accessToken)) != null) {
-            throw new ExpiredTokenException();
-        }
-    }
-
     private String buildRefreshKey(String value) {
         return REFRESH_PREFIX + value;
     }
