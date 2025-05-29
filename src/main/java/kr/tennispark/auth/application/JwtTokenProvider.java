@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import kr.tennispark.auth.application.dto.TokenDTO;
 import kr.tennispark.auth.application.exception.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,12 +30,20 @@ public class JwtTokenProvider {
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
+    public TokenDTO issueTokensFor(String payload) {
+        // authority를 유지할 지 논의 필요
+        return TokenDTO.builder()
+                .accessToken(createAccessToken(String.valueOf(payload), "USER"))
+                .refreshToken(createRefreshToken(String.valueOf(payload), "USER"))
+                .build();
+    }
+
     // TODO : authority는 enum으로 변경
-    public String createAccessToken(final String payload, final String authority) {
+    private String createAccessToken(final String payload, final String authority) {
         return createToken(payload, accessTokenValidityInMilliseconds, authority.toString());
     }
 
-    public String createRefreshToken(final String payload, final String authority) {
+    private String createRefreshToken(final String payload, final String authority) {
         return createToken(payload, refreshTokenValidityInMilliseconds, authority.toString());
     }
 
@@ -49,7 +58,6 @@ public class JwtTokenProvider {
             throw new InvalidTokenException();
         }
     }
-
 
     private String createToken(String payload, Long validityInMilliseconds, String roles) {
         Date now = new Date();
