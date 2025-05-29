@@ -5,18 +5,24 @@ import kr.tennispark.auth.application.service.AuthService;
 import kr.tennispark.auth.presentation.dto.request.SendAuthCodeRequest;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
+import kr.tennispark.auth.presentation.dto.response.ReissueTokenResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
+import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
+import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -44,5 +50,20 @@ public class AuthController {
         VerifyPhoneResponse response = authService.verifyPhone(request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiUtils.success(response));
+    }
+
+    @PostMapping("/auth/token/refresh")
+    public ResponseEntity<ApiResult<ReissueTokenResponse>> reissueLoginTokens(
+            @RequestHeader("Refresh-Token") String refreshToken) {
+        ReissueTokenResponse response = authService.reissueLoginTokens(refreshToken);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiUtils.success(response));
+    }
+
+    @PostMapping("/auth/logout")
+    public ResponseEntity<ApiResult<String>> logout(@LoginMember Member member) {
+        authService.logout(member);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiUtils.success());
     }
 }

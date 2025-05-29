@@ -24,6 +24,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
         name = "member",

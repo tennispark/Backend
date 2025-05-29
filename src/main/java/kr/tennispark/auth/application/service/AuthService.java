@@ -1,6 +1,5 @@
 package kr.tennispark.auth.application.service;
 
-import kr.tennispark.auth.application.JwtTokenProvider;
 import kr.tennispark.auth.application.dto.TokenDTO;
 import kr.tennispark.auth.application.exception.MemberAlreadyExistsException;
 import kr.tennispark.auth.application.exception.PhoneNotVerifiedException;
@@ -9,7 +8,9 @@ import kr.tennispark.auth.domain.vo.VerificationCode;
 import kr.tennispark.auth.infrastructure.sms.SmsService;
 import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
+import kr.tennispark.auth.presentation.dto.response.ReissueTokenResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
+import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final MemberService memberService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final SmsService smsService;
     private final RedisAuthService redisAuthService;
+    private final TokenService tokenService;
 
     @Transactional
     public RegisterMemberResponse registerMember(RegisterMemberRequest request) {
@@ -38,7 +39,7 @@ public class AuthService {
 
         memberService.createMember(request);
 
-        TokenDTO tokens = jwtTokenProvider.issueTokensFor(request.phoneNumber());
+        TokenDTO tokens = tokenService.issueTokensFor(request.phoneNumber());
         return new RegisterMemberResponse(tokens.accessToken(), tokens.refreshToken());
     }
 
@@ -52,13 +53,21 @@ public class AuthService {
         if (!redisAuthService.isCodeMatched(req.phoneNumber(), req.code())) {
             throw new PhoneVerificationFailedException();
         }
-
         if (memberService.existsMemberByPhone(req.phoneNumber())) {
-            TokenDTO tokens = jwtTokenProvider.issueTokensFor(req.phoneNumber());
+            TokenDTO tokens = tokenService.issueTokensFor(req.phoneNumber());
             return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());
         }
 
         redisAuthService.saveVerifiedStatus(req.phoneNumber());
         return VerifyPhoneResponse.needSignUp();
+    }
+
+    public ReissueTokenResponse reissueLoginTokens(String refreshToken) {
+        TokenDTO tokens = tokenService.reissueTokens(refreshToken);
+        return new ReissueTokenResponse(tokens.accessToken(), tokens.refreshToken());
+    }
+
+    public void logout(Member member) {
+        tokenService.expireTokens(member.getPhone().getNumber());
     }
 }
