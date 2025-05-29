@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.tennispark.common.domain.BaseEntity;
+import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.PointReason;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,10 @@ public class PointHistory extends BaseEntity {
     @JoinColumn(name = "point_id", nullable = false)
     private Point point;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     @Column(nullable = false)
     private Integer amount;
 
@@ -35,7 +40,7 @@ public class PointHistory extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PointReason reason;
 
-    public static PointHistory of(Point point, int amount, PointReason reason) {
-        return new PointHistory(point, amount, reason);
+    public static PointHistory of(Point point, Member member, int amount, PointReason reason) {
+        return new PointHistory(point, member, amount, reason);
     }
 }
