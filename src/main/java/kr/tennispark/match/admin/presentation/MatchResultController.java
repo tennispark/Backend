@@ -1,10 +1,10 @@
-package kr.tennispark.record.admin.presentation;
+package kr.tennispark.match.admin.presentation;
 
 import jakarta.validation.Valid;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
-import kr.tennispark.record.admin.application.MatchResultService;
-import kr.tennispark.record.admin.presentation.dto.request.SaveMatchResultRequestDTO;
+import kr.tennispark.match.admin.application.MatchResultService;
+import kr.tennispark.match.admin.presentation.dto.request.SaveMatchResultRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

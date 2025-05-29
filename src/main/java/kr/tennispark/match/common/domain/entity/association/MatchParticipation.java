@@ -1,4 +1,4 @@
-package kr.tennispark.record.common.domain.entity.association;
+package kr.tennispark.match.common.domain.entity.association;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,9 +6,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.tennispark.common.domain.BaseEntity;
+import kr.tennispark.match.common.domain.entity.MatchResult;
+import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.record.common.domain.entity.MatchResult;
-import kr.tennispark.record.common.domain.entity.exception.InvalidMatchResultException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

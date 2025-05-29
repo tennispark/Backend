@@ -1,17 +1,17 @@
-package kr.tennispark.record.admin.application.impl;
+package kr.tennispark.match.admin.application.impl;
 
 import java.util.List;
+import kr.tennispark.match.admin.application.MatchResultService;
+import kr.tennispark.match.admin.infrastructure.MatchResultRepository;
+import kr.tennispark.match.admin.infrastructure.MemberRecordRepository;
+import kr.tennispark.match.admin.presentation.dto.request.SaveMatchResultRequestDTO;
+import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO;
+import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
+import kr.tennispark.match.common.domain.entity.MatchResult;
+import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
+import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
-import kr.tennispark.record.admin.application.MatchResultService;
-import kr.tennispark.record.admin.infrastructure.MatchResultRepository;
-import kr.tennispark.record.admin.infrastructure.MemberRecordRepository;
-import kr.tennispark.record.admin.presentation.dto.request.SaveMatchResultRequestDTO;
-import kr.tennispark.record.admin.presentation.dto.response.GetMemberSummaryResponseDTO;
-import kr.tennispark.record.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
-import kr.tennispark.record.common.domain.entity.MatchResult;
-import kr.tennispark.record.common.domain.entity.association.MatchParticipation;
-import kr.tennispark.record.common.domain.entity.exception.InvalidMatchResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

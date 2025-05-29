@@ -1,4 +1,4 @@
-package kr.tennispark.record.admin.presentation.dto.response;
+package kr.tennispark.match.admin.presentation.dto.response;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package kr.tennispark.record.common.domain.entity.exception;
+package kr.tennispark.match.common.domain.entity.exception;
 
 import kr.tennispark.common.exception.base.InvalidException;
 

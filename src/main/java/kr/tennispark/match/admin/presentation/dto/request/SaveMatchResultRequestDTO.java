@@ -1,4 +1,4 @@
-package kr.tennispark.record.admin.presentation.dto.request;
+package kr.tennispark.match.admin.presentation.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,10 +1,10 @@
-package kr.tennispark.record.common.domain.entity;
+package kr.tennispark.match.common.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import kr.tennispark.common.domain.BaseEntity;
-import kr.tennispark.record.common.domain.entity.exception.InvalidMatchResultException;
+import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
