@@ -2,11 +2,14 @@ package kr.tennispark.match.common.domain.entity.association;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.match.common.domain.entity.MatchResult;
+import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
 import lombok.AccessLevel;
@@ -33,14 +36,16 @@ public class MatchParticipation extends BaseEntity {
     private MatchResult matchResult;
 
     @Column(nullable = false)
-    private Boolean isWinner;
+    @Enumerated(EnumType.STRING)
+    private MatchOutcome matchOutcome;
 
     @Column(nullable = false)
     private Integer score;
 
-    public static MatchParticipation of(Member member, MatchResult matchResult, Boolean isWinner, Integer score) {
+    public static MatchParticipation of(Member member, MatchResult matchResult, MatchOutcome matchOutcome,
+                                        Integer score) {
         validateScore(score);
-        return new MatchParticipation(member, matchResult, isWinner, score);
+        return new MatchParticipation(member, matchResult, matchOutcome, score);
     }
 
     private static void validateScore(Integer score) {

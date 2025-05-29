@@ -9,6 +9,7 @@ import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryRespo
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
 import kr.tennispark.match.common.domain.entity.MatchResult;
 import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
+import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
@@ -39,10 +40,11 @@ public class MatchResultServiceImpl implements MatchResultService {
         );
         matchResultRepository.save(matchResult);
 
-        boolean isTeamAWin = request.teamA().score() > request.teamB().score();
+        MatchOutcome teamAOutcome = determineMatchOutcome(request.teamA().score(), request.teamB().score());
+        MatchOutcome teamBOutcome = determineMatchOutcome(request.teamB().score(), request.teamA().score());
 
-        saveMemberRecords(teamAMembers, matchResult, isTeamAWin, request.teamA().score());
-        saveMemberRecords(teamBMembers, matchResult, !isTeamAWin, request.teamB().score());
+        saveMemberRecords(teamAMembers, matchResult, teamAOutcome, request.teamA().score());
+        saveMemberRecords(teamBMembers, matchResult, teamBOutcome, request.teamB().score());
     }
 
     @Override
@@ -69,10 +71,21 @@ public class MatchResultServiceImpl implements MatchResultService {
         }
     }
 
-    private void saveMemberRecords(List<Member> members, MatchResult matchResult, boolean isWinner, int score) {
+    private void saveMemberRecords(List<Member> members, MatchResult matchResult, MatchOutcome matchOutcome,
+                                   int score) {
         members.forEach(member -> {
-            MatchParticipation record = MatchParticipation.of(member, matchResult, isWinner, score);
+            MatchParticipation record = MatchParticipation.of(member, matchResult, matchOutcome, score);
             memberRecordRepository.save(record);
         });
+    }
+
+    private MatchOutcome determineMatchOutcome(int teamAScore, int teamBScore) {
+        if (teamAScore > teamBScore) {
+            return MatchOutcome.WIN;
+        } else if (teamAScore < teamBScore) {
+            return MatchOutcome.LOSE;
+        } else {
+            return MatchOutcome.DRAW;
+        }
     }
 }
