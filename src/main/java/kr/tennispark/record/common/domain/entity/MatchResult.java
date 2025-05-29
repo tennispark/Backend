@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import kr.tennispark.common.domain.BaseEntity;
-import kr.tennispark.record.common.domain.entity.exception.InvalidRecordException;
+import kr.tennispark.record.common.domain.entity.exception.InvalidMatchResultException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLRestriction("status = true")
-public class Record extends BaseEntity {
+public class MatchResult extends BaseEntity {
 
     @Column(nullable = false)
     private Integer teamAScore;
@@ -29,14 +29,14 @@ public class Record extends BaseEntity {
     @Column(nullable = false)
     private LocalDate matchDate;
 
-    public static Record of(Integer teamAScore, Integer teamBScore, LocalDate matchDate) {
+    public static MatchResult of(Integer teamAScore, Integer teamBScore, LocalDate matchDate) {
         validateMatchScores(teamAScore, teamBScore);
-        return new Record(teamAScore, teamBScore, matchDate);
+        return new MatchResult(teamAScore, teamBScore, matchDate);
     }
 
     private static void validateMatchScores(Integer teamAScore, Integer teamBScore) {
         if (teamAScore < 0 || teamBScore < 0) {
-            throw new InvalidRecordException("경기 점수는 0 이상이어야 합니다.");
+            throw new InvalidMatchResultException("경기 점수는 0 이상이어야 합니다.");
         }
     }
 }

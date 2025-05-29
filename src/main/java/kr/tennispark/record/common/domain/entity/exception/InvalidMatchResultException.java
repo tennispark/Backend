@@ -2,15 +2,15 @@ package kr.tennispark.record.common.domain.entity.exception;
 
 import kr.tennispark.common.exception.base.InvalidException;
 
-public class InvalidRecordException extends InvalidException {
+public class InvalidMatchResultException extends InvalidException {
 
     private static final String DEFAULT_MESSAGE = "유효하지 않은 기록입니다.";
 
-    public InvalidRecordException(String message) {
+    public InvalidMatchResultException(String message) {
         super(message);
     }
 
-    public InvalidRecordException() {
+    public InvalidMatchResultException() {
         super(DEFAULT_MESSAGE);
     }
 }
