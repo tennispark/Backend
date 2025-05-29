@@ -20,6 +20,8 @@ public class QrService {
     private static final String QR_PREFIX = "qr/";
     private static final String QR_SUFFIX = "png";
     private static final Integer QR_SIZE = 200;
+    private static final Integer WHITE = 0xFFFFFF;
+    private static final Integer BLACK = 0x000000;
 
     private final S3UploadService s3UploadService;
 
@@ -40,7 +42,7 @@ public class QrService {
         BufferedImage image = new BufferedImage(QR_SIZE, QR_SIZE, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < QR_SIZE; x++) {
             for (int y = 0; y < QR_SIZE; y++) {
-                image.setRGB(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF);
+                image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
             }
         }
 
