@@ -7,6 +7,8 @@ import kr.tennispark.record.admin.application.MatchResultService;
 import kr.tennispark.record.admin.infrastructure.MatchResultRepository;
 import kr.tennispark.record.admin.infrastructure.MemberRecordRepository;
 import kr.tennispark.record.admin.presentation.dto.request.SaveMatchResultRequestDTO;
+import kr.tennispark.record.admin.presentation.dto.response.GetMemberSummaryResponseDTO;
+import kr.tennispark.record.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
 import kr.tennispark.record.common.domain.entity.MatchResult;
 import kr.tennispark.record.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.record.common.domain.entity.exception.InvalidMatchResultException;
@@ -41,6 +43,20 @@ public class MatchResultServiceImpl implements MatchResultService {
 
         saveMemberRecords(teamAMembers, matchResult, isTeamAWin, request.teamA().score());
         saveMemberRecords(teamBMembers, matchResult, !isTeamAWin, request.teamB().score());
+    }
+
+    @Override
+    public GetMemberSummaryResponseDTO searchMemberNameForMatchResult(String memberName) {
+        List<Member> members = memberRepository.findByNameContaining(memberName);
+
+        return convertMembersToDTO(members);
+    }
+
+    private static GetMemberSummaryResponseDTO convertMembersToDTO(List<Member> members) {
+        List<MemberSummaryDTO> memberSummaryDTOS = members.stream()
+                .map(member -> new MemberSummaryDTO(member.getId(), member.getName()))
+                .toList();
+        return GetMemberSummaryResponseDTO.of(memberSummaryDTOS);
     }
 
     private List<Member> fetchMembersByIds(List<Long> ids) {
