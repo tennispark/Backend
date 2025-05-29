@@ -1,4 +1,4 @@
-package kr.tennispark.common.qr.exception;
+package kr.tennispark.qr.application.exception;
 
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.HttpStatus;
