@@ -1,5 +1,6 @@
 package kr.tennispark.record.admin.presentation;
 
+import jakarta.validation.Valid;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.record.admin.application.MatchResultService;
@@ -20,7 +21,7 @@ public class MatchResultController {
 
     @PostMapping("/match-results")
     public ResponseEntity<ApiResult<?>> saveMatchResult(
-            @RequestBody SaveMatchResultRequestDTO request
+            @RequestBody @Valid SaveMatchResultRequestDTO request
     ) {
         matchResultService.saveMatchResult(request);
         return ResponseEntity.ok(ApiUtils.success());
