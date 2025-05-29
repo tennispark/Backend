@@ -62,8 +62,6 @@ public class AuthController {
 
     @PostMapping("/auth/logout")
     public ResponseEntity<ApiResult<String>> logout(@LoginMember Member member) {
-        System.out.println("member.getPhone().getNumber() = " + member.getPhone().getNumber());
-        System.out.println("member.getName() = " + member.getName());
         authService.logout(member);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiUtils.success());
