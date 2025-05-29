@@ -7,6 +7,7 @@ import kr.tennispark.auth.presentation.dto.request.VerifyPhoneRequest;
 import kr.tennispark.auth.presentation.dto.response.RegisterMemberResponse;
 import kr.tennispark.auth.presentation.dto.response.ReissueTokenResponse;
 import kr.tennispark.auth.presentation.dto.response.VerifyPhoneResponse;
+import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
@@ -60,10 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/logout")
-    public ResponseEntity<ApiResult<String>> logout() {
-        // Member() 메서드 없음, 그냥 임시로 코드 작성해놓음
-        // 이후 loginMember 구현 후 수정 예정
-        Member member = new Member();
+    public ResponseEntity<ApiResult<String>> logout(@LoginMember Member member) {
         authService.logout(member);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiUtils.success());

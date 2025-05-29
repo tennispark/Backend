@@ -53,7 +53,6 @@ public class AuthService {
         if (!redisAuthService.isCodeMatched(req.phoneNumber(), req.code())) {
             throw new PhoneVerificationFailedException();
         }
-
         if (memberService.existsMemberByPhone(req.phoneNumber())) {
             TokenDTO tokens = tokenService.issueTokensFor(req.phoneNumber());
             return VerifyPhoneResponse.login(tokens.accessToken(), tokens.refreshToken());

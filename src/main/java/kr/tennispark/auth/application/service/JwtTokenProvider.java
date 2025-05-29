@@ -1,97 +1,64 @@
 package kr.tennispark.auth.application.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import javax.crypto.SecretKey;
+import static kr.tennispark.common.constant.JwtConstants.ROLE_CLAIM;
+
+import java.time.Duration;
+import java.time.Instant;
 import kr.tennispark.auth.application.exception.InvalidTokenException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private final static String ROLE_KEY = "roles";
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
 
-    private final SecretKey key;
-    private final long accessTokenValidityInMilliseconds;
-    private final long refreshTokenValidityInMilliseconds;
+    @Value("${security.jwt.token.access.expire-length}")
+    private Duration accessTtl;
 
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
-                            @Value("${security.jwt.token.access.expire-length}") final long accessTokenValidityInMilliseconds,
-                            @Value("${security.jwt.token.refresh.expire-length}") final long refreshTokenValidityInMilliseconds) {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
-        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
+    @Value("${security.jwt.token.refresh.expire-length}")
+    private Duration refreshTtl;
+
+    public String createAccessToken(String subject, String role) {
+        return createToken(subject, role, accessTtl);
     }
 
-    public String createAccessToken(final String payload, final String authority) {
-        return createToken(payload, accessTokenValidityInMilliseconds, authority.toString());
+    public String createRefreshToken(String subject, String role) {
+        return createToken(subject, role, refreshTtl);
     }
 
-    public String createRefreshToken(final String payload, final String authority) {
-        return createToken(payload, refreshTokenValidityInMilliseconds, authority.toString());
+    private String createToken(String subject, String role, Duration ttl) {
+        Instant now = Instant.now();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .subject(subject)
+                .issuedAt(now)
+                .expiresAt(now.plus(ttl))
+                .claim(ROLE_CLAIM, role)
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
+        JwtEncoderParameters params = JwtEncoderParameters.from(jwsHeader, claims);
+
+        return jwtEncoder.encode(params)
+                .getTokenValue();
     }
 
-    public Claims getClaims(String token) {
+    public String getSubject(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (JwtException | IllegalArgumentException e) {
+            return jwtDecoder.decode(token).getSubject();
+        } catch (JwtException e) {
             throw new InvalidTokenException();
         }
     }
-
-    private String createToken(String payload, Long validityInMilliseconds, String roles) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
-
-        return Jwts.builder()
-                .setSubject(payload)
-                .claim(ROLE_KEY, roles)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-
-    public String getPayload(final String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-    public String getRole(final String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.get(ROLE_KEY, String.class);
-    }
-
-
-    public void validateToken(final String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-        } catch (final JwtException | IllegalArgumentException e) {
-            throw new InvalidTokenException();
-        }
-    }
-
 }

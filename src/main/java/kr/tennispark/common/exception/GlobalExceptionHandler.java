@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -76,5 +77,12 @@ public class GlobalExceptionHandler {
         }
 
         return ApiUtils.error(HttpStatus.BAD_REQUEST, "요청 데이터를 읽을 수 없습니다.");
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<?> handleJwtException(JwtException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("유효하지 않은 토큰입니다.");
     }
 }
