@@ -1,0 +1,42 @@
+package kr.tennispark.record.common.domain.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import java.time.LocalDate;
+import kr.tennispark.common.domain.BaseEntity;
+import kr.tennispark.record.common.domain.entity.exception.InvalidRecordException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+@Entity
+@Getter
+@SQLDelete(sql = "UPDATE record SET status = false WHERE id = ?")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@SQLRestriction("status = true")
+public class Record extends BaseEntity {
+
+    @Column(nullable = false)
+    private Integer teamAScore;
+
+    @Column(nullable = false)
+    private Integer teamBScore;
+
+    @Column(nullable = false)
+    private LocalDate matchDate;
+
+    public static Record of(Integer teamAScore, Integer teamBScore, LocalDate matchDate) {
+        validateMatchScores(teamAScore, teamBScore);
+        return new Record(teamAScore, teamBScore, matchDate);
+    }
+
+    private static void validateMatchScores(Integer teamAScore, Integer teamBScore) {
+        if (teamAScore < 0 || teamBScore < 0) {
+            throw new InvalidRecordException("경기 점수는 0 이상이어야 합니다.");
+        }
+    }
+}
