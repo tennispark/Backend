@@ -7,11 +7,7 @@ import kr.tennispark.event.user.application.EventMemberUseCase;
 import kr.tennispark.event.user.application.exception.AlreadyAttendEventException;
 import kr.tennispark.event.user.infrastructure.repository.EventApplicationRepository;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.common.domain.entity.enums.PointReason;
-import kr.tennispark.members.common.domain.entity.vo.Point;
-import kr.tennispark.members.common.domain.entity.vo.PointHistory;
-import kr.tennispark.members.user.infrastructure.repository.PointHistoryRepository;
-import kr.tennispark.members.user.infrastructure.repository.PointRepository;
+import kr.tennispark.members.user.application.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +19,8 @@ public class EventMemberUseCaseImpl implements EventMemberUseCase {
 
     private final EventRepository eventRepository;
     private final EventApplicationRepository eventApplicationRepository;
-    private final PointRepository pointRepository;
-    private final PointHistoryRepository pointHistoryRepository;
+
+    private final MemberService memberService;
 
     @Override
     public void attendEvent(Long eventId, Member member) {
@@ -32,7 +28,7 @@ public class EventMemberUseCaseImpl implements EventMemberUseCase {
         validateNotAlreadyAttended(event, member);
 
         applyForEvent(member, event);
-        earnEventPoint(member, event);
+        memberService.earnEventPoint(member, event);
     }
 
     private void validateNotAlreadyAttended(Event event, Member member) {
@@ -44,12 +40,5 @@ public class EventMemberUseCaseImpl implements EventMemberUseCase {
     private void applyForEvent(Member member, Event event) {
         EventApplication application = EventApplication.of(event, member);
         eventApplicationRepository.save(application);
-    }
-
-    private void earnEventPoint(Member member, Event event) {
-        Point point = pointRepository.getByMemberId(member.getId());
-
-        point.addPoint(event.getPoint());
-        pointHistoryRepository.save(PointHistory.of(point, event.getPoint(), PointReason.EVENT));
     }
 }
