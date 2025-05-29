@@ -50,6 +50,9 @@ public class Member extends BaseEntity {
     private String recommender;
 
     @Column(nullable = false)
+    private Integer point = 0;
+
+    @Column(nullable = false)
     private String instagramId;
 
     @Column(nullable = false)
@@ -73,6 +76,7 @@ public class Member extends BaseEntity {
         this.year = year;
         this.tennisCareer = tennisCareer;
         this.recommender = recommender;
+        this.point = 0;
         this.instagramId = instagramId;
         this.gender = gender;
         this.registrationSource = registrationSource;
@@ -90,6 +94,13 @@ public class Member extends BaseEntity {
                 gender,
                 registrationSource
         );
+    }
+
+    public void addPoint(int point) {
+        if (point < 0) {
+            throw new InvalidMemberException("포인트는 0 이상이어야 합니다.");
+        }
+        this.point += point;
     }
 
     private void validateRecommender(RegistrationSource registrationSource, String recommender) {
