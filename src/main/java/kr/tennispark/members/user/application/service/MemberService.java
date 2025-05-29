@@ -36,8 +36,5 @@ public class MemberService {
         return memberRepository.existsByPhone_Number(phoneNumber);
     }
 
-    public void addMemberPoint(Member member, int point) {
-        member.addPoint(point);
-        memberRepository.save(member);
-    }
+
 }

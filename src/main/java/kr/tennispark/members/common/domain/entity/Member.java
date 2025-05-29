@@ -2,18 +2,23 @@ package kr.tennispark.members.common.domain.entity;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
+import kr.tennispark.members.common.domain.entity.vo.Point;
 import kr.tennispark.members.common.domain.exception.InvalidMemberException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,8 +54,9 @@ public class Member extends BaseEntity {
 
     private String recommender;
 
-    @Column(nullable = false)
-    private Integer point = 0;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "point_id", nullable = false)
+    private Point point;
 
     @Column(nullable = false)
     private String instagramId;
@@ -76,7 +82,7 @@ public class Member extends BaseEntity {
         this.year = year;
         this.tennisCareer = tennisCareer;
         this.recommender = recommender;
-        this.point = 0;
+        this.point = Point.of(this);
         this.instagramId = instagramId;
         this.gender = gender;
         this.registrationSource = registrationSource;
@@ -94,13 +100,6 @@ public class Member extends BaseEntity {
                 gender,
                 registrationSource
         );
-    }
-
-    public void addPoint(int point) {
-        if (point < 0) {
-            throw new InvalidMemberException("포인트는 0 이상이어야 합니다.");
-        }
-        this.point += point;
     }
 
     private void validateRecommender(RegistrationSource registrationSource, String recommender) {
