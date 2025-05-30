@@ -4,14 +4,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +26,6 @@ public class S3UploadService {
     public String uploadQrImage(byte[] imageData, String keyPrefix) {
         return uploadToS3(new ByteArrayInputStream(imageData), imageData.length, keyPrefix, DEFAULT_CONTENT_TYPE,
                 DEFAULT_EXTENSION);
-    }
-
-    public String uploadAdvertisementImage(MultipartFile file, String keyPrefix) {
-        try {
-            return uploadToS3(file.getInputStream(), file.getSize(), keyPrefix, file.getContentType(),
-                    DEFAULT_EXTENSION);
-        } catch (IOException e) {
-            throw new UncheckedIOException("광고 배너 이미지 업로드에 실패하였습니다.", e);
-        }
     }
 
     private String uploadToS3(InputStream inputStream, long contentLength, String keyPrefix, String contentType,
