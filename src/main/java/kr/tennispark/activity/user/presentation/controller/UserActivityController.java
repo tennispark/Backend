@@ -9,6 +9,7 @@ import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,6 @@ public class UserActivityController {
     public ResponseEntity<ApiResult<String>> applyActivity(@LoginMember Member member,
                                                            @PathVariable Long activityId) {
         commandService.applyActivity(member, activityId);
-        return ResponseEntity.ok(ApiUtils.success());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiUtils.success());
     }
 }
