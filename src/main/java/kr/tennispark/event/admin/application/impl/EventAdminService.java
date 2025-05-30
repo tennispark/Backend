@@ -21,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventAdminService implements EventAdminUseCase {
 
     @Value("${qr.url.prefix}")
-    private String qrImageUrlPrefix;
+    private String qrUrlPrefix;
 
     @Value("${qr.url.suffix}")
-    private String URL_SUFFIX;
+    private String qrUrlSuffix;
 
     private final EventRepository eventRepository;
     private final QrService qrService;
@@ -38,16 +38,10 @@ public class EventAdminService implements EventAdminUseCase {
     @Override
     @Transactional
     public void registerEvent(ManageEventRequestDTO request) {
-        Event event = Event.of(
-                request.title(),
-                request.content(),
-                request.point()
-        );
+        Event event = Event.of(request.title(), request.content(), request.point());
+        eventRepository.saveAndFlush(event);
 
-        eventRepository.save(event);
-
-        String qrImageUrl = generateQrImageUrl(event.getId());
-        event.attachQrImageUrl(qrImageUrl);
+        attachQrToEvent(event);
 
         eventRepository.save(event);
     }
@@ -56,27 +50,23 @@ public class EventAdminService implements EventAdminUseCase {
     @Transactional
     public void modifyEventDetails(Long eventId, ManageEventRequestDTO request) {
         Event event = eventRepository.getById(eventId);
-
-        event.modifyEventDetails(
-                request.title(),
-                request.content(),
-                request.point()
-        );
-
-        eventRepository.save(event);
-
+        event.modifyEventDetails(request.title(), request.content(), request.point());
     }
 
     @Override
     @Transactional
     public void removeEvent(Long eventId) {
         Event event = eventRepository.getById(eventId);
-
         eventRepository.delete(event);
     }
 
+    private void attachQrToEvent(Event event) {
+        String qrUrl = generateQrImageUrl(event.getId());
+        event.attachQrImageUrl(qrUrl);
+    }
+
     private String generateQrImageUrl(Long eventId) {
-        String targetUrl = qrImageUrlPrefix + URL_SUFFIX + eventId;
+        String targetUrl = qrUrlPrefix + qrUrlSuffix + eventId;
         return qrService.generateAndUploadQr(targetUrl);
     }
 }
