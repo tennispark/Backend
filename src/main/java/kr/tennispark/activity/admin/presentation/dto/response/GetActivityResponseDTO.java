@@ -11,7 +11,7 @@ public record GetActivityResponseDTO(Page<ActivityDetails> acts) {
         Page<ActivityDetails> actDetailsList = acts.map(act ->
                 ActivityDetails.of(
                         act.getId(),
-                        act.getCourtName(),
+                        act.getPlace().getName(),
                         act.getActTime().getBeginAt(),
                         act.getActTime().getEndAt()
                 )
@@ -22,7 +22,7 @@ public record GetActivityResponseDTO(Page<ActivityDetails> acts) {
 
     public record ActivityDetails(
             Long actId,
-            String courtName,
+            String placeName,
             LocalTime beginAt,
             LocalTime endAt
     ) {
