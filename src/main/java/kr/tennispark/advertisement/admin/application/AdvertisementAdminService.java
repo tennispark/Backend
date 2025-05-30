@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class AdvertisementAdminService implements AdvertisementAdminUseCase {
 
@@ -22,7 +22,6 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
     private final S3UploadService s3UploadService;
 
     @Override
-    @Transactional
     public void saveAdvertisement(MultipartFile imageFile, Position position) {
         validateAdvertisementLimit(position);
 
@@ -33,7 +32,6 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
     }
 
     @Override
-    @Transactional
     public void deleteAdvertisement(Long advertisementId) {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
         advertisementRepository.delete(advertisement);
@@ -49,6 +47,7 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GetAdvertisementResponseDTO getAdvertisementsByPosition(Position position) {
         return GetAdvertisementResponseDTO.of(advertisementRepository.findAllByPosition(position));
     }
