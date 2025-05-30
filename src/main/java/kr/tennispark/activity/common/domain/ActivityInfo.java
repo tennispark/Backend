@@ -20,7 +20,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
-@SQLDelete(sql = "UPDATE activity SET status = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE activity_info SET status = false WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLRestriction("status = true")
