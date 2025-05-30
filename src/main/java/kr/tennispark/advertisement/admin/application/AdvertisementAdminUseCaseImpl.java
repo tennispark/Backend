@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase {
 
@@ -20,6 +20,7 @@ public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase 
     private final AdvertisementRepository advertisementRepository;
 
     @Override
+    @Transactional
     public void saveAdvertisement(SaveAdvertisementRequestDTO request) {
         validateAdvertisementLimit(request.position());
 
@@ -29,19 +30,20 @@ public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase 
     }
 
     @Override
+    @Transactional
     public void deleteAdvertisement(Long advertisementId) {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
         advertisementRepository.delete(advertisement);
     }
 
     @Override
+    @Transactional
     public void updateAdvertisement(SaveAdvertisementRequestDTO request, Long advertisementId) {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
         advertisement.updateImageUrl(request.imageUrl());
     }
 
     @Override
-    @Transactional(readOnly = true)
     public GetAdvertisementResponseDTO getAdvertisementsByPosition(Position position) {
         return GetAdvertisementResponseDTO.of(advertisementRepository.findAllByPosition(position));
     }
