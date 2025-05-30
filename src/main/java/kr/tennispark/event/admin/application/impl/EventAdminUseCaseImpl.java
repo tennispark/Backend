@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class EventAdminService implements EventAdminUseCase {
+public class EventAdminUseCaseImpl implements EventAdminUseCase {
 
     private static final Integer MAX_EVENT_COUNT = 5;
 
