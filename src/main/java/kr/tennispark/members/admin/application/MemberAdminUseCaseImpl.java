@@ -3,7 +3,9 @@ package kr.tennispark.members.admin.application;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import kr.tennispark.event.user.infrastructure.repository.EventApplicationRepository;
+import kr.tennispark.members.admin.presentation.dto.response.GetMemberListResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberActivityStatsResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
 import kr.tennispark.members.common.domain.entity.Member;
@@ -52,6 +54,12 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
                 totalActivityCount,
                 topScorer.getName(),
                 topScore);
+    }
+
+    @Override
+    public GetMemberListResponseDTO getMemberList(String name) {
+        List<Member> members = memberRepository.findByNameContaining(name);
+        return GetMemberListResponseDTO.of(members);
     }
 
     private int countDistinctEventParticipants(LocalDateTime start, LocalDateTime end) {
