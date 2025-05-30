@@ -17,7 +17,7 @@ public record ActivityDTO(
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM.dd(E)", Locale.KOREAN);
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static ActivityDTO from(Activity a) {
+    public static ActivityDTO of(Activity a) {
         return new ActivityDTO(
                 a.getId(),
                 a.getDate().format(DATE_FMT),
