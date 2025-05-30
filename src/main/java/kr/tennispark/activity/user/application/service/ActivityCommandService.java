@@ -1,6 +1,5 @@
 package kr.tennispark.activity.user.application.service;
 
-import jakarta.transaction.Transactional;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
@@ -11,9 +10,11 @@ import kr.tennispark.activity.user.infrastructure.repository.UserActivityReposit
 import kr.tennispark.members.common.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ActivityCommandService {
 
     private final UserActivityRepository activityRepository;
