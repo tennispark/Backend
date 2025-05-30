@@ -15,7 +15,6 @@ public class ActivityPlanner {
     private final ActivityRepository activityRepo;
 
     public List<Activity> plan(ActivityInfo info, WeekPeriod week) {
-
         return info.getActTime().getActiveDays().stream()
                 .map(week::toDate)
                 .filter(week::contains)
