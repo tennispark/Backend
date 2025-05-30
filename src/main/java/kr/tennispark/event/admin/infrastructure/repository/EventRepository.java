@@ -10,6 +10,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
+    Long countByStatus(boolean status);
+
     default Event getById(Long eventId) {
         return findById(eventId)
                 .orElseThrow(NoSuchEventException::new);

@@ -1,6 +1,7 @@
 package kr.tennispark.event.admin.application.impl;
 
 import kr.tennispark.event.admin.application.EventAdminUseCase;
+import kr.tennispark.event.admin.application.exception.MoreThan5EventException;
 import kr.tennispark.event.admin.infrastructure.repository.EventRepository;
 import kr.tennispark.event.admin.presentation.dto.request.ManageEventRequestDTO;
 import kr.tennispark.event.admin.presentation.dto.response.GetEventResponseDTO;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class EventAdminService implements EventAdminUseCase {
 
+    private static final Integer MAX_EVENT_COUNT = 5;
+
     @Value("${qr.url.prefix}")
     private String qrUrlPrefix;
 
@@ -38,6 +41,8 @@ public class EventAdminService implements EventAdminUseCase {
     @Override
     @Transactional
     public void registerEvent(ManageEventRequestDTO request) {
+        validateEventLimit();
+
         Event event = Event.of(request.title(), request.content(), request.point());
         eventRepository.saveAndFlush(event);
 
@@ -58,6 +63,12 @@ public class EventAdminService implements EventAdminUseCase {
     public void removeEvent(Long eventId) {
         Event event = eventRepository.getById(eventId);
         eventRepository.delete(event);
+    }
+
+    private void validateEventLimit() {
+        if (eventRepository.countByStatus(true) >= MAX_EVENT_COUNT) {
+            throw new MoreThan5EventException();
+        }
     }
 
     private void attachQrToEvent(Event event) {
