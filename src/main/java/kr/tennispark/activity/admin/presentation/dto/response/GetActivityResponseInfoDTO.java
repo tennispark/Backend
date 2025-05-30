@@ -12,8 +12,8 @@ public record GetActivityResponseInfoDTO(Page<ActivityDetails> acts) {
                 ActivityDetails.of(
                         act.getId(),
                         act.getPlace().getName(),
-                        act.getActTime().getBeginAt(),
-                        act.getActTime().getEndAt()
+                        act.getTime().getBeginAt(),
+                        act.getTime().getEndAt()
                 )
         );
 

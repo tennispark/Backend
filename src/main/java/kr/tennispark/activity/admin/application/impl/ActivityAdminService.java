@@ -20,7 +20,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
     @Override
     public void registerActivityInfo(ManageActivityInfoRequestDTO request) {
-        ActivityInfo act = ActivityInfo.of(request.courtName(),
+        ActivityInfo act = ActivityInfo.of(request.courtType(),
                 request.placeName(),
                 request.address(),
                 request.beginAt(),
@@ -36,7 +36,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     public void modifyActivityInfoDetails(Long activityId, ManageActivityInfoRequestDTO request) {
         ActivityInfo activityInfo = activityInfoRepository.getById(activityId);
 
-        activityInfo.modifyActivityInfoDetails(request.courtName(),
+        activityInfo.modifyActivityInfoDetails(request.courtType(),
                 request.placeName(),
                 request.address(),
                 request.beginAt(),

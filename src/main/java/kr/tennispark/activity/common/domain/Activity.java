@@ -51,15 +51,18 @@ public class Activity extends BaseEntity {
     @Embedded
     private Place place;
 
-    public static Activity of(ActivityInfo info, LocalDate date) {
+    public static Activity of(ActivityInfo template, LocalDate date) {
         return new Activity(
-                info,
+                template,
                 date,
-                info.getActTime(),
+                ScheduledTime.of(
+                        template.getTime().getBeginAt(),
+                        template.getTime().getEndAt()
+                ),
                 0,
-                info.getCapacity(),
-                info.getCourtType(),
-                info.getPlace()
+                template.getCapacity(),
+                template.getCourtType(),
+                template.getPlace()
         );
     }
 }

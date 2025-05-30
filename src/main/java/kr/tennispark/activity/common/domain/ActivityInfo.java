@@ -1,13 +1,18 @@
 package kr.tennispark.activity.common.domain;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import java.time.LocalTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.enums.CourtType;
+import kr.tennispark.activity.common.domain.enums.Days;
 import kr.tennispark.activity.common.domain.vo.Place;
 import kr.tennispark.activity.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
@@ -34,7 +39,14 @@ public class ActivityInfo extends BaseEntity {
     private Place place;
 
     @Embedded
-    private ScheduledTime actTime;
+    private ScheduledTime time;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "active_days",
+            joinColumns = @JoinColumn(name = "info_id"))
+    @Column(name = "active_day")
+    @Enumerated(EnumType.STRING)
+    private List<Days> activeDays;
 
     @Column(nullable = false)
     private Boolean isRecurring;
@@ -47,7 +59,8 @@ public class ActivityInfo extends BaseEntity {
                                   List<String> activeDays, Boolean isRecurring, Integer capacity) {
         return new ActivityInfo(courtType,
                 Place.of(placeName, address),
-                ScheduledTime.of(beginAt, endAt, activeDays),
+                ScheduledTime.of(beginAt, endAt),
+                Days.from(activeDays),
                 isRecurring,
                 capacity);
     }
@@ -57,7 +70,8 @@ public class ActivityInfo extends BaseEntity {
             List<String> activeDays, Boolean isRecurring, Integer capacity) {
         this.courtType = courtType;
         this.place = Place.of(placeName, address);
-        this.actTime = ScheduledTime.of(beginAt, endAt, activeDays);
+        this.time = ScheduledTime.of(beginAt, endAt);
+        this.activeDays = Days.from(activeDays);
         this.isRecurring = isRecurring;
         this.capacity = capacity;
     }
