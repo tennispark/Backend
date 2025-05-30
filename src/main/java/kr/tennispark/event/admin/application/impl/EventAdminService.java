@@ -47,8 +47,6 @@ public class EventAdminService implements EventAdminUseCase {
         eventRepository.saveAndFlush(event);
 
         attachQrToEvent(event);
-
-        eventRepository.save(event);
     }
 
     @Override
