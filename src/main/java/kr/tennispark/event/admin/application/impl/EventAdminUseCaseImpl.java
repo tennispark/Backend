@@ -1,7 +1,7 @@
 package kr.tennispark.event.admin.application.impl;
 
 import kr.tennispark.event.admin.application.EventAdminUseCase;
-import kr.tennispark.event.admin.application.exception.MoreThan5EventException;
+import kr.tennispark.event.admin.application.exception.MoreThanEventLimitException;
 import kr.tennispark.event.admin.infrastructure.repository.EventRepository;
 import kr.tennispark.event.admin.presentation.dto.request.ManageEventRequestDTO;
 import kr.tennispark.event.admin.presentation.dto.response.GetEventResponseDTO;
@@ -65,7 +65,7 @@ public class EventAdminUseCaseImpl implements EventAdminUseCase {
 
     private void validateEventLimit() {
         if (eventRepository.countByStatus(true) >= MAX_EVENT_COUNT) {
-            throw new MoreThan5EventException();
+            throw new MoreThanEventLimitException();
         }
     }
 
