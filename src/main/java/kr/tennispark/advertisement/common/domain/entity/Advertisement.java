@@ -28,4 +28,8 @@ public class Advertisement extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Position position;
 
+    public static Advertisement of(String imageUrl, Position position) {
+        return new Advertisement(imageUrl, position);
+    }
+
 }
