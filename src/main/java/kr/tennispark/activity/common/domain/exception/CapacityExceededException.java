@@ -1,4 +1,4 @@
-package kr.tennispark.activity.user.application.exception;
+package kr.tennispark.activity.common.domain.exception;
 
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package kr.tennispark.activity.user.presentation.exception;
 
-import kr.tennispark.activity.user.application.exception.CapacityExceededException;
+import kr.tennispark.activity.common.domain.exception.CapacityExceededException;
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
