@@ -2,10 +2,10 @@ package kr.tennispark.members.user.application.service;
 
 import kr.tennispark.event.common.domain.Event;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.members.common.domain.entity.association.Point;
+import kr.tennispark.members.common.domain.entity.association.PointHistory;
 import kr.tennispark.members.common.domain.entity.enums.PointReason;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
-import kr.tennispark.members.common.domain.entity.vo.Point;
-import kr.tennispark.members.common.domain.entity.vo.PointHistory;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.members.user.infrastructure.repository.PointHistoryRepository;
 import kr.tennispark.members.user.infrastructure.repository.PointRepository;
