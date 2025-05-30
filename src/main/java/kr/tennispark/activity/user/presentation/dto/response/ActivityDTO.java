@@ -1,0 +1,35 @@
+package kr.tennispark.activity.user.presentation.dto.response;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import kr.tennispark.activity.common.domain.Activity;
+
+public record ActivityDTO(
+        Long activityId,
+        String date,
+        String startAt,
+        String endAt,
+        int participantCount,
+        int capacity,
+        String courtType,
+        PlaceDTO place
+) {
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM.dd(E)", Locale.KOREAN);
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
+
+    public static ActivityDTO from(Activity a) {
+        return new ActivityDTO(
+                a.getId(),
+                a.getDate().format(DATE_FMT),
+                a.getScheduledTime().getBeginAt().format(TIME_FMT),
+                a.getScheduledTime().getEndAt().format(TIME_FMT),
+                a.getParticipantCount(),
+                a.getCapacity(),
+                a.getCourtType().name(),
+                new PlaceDTO(a.getPlace().getName(), a.getPlace().getAddress())
+        );
+    }
+
+    public record PlaceDTO(String name, String address) {
+    }
+}
