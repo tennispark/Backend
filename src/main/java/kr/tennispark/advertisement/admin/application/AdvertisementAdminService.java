@@ -1,6 +1,6 @@
 package kr.tennispark.advertisement.admin.application;
 
-import kr.tennispark.advertisement.admin.application.exception.MoreThanAdsLimitException;
+import kr.tennispark.advertisement.admin.application.exception.AdvertisementLimitExceededException;
 import kr.tennispark.advertisement.admin.infrastructure.repository.AdvertisementRepository;
 import kr.tennispark.advertisement.admin.presentation.dto.response.GetAdvertisementResponseDTO;
 import kr.tennispark.advertisement.common.domain.entity.Advertisement;
@@ -54,7 +54,7 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
 
     private void validateAdvertisementLimit(Position position) {
         if (advertisementRepository.countByPosition(position) >= MAX_ADVERTISEMENTS_PER_POSITION) {
-            throw new MoreThanAdsLimitException();
+            throw new AdvertisementLimitExceededException();
         }
     }
 }
