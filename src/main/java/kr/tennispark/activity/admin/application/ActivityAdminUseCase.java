@@ -5,10 +5,10 @@ import kr.tennispark.activity.admin.presentation.dto.response.GetActivityRespons
 
 public interface ActivityAdminUseCase {
 
-    void registerActivity(ManageActivityRequestDTO request);
+    void registerActivityInfo(ManageActivityRequestDTO request);
 
-    void modifyActivityDetails(Long activityId, ManageActivityRequestDTO requestDTO);
+    void modifyActivityInfoDetails(Long activityId, ManageActivityRequestDTO requestDTO);
 
-    GetActivityResponseDTO getActivityList(Integer page, Integer size);
+    GetActivityResponseDTO getActivityInfoList(Integer page, Integer size);
 
 }

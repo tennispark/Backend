@@ -1,12 +1,12 @@
 package kr.tennispark.activity.admin.presentation.dto.response;
 
 import java.time.LocalTime;
-import kr.tennispark.activity.common.domain.Activity;
+import kr.tennispark.activity.common.domain.ActivityInfo;
 import org.springframework.data.domain.Page;
 
 public record GetActivityResponseDTO(Page<ActivityDetails> acts) {
 
-    public static GetActivityResponseDTO of(Page<Activity> acts) {
+    public static GetActivityResponseDTO of(Page<ActivityInfo> acts) {
 
         Page<ActivityDetails> actDetailsList = acts.map(act ->
                 ActivityDetails.of(

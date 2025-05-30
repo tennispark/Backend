@@ -24,7 +24,7 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLRestriction("status = true")
-public class Activity extends BaseEntity {
+public class ActivityInfo extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,16 +42,17 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     private Integer participantCount;
 
-    public static Activity of(CourtType courtType, String placeName, String address, LocalTime beginAt, LocalTime endAt,
-                              List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Activity(courtType,
+    public static ActivityInfo of(CourtType courtType, String placeName, String address, LocalTime beginAt,
+                                  LocalTime endAt,
+                                  List<String> activeDays, Boolean isRecurring, Integer participantCount) {
+        return new ActivityInfo(courtType,
                 Place.of(placeName, address),
                 ScheduledTime.of(beginAt, endAt, activeDays),
                 isRecurring,
                 participantCount);
     }
 
-    public void modifyActivityDetails(
+    public void modifyActivityInfoDetails(
             CourtType courtType, String placeName, String address, LocalTime beginAt, LocalTime endAt,
             List<String> activeDays, Boolean isRecurring, Integer participantCount) {
         this.courtType = courtType;

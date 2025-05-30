@@ -28,20 +28,20 @@ public class ActivityAdminController {
     public ResponseEntity<ApiResult<GetActivityResponseDTO>> getActivityDetails(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        GetActivityResponseDTO response = actUseCase.getActivityList(page, size);
+        GetActivityResponseDTO response = actUseCase.getActivityInfoList(page, size);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
     @PostMapping("/activities")
     public ResponseEntity<ApiResult<?>> registerActivity(@RequestBody @Valid ManageActivityRequestDTO request) {
-        actUseCase.registerActivity(request);
+        actUseCase.registerActivityInfo(request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 
     @PutMapping("/activities/{activityId}")
     public ResponseEntity<ApiResult<?>> registerActivity(@PathVariable Long activityId,
                                                          @RequestBody @Valid ManageActivityRequestDTO request) {
-        actUseCase.modifyActivityDetails(activityId, request);
+        actUseCase.modifyActivityInfoDetails(activityId, request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 }
