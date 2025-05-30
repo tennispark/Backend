@@ -22,6 +22,7 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
     private final S3UploadService s3UploadService;
 
     @Override
+    @Transactional
     public void saveAdvertisement(MultipartFile imageFile, Position position) {
         validateAdvertisementLimit(position);
 
@@ -32,6 +33,7 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
     }
 
     @Override
+    @Transactional
     public void deleteAdvertisement(Long advertisementId) {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
         advertisementRepository.delete(advertisement);
