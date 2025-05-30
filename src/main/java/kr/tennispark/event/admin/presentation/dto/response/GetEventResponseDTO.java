@@ -1,6 +1,6 @@
-package kr.tennispark.event.presentation.dto.response;
+package kr.tennispark.event.admin.presentation.dto.response;
 
-import kr.tennispark.event.domain.Event;
+import kr.tennispark.event.common.domain.Event;
 import org.springframework.data.domain.Page;
 
 public record GetEventResponseDTO(Page<EventDetails> events) {

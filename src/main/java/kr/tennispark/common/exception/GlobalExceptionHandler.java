@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.util.stream.Collectors;
 import kr.tennispark.auth.application.exception.ExpiredTokenException;
+import kr.tennispark.common.exception.base.DuplicateException;
 import kr.tennispark.common.exception.base.InvalidException;
 import kr.tennispark.common.exception.base.NotFoundException;
 import kr.tennispark.common.exception.base.UnsupportedTypeException;
@@ -36,6 +37,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidException.class)
     public ResponseEntity<?> handleInvalidMemberException(InvalidException e) {
+        return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<?> handleDuplicateException(DuplicateException e) {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
 

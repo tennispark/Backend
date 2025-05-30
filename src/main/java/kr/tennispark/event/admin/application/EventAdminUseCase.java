@@ -1,7 +1,7 @@
-package kr.tennispark.event.application;
+package kr.tennispark.event.admin.application;
 
-import kr.tennispark.event.presentation.dto.request.ManageEventRequestDTO;
-import kr.tennispark.event.presentation.dto.response.GetEventResponseDTO;
+import kr.tennispark.event.admin.presentation.dto.request.ManageEventRequestDTO;
+import kr.tennispark.event.admin.presentation.dto.response.GetEventResponseDTO;
 
 public interface EventAdminUseCase {
 
