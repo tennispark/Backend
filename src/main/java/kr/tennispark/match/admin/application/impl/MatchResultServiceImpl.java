@@ -12,6 +12,7 @@ import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class MatchResultServiceImpl implements MatchResultService {
     private final MemberRepository memberRepository;
     private final MatchResultRepository matchResultRepository;
     private final MatchParticipationRepository matchParticipationRepository;
+
+    private final MemberService memberService;
 
     @Override
     public void saveMatchResult(SaveMatchResultRequestDTO request) {
@@ -43,6 +46,9 @@ public class MatchResultServiceImpl implements MatchResultService {
         MatchOutcome teamAOutcome = determineMatchOutcome(request.teamA().score(), request.teamB().score());
         MatchOutcome teamBOutcome = determineMatchOutcome(request.teamB().score(), request.teamA().score());
 
+        rewardWinningTeam(teamAOutcome, teamAMembers);
+        rewardWinningTeam(teamBOutcome, teamBMembers);
+
         saveMemberRecords(teamAMembers, matchResult, teamAOutcome, request.teamA().score());
         saveMemberRecords(teamBMembers, matchResult, teamBOutcome, request.teamB().score());
     }
@@ -59,6 +65,14 @@ public class MatchResultServiceImpl implements MatchResultService {
                 .map(member -> MemberSummaryDTO.of(member.getId(), member.getName()))
                 .toList();
         return GetMemberSummaryResponseDTO.of(memberSummaryDTOS);
+    }
+
+    private void rewardWinningTeam(MatchOutcome outcome, List<Member> members) {
+        memberService.processMatchPoint(members, outcome);
+
+        if (outcome == MatchOutcome.WIN) {
+            memberService.earnPointByMatch(members);
+        }
     }
 
     private List<Member> fetchMembersByIds(List<Long> ids) {
