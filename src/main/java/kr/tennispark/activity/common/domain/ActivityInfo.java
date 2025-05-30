@@ -40,25 +40,25 @@ public class ActivityInfo extends BaseEntity {
     private Boolean isRecurring;
 
     @Column(nullable = false)
-    private Integer participantCount;
+    private Integer capacity;
 
     public static ActivityInfo of(CourtType courtType, String placeName, String address, LocalTime beginAt,
                                   LocalTime endAt,
-                                  List<String> activeDays, Boolean isRecurring, Integer participantCount) {
+                                  List<String> activeDays, Boolean isRecurring, Integer capacity) {
         return new ActivityInfo(courtType,
                 Place.of(placeName, address),
                 ScheduledTime.of(beginAt, endAt, activeDays),
                 isRecurring,
-                participantCount);
+                capacity);
     }
 
     public void modifyActivityInfoDetails(
             CourtType courtType, String placeName, String address, LocalTime beginAt, LocalTime endAt,
-            List<String> activeDays, Boolean isRecurring, Integer participantCount) {
+            List<String> activeDays, Boolean isRecurring, Integer capacity) {
         this.courtType = courtType;
         this.place = Place.of(placeName, address);
         this.actTime = ScheduledTime.of(beginAt, endAt, activeDays);
         this.isRecurring = isRecurring;
-        this.participantCount = participantCount;
+        this.capacity = capacity;
     }
 }
