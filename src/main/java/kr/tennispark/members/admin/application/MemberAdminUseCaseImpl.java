@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import kr.tennispark.event.user.infrastructure.repository.EventApplicationRepository;
-import kr.tennispark.match.admin.infrastructure.MatchParticipationRepository;
 import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberActivityStatsResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
 import kr.tennispark.members.common.domain.entity.Member;
@@ -23,7 +22,6 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     private final MemberRepository memberRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final EventApplicationRepository eventApplicationRepository;
-    private final MatchParticipationRepository matchParticipationRepository;
 
     @Override
     public GetMonthlyMemberActivityStatsResponseDTO getMonthlyActivityStats(LocalDate from, LocalDate to) {
@@ -83,11 +81,11 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     }
 
     private Member findTopLeagueMember() {
-        return matchParticipationRepository.findTopScorerMember()
+        return memberRepository.findTopScorerMember()
                 .orElseThrow(() -> new NoSuchMemberException("리그에서 활동한 회원이 없습니다."));
     }
 
     private int getTopLeagueScore(Long memberId) {
-        return matchParticipationRepository.sumScoreByMemberId(memberId);
+        return memberRepository.sumScoreByMemberId(memberId);
     }
 }

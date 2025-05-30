@@ -5,6 +5,7 @@ import java.util.Optional;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,4 +21,18 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     }
 
     Optional<Member> findByPhone_Number(String number);
+
+    @Query("""
+            SELECT m 
+            FROM Member m 
+            ORDER BY m.matchPoint DESC
+            """)
+    Optional<Member> findTopScorerMember();
+
+    @Query("""
+            SELECT m 
+            FROM Member m 
+            WHERE m.id = :memberId
+            """)
+    int sumScoreByMemberId(Long memberId);
 }
