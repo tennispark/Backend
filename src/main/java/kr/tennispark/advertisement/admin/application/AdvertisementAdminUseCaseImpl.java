@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AdvertisementAdminService implements AdvertisementAdminUseCase {
+public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase {
 
     private static final String IMAGE_DIRECTORY = "advertisement";
     private static final Integer MAX_ADVERTISEMENTS_PER_POSITION = 3;
