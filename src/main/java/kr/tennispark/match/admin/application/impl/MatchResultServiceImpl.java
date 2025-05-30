@@ -2,8 +2,8 @@ package kr.tennispark.match.admin.application.impl;
 
 import java.util.List;
 import kr.tennispark.match.admin.application.MatchResultService;
+import kr.tennispark.match.admin.infrastructure.MatchParticipationRepository;
 import kr.tennispark.match.admin.infrastructure.MatchResultRepository;
-import kr.tennispark.match.admin.infrastructure.MemberRecordRepository;
 import kr.tennispark.match.admin.presentation.dto.request.SaveMatchResultRequestDTO;
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO;
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
@@ -24,7 +24,7 @@ public class MatchResultServiceImpl implements MatchResultService {
 
     private final MemberRepository memberRepository;
     private final MatchResultRepository matchResultRepository;
-    private final MemberRecordRepository memberRecordRepository;
+    private final MatchParticipationRepository matchParticipationRepository;
 
     @Override
     public void saveMatchResult(SaveMatchResultRequestDTO request) {
@@ -75,7 +75,7 @@ public class MatchResultServiceImpl implements MatchResultService {
                                    int score) {
         members.forEach(member -> {
             MatchParticipation record = MatchParticipation.of(member, matchResult, matchOutcome, score);
-            memberRecordRepository.save(record);
+            matchParticipationRepository.save(record);
         });
     }
 
