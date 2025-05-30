@@ -20,6 +20,7 @@ public class ScheduledTime {
     private LocalTime endAt;
 
     private ScheduledTime(LocalTime beginAt, LocalTime endAt) {
+        validateActTime(beginAt, endAt);
         this.beginAt = beginAt;
         this.endAt = endAt;
     }
