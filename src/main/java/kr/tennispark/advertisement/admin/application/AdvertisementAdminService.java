@@ -40,6 +40,15 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
     }
 
     @Override
+    public void updateAdvertisement(MultipartFile imageFile, Long advertisementId) {
+        Advertisement advertisement = advertisementRepository.getById(advertisementId);
+        String imageUrl = s3UploadService.uploadAdvertisementImage(imageFile, IMAGE_DIRECTORY);
+        advertisement.updateImageUrl(imageUrl);
+
+        advertisementRepository.save(advertisement);
+    }
+
+    @Override
     public GetAdvertisementResponseDTO getAdvertisementsByPosition(Position position) {
         return GetAdvertisementResponseDTO.of(advertisementRepository.findAllByPosition(position));
     }

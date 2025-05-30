@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,15 @@ public class AdvertisementController {
             @PathVariable Long advertisementId
     ) {
         advertisementAdminUseCase.deleteAdvertisement(advertisementId);
+        return ResponseEntity.ok(ApiUtils.success());
+    }
+
+    @PutMapping("/{advertisementId}")
+    public ResponseEntity<ApiResult<?>> updateAdvertisement(
+            @PathVariable Long advertisementId,
+            @RequestParam MultipartFile imageFile
+    ) {
+        advertisementAdminUseCase.updateAdvertisement(imageFile, advertisementId);
         return ResponseEntity.ok(ApiUtils.success());
     }
 

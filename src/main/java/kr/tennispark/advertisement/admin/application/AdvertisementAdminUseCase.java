@@ -10,6 +10,8 @@ public interface AdvertisementAdminUseCase {
 
     void deleteAdvertisement(Long advertisementId);
 
+    void updateAdvertisement(MultipartFile imageFile, Long advertisementId);
+
     GetAdvertisementResponseDTO getAdvertisementsByPosition(Position position);
 
 }

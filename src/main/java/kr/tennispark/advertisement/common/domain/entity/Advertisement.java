@@ -32,4 +32,8 @@ public class Advertisement extends BaseEntity {
         return new Advertisement(imageUrl, position);
     }
 
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }
