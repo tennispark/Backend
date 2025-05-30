@@ -1,14 +1,14 @@
 package kr.tennispark.activity.admin.application;
 
-import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityRequestDTO;
-import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 
 public interface ActivityAdminUseCase {
 
-    void registerActivity(ManageActivityRequestDTO request);
+    void registerActivityInfo(ManageActivityInfoRequestDTO request);
 
-    void modifyActivityDetails(Long activityId, ManageActivityRequestDTO requestDTO);
+    void modifyActivityInfoDetails(Long activityId, ManageActivityInfoRequestDTO requestDTO);
 
-    GetActivityResponseDTO getActivityList(Integer page, Integer size);
+    GetActivityResponseInfoDTO getActivityInfoList(Integer page, Integer size);
 
 }

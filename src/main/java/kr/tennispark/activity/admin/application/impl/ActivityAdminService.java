@@ -1,10 +1,10 @@
 package kr.tennispark.activity.admin.application.impl;
 
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
-import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
-import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityRequestDTO;
-import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
-import kr.tennispark.activity.common.domain.Activity;
+import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
+import kr.tennispark.activity.common.domain.ActivityInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,11 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
-    private final ActivityRepository activityRepository;
+    private final ActivityInfoRepository activityInfoRepository;
 
     @Override
-    public void registerActivity(ManageActivityRequestDTO request) {
-        Activity act = Activity.of(request.courtName(),
+    public void registerActivityInfo(ManageActivityInfoRequestDTO request) {
+        ActivityInfo act = ActivityInfo.of(request.courtType(),
+                request.placeName(),
                 request.address(),
                 request.beginAt(),
                 request.endAt(),
@@ -28,14 +29,15 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 request.isRecurring(),
                 request.participantCount());
 
-        activityRepository.save(act);
+        activityInfoRepository.save(act);
     }
 
     @Override
-    public void modifyActivityDetails(Long activityId, ManageActivityRequestDTO request) {
-        Activity activity = activityRepository.getById(activityId);
+    public void modifyActivityInfoDetails(Long activityId, ManageActivityInfoRequestDTO request) {
+        ActivityInfo activityInfo = activityInfoRepository.getById(activityId);
 
-        activity.modifyActivityDetails(request.courtName(),
+        activityInfo.modifyActivityInfoDetails(request.courtType(),
+                request.placeName(),
                 request.address(),
                 request.beginAt(),
                 request.endAt(),
@@ -45,9 +47,9 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
-    public GetActivityResponseDTO getActivityList(Integer page, Integer size) {
-        Page<Activity> actPage = activityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
+    public GetActivityResponseInfoDTO getActivityInfoList(Integer page, Integer size) {
+        Page<ActivityInfo> actPage = activityInfoRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
 
-        return GetActivityResponseDTO.of(actPage);
+        return GetActivityResponseInfoDTO.of(actPage);
     }
 }

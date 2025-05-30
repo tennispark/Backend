@@ -3,8 +3,14 @@ package kr.tennispark.activity.common.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import java.time.LocalTime;
-import java.util.List;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
+import kr.tennispark.activity.common.domain.enums.CourtType;
+import kr.tennispark.activity.common.domain.vo.Place;
 import kr.tennispark.activity.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -16,40 +22,48 @@ import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
-@SQLDelete(sql = "UPDATE activity SET status = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE activity SET status=false WHERE id=?")
+@SQLRestriction("status=true")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@SQLRestriction("status = true")
 public class Activity extends BaseEntity {
 
-    @Column(nullable = false)
-    private String courtName;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "info_id")
+    private ActivityInfo template;
 
     @Column(nullable = false)
-    private String address;
+    private LocalDate date;
 
     @Embedded
-    private ScheduledTime actTime;
+    private ScheduledTime scheduledTime;
 
     @Column(nullable = false)
-    private Boolean isRecurring;
+    private Integer participantCount = 0;
 
     @Column(nullable = false)
-    private Integer participantCount;
+    private Integer capacity;
 
-    public static Activity of(String courtName, String address, LocalTime beginAt, LocalTime endAt,
-                         List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Activity(courtName, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
-                participantCount);
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CourtType courtType;
 
-    public void modifyActivityDetails(
-            String courtName, String address, LocalTime beginAt, LocalTime endAt,
-            List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        this.courtName = courtName;
-        this.address = address;
-        this.actTime = ScheduledTime.of(beginAt, endAt, activeDays);
-        this.isRecurring = isRecurring;
-        this.participantCount = participantCount;
+    @Embedded
+    private Place place;
+
+    public static Activity of(ActivityInfo template, LocalDate date) {
+        return new Activity(
+                template,
+                date,
+                ScheduledTime.of(
+                        template.getTime().getBeginAt(),
+                        template.getTime().getEndAt()
+                ),
+                0,
+                template.getCapacity(),
+                template.getCourtType(),
+                template.getPlace()
+        );
     }
 }
+
