@@ -3,8 +3,11 @@ package kr.tennispark.activity.common.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.time.LocalTime;
 import java.util.List;
+import kr.tennispark.activity.common.domain.enums.CourtType;
 import kr.tennispark.activity.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -22,8 +25,9 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("status = true")
 public class Activity extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String courtName;
+    private CourtType courtType;
 
     @Column(nullable = false)
     private String address;
@@ -37,16 +41,16 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     private Integer participantCount;
 
-    public static Activity of(String courtName, String address, LocalTime beginAt, LocalTime endAt,
-                         List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Activity(courtName, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
+    public static Activity of(CourtType courtType, String address, LocalTime beginAt, LocalTime endAt,
+                              List<String> activeDays, Boolean isRecurring, Integer participantCount) {
+        return new Activity(courtType, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
                 participantCount);
     }
 
     public void modifyActivityDetails(
-            String courtName, String address, LocalTime beginAt, LocalTime endAt,
+            CourtType courtType, String address, LocalTime beginAt, LocalTime endAt,
             List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        this.courtName = courtName;
+        this.courtType = courtType;
         this.address = address;
         this.actTime = ScheduledTime.of(beginAt, endAt, activeDays);
         this.isRecurring = isRecurring;
