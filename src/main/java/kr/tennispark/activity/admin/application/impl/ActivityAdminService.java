@@ -21,6 +21,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     @Override
     public void registerActivity(ManageActivityRequestDTO request) {
         Activity act = Activity.of(request.courtName(),
+                request.placeName(),
                 request.address(),
                 request.beginAt(),
                 request.endAt(),
@@ -36,6 +37,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         Activity activity = activityRepository.getById(activityId);
 
         activity.modifyActivityDetails(request.courtName(),
+                request.placeName(),
                 request.address(),
                 request.beginAt(),
                 request.endAt(),

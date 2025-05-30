@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import java.time.LocalTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.enums.CourtType;
+import kr.tennispark.activity.common.domain.vo.Place;
 import kr.tennispark.activity.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -29,8 +30,8 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     private CourtType courtType;
 
-    @Column(nullable = false)
-    private String address;
+    @Embedded
+    private Place place;
 
     @Embedded
     private ScheduledTime actTime;
@@ -41,17 +42,20 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     private Integer participantCount;
 
-    public static Activity of(CourtType courtType, String address, LocalTime beginAt, LocalTime endAt,
+    public static Activity of(CourtType courtType, String placeName, String address, LocalTime beginAt, LocalTime endAt,
                               List<String> activeDays, Boolean isRecurring, Integer participantCount) {
-        return new Activity(courtType, address, ScheduledTime.of(beginAt, endAt, activeDays), isRecurring,
+        return new Activity(courtType,
+                Place.of(placeName, address),
+                ScheduledTime.of(beginAt, endAt, activeDays),
+                isRecurring,
                 participantCount);
     }
 
     public void modifyActivityDetails(
-            CourtType courtType, String address, LocalTime beginAt, LocalTime endAt,
+            CourtType courtType, String placeName, String address, LocalTime beginAt, LocalTime endAt,
             List<String> activeDays, Boolean isRecurring, Integer participantCount) {
         this.courtType = courtType;
-        this.address = address;
+        this.place = Place.of(placeName, address);
         this.actTime = ScheduledTime.of(beginAt, endAt, activeDays);
         this.isRecurring = isRecurring;
         this.participantCount = participantCount;
