@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.enums.CourtType;
 
-public record ManageActivityRequestDTO(
+public record ManageActivityInfoRequestDTO(
         @NotNull(message = "활동 시작 시간은 필수입니다.") LocalTime beginAt,
         @NotNull(message = "활동 종료 시간은 필수입니다.") LocalTime endAt,
         @NotEmpty(message = "활동 반복 요일은 필수입니다.") List<String> activeDays,

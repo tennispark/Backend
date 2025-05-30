@@ -1,9 +1,9 @@
 package kr.tennispark.activity.admin.application.impl;
 
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
-import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
-import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityRequestDTO;
-import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
+import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.activity.common.domain.ActivityInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
-    private final ActivityRepository activityRepository;
+    private final ActivityInfoRepository activityInfoRepository;
 
     @Override
-    public void registerActivityInfo(ManageActivityRequestDTO request) {
+    public void registerActivityInfo(ManageActivityInfoRequestDTO request) {
         ActivityInfo act = ActivityInfo.of(request.courtName(),
                 request.placeName(),
                 request.address(),
@@ -29,12 +29,12 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 request.isRecurring(),
                 request.participantCount());
 
-        activityRepository.save(act);
+        activityInfoRepository.save(act);
     }
 
     @Override
-    public void modifyActivityInfoDetails(Long activityId, ManageActivityRequestDTO request) {
-        ActivityInfo activityInfo = activityRepository.getById(activityId);
+    public void modifyActivityInfoDetails(Long activityId, ManageActivityInfoRequestDTO request) {
+        ActivityInfo activityInfo = activityInfoRepository.getById(activityId);
 
         activityInfo.modifyActivityInfoDetails(request.courtName(),
                 request.placeName(),
@@ -47,9 +47,9 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
-    public GetActivityResponseDTO getActivityInfoList(Integer page, Integer size) {
-        Page<ActivityInfo> actPage = activityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
+    public GetActivityResponseInfoDTO getActivityInfoList(Integer page, Integer size) {
+        Page<ActivityInfo> actPage = activityInfoRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
 
-        return GetActivityResponseDTO.of(actPage);
+        return GetActivityResponseInfoDTO.of(actPage);
     }
 }
