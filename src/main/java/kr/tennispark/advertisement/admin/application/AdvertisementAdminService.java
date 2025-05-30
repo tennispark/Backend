@@ -42,8 +42,6 @@ public class AdvertisementAdminService implements AdvertisementAdminUseCase {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
         String imageUrl = s3UploadService.uploadAdvertisementImage(imageFile, IMAGE_DIRECTORY);
         advertisement.updateImageUrl(imageUrl);
-
-        advertisementRepository.save(advertisement);
     }
 
     @Override
