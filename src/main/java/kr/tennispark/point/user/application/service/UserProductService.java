@@ -1,10 +1,10 @@
 package kr.tennispark.point.user.application.service;
 
 import java.util.List;
-import kr.tennispark.activity.user.presentation.dto.request.PurchasePayload;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.point.common.domain.entity.Product;
-import kr.tennispark.point.user.infrastrurcture.repository.UserProductRepository;
+import kr.tennispark.point.common.infrastructure.ProductRepository;
+import kr.tennispark.point.common.presentation.dto.PurchasePayload;
 import kr.tennispark.point.user.presentation.dto.response.GetAllProductResponse;
 import kr.tennispark.point.user.presentation.dto.response.PurchaseProductResponse;
 import kr.tennispark.qr.application.QrService;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserProductService {
 
-    private final UserProductRepository productRepository;
+    private final ProductRepository productRepository;
     private final QrService qrService;
 
     @Value("${qr.url.product.suffix}")
