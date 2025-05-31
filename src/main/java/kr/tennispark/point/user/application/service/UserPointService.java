@@ -6,6 +6,7 @@ import kr.tennispark.point.common.domain.entity.PointHistory;
 import kr.tennispark.point.common.domain.entity.enums.PointReason;
 import kr.tennispark.point.user.infrastrurcture.repository.PointHistoryRepository;
 import kr.tennispark.point.user.infrastrurcture.repository.PointRepository;
+import kr.tennispark.point.user.presentation.dto.response.GetMemberPointResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,5 +25,10 @@ public class UserPointService {
 
         point.updatePoint(points);
         pointHistoryRepository.save(PointHistory.of(point, member, points, reason));
+    }
+
+    public GetMemberPointResponse getMemberPoint(Member member){
+        Point point = pointRepository.getByMemberId(member.getId());
+        return new GetMemberPointResponse(point.getTotalPoint());
     }
 }
