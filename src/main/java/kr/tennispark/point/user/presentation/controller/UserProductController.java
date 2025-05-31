@@ -31,7 +31,7 @@ public class UserProductController {
     @PostMapping("/{productId}/purchases/qr")
     public ResponseEntity<ApiResult<PurchaseProductResponse>> issue(
             @LoginMember Member member,
-            @PathVariable Long productId) {
+            @PathVariable("productId") Long productId) {
         PurchaseProductResponse response = productService.createPurchaseQr(productId, member);
         return ResponseEntity.ok(ApiUtils.success(response));
     }

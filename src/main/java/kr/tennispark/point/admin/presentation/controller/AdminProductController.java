@@ -18,7 +18,7 @@ public class AdminProductController {
     private final AdminProductService productService;
 
     @PostMapping("/purchases")
-    public ResponseEntity<ApiResult<String>> purchaseProduct(@RequestParam String token) {
+    public ResponseEntity<ApiResult<String>> purchaseProduct(@RequestParam(name = "token") String token) {
         productService.purchaseProduct(token);
         return ResponseEntity.ok(ApiUtils.success());
     }
