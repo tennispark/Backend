@@ -1,4 +1,4 @@
-package kr.tennispark.activity.user.presentation.dto.request;
+package kr.tennispark.point.common.presentation.dto;
 
 public record PurchasePayload(
         long productId,
