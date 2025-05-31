@@ -12,7 +12,8 @@ public record ActivityDTO(
         int participantCount,
         int capacity,
         String courtType,
-        PlaceDTO place
+        PlaceDTO place,
+        String courtName
 ) {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM.dd(E)", Locale.KOREAN);
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
@@ -26,7 +27,8 @@ public record ActivityDTO(
                 a.getParticipantCount(),
                 a.getCapacity(),
                 a.getActivityName().name(),
-                new PlaceDTO(a.getPlace().getName(), a.getPlace().getAddress())
+                new PlaceDTO(a.getPlace().getName(), a.getPlace().getAddress()),
+                a.getCourtName()
         );
     }
 
