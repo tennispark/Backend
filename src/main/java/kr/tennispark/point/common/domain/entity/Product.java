@@ -6,6 +6,7 @@ import kr.tennispark.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -20,8 +21,12 @@ public class Product extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer amount;
+    private Integer point;
 
     @Column(nullable = false)
     private String imageUrl;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer quantity;
 }
