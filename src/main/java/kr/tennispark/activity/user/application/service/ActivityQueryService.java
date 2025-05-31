@@ -19,7 +19,7 @@ public class ActivityQueryService {
 
     public GetActivityResponse getAllAvailableActivitiesFromToday() {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        List<Activity> activities = activityRepository.findAllByDateGreaterThanEqual(today);
+        List<Activity> activities = activityRepository.findAllGeneralActivitiesFrom(today);
         return GetActivityResponse.of(activities);
     }
 }
