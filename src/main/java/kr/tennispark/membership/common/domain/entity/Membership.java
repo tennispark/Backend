@@ -52,7 +52,4 @@ public class Membership extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "period", nullable = false, length = 10)
     private ActivityDuration period;
-
-    @Column(length = 30)
-    private String referrer;
 }
