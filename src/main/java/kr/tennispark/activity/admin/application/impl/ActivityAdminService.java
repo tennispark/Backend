@@ -2,8 +2,11 @@ package kr.tennispark.activity.admin.application.impl;
 
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
+import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
+import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActivityAdminService implements ActivityAdminUseCase {
 
     private final ActivityInfoRepository activityInfoRepository;
+    private final ActivityRepository activityRepository;
 
     @Override
     public void registerActivityInfo(ManageActivityInfoRequestDTO request) {
@@ -51,5 +55,12 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         Page<ActivityInfo> actPage = activityInfoRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
 
         return GetActivityResponseInfoDTO.of(actPage);
+    }
+
+    @Override
+    public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
+        Page<Activity> activityPage = activityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
+
+        return GetActivityApplicationResponseDTO.of(activityPage);
     }
 }

@@ -3,6 +3,7 @@ package kr.tennispark.activity.admin.presentation;
 import jakarta.validation.Valid;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
@@ -29,6 +30,14 @@ public class ActivityAdminController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
         GetActivityResponseInfoDTO response = actUseCase.getActivityInfoList(page, size);
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
+
+    @GetMapping("/activities/applications")
+    public ResponseEntity<ApiResult<GetActivityApplicationResponseDTO>> getActivityApplicationDetails(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        GetActivityApplicationResponseDTO response = actUseCase.getActivityApplicationList(page, size);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
