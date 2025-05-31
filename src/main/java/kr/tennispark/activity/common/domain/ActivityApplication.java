@@ -48,5 +48,13 @@ public class ActivityApplication extends BaseEntity {
     public void cancel() {
         this.applicationStatus = ApplicationStatus.CANCELED;
     }
+
+    public void modifyStatus(ApplicationStatus status) {
+        if (status == ApplicationStatus.CANCELED) {
+            cancel();
+        } else {
+            this.applicationStatus = status;
+        }
+    }
 }
 

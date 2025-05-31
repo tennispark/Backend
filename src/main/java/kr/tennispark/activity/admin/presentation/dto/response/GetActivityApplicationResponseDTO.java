@@ -1,0 +1,41 @@
+package kr.tennispark.activity.admin.presentation.dto.response;
+
+import java.time.LocalTime;
+import kr.tennispark.activity.common.domain.Activity;
+import org.springframework.data.domain.Page;
+
+public record GetActivityApplicationResponseDTO(
+        Page<ActivityApplicationDTO> applications
+) {
+    public static GetActivityApplicationResponseDTO of(Page<Activity> activities) {
+        Page<ActivityApplicationDTO> applications = activities.map(activity ->
+                ActivityApplicationDTO.of(
+                        activity.getPlace().getName(),
+                        activity.getScheduledTime().getBeginAt(),
+                        activity.getScheduledTime().getEndAt(),
+                        activity.getParticipantCount(),
+                        activity.getCapacity()
+                )
+        );
+        return new GetActivityApplicationResponseDTO(applications);
+    }
+
+    public record ActivityApplicationDTO(
+            String name,
+            LocalTime startAt,
+            LocalTime endAt,
+            int participantCount,
+            int capacity
+    ) {
+        public static ActivityApplicationDTO of(
+                String name,
+                LocalTime startAt,
+                LocalTime endAt,
+                int participantCount,
+                int capacity
+        ) {
+            return new ActivityApplicationDTO(name, startAt, endAt, participantCount, capacity);
+        }
+
+    }
+}
