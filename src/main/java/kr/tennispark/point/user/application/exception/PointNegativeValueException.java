@@ -1,7 +1,5 @@
 package kr.tennispark.point.user.application.exception;
 
-import kr.tennispark.activity.common.domain.enums.ActivityName;
-import kr.tennispark.activity.common.domain.enums.ActivityType;
 import kr.tennispark.common.exception.base.InvalidException;
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.HttpStatus;
