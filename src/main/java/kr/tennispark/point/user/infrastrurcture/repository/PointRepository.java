@@ -1,4 +1,4 @@
-package kr.tennispark.members.user.infrastructure.repository;
+package kr.tennispark.point.user.infrastrurcture.repository;
 
 import java.util.Optional;
 import kr.tennispark.point.common.domain.entity.Point;

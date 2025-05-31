@@ -1,4 +1,4 @@
-package kr.tennispark.members.user.infrastructure.repository;
+package kr.tennispark.point.user.infrastrurcture.repository;
 
 import kr.tennispark.point.common.domain.entity.PointHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
