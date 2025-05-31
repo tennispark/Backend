@@ -3,10 +3,13 @@ package kr.tennispark.activity.admin.application.impl;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
+import kr.tennispark.activity.admin.infrastructure.repository.AdminActivityApplicationRepository;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.activity.common.domain.Activity;
+import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
+    private final AdminActivityApplicationRepository activityApplicationRepository;
     private final ActivityInfoRepository activityInfoRepository;
     private final ActivityRepository activityRepository;
 
@@ -62,5 +66,15 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         Page<Activity> activityPage = activityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
 
         return GetActivityApplicationResponseDTO.of(activityPage);
+    }
+
+    @Override
+    public GetActivityApplicantResponseDTO getActivityApplicantList(Long activityId, Integer page, Integer size) {
+        Activity activity = activityRepository.getById(activityId);
+
+        Page<ActivityApplication> applicantPage = activityApplicationRepository.findAllByActivityOrderByCreatedAtDesc(
+                activity, PageRequest.of(page, size));
+
+        return GetActivityApplicantResponseDTO.of(applicantPage);
     }
 }
