@@ -11,7 +11,6 @@ import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberAct
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
-import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.members.user.infrastructure.repository.PointHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
 
     private final MemberRepository memberRepository;
     private final PointHistoryRepository pointHistoryRepository;
-
     private final UserActivityApplicationRepository activityApplicationRepository;
     private final ActivityRepository activityRepository;
 
@@ -36,28 +34,33 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
 
         int participantCount = countDistinctEventParticipants(start, end);
         int totalEarnedPoints = sumEarnedPoints(start, end);
-        Member topEarner = findTopEarner(start, end);
-        Member topSpender = findTopSpender(start, end);
+
+        String topEarnerName = toNameOrDefault(findTopEarner(start, end));
+        String topSpenderName = toNameOrDefault(findTopSpender(start, end));
 
         return GetMonthlyMemberActivityStatsResponseDTO.of(
                 participantCount,
                 totalEarnedPoints,
-                topEarner.getName(),
-                topSpender.getName());
+                topEarnerName,
+                topSpenderName
+        );
     }
 
     @Override
     public GetOverallMemberStatsResponseDTO getOverallMemberStats() {
         long totalMembers = countTotalMembers();
         long totalActivityCount = countTotalEventApplications();
+
         Member topScorer = findTopLeagueMember();
-        int topScore = getTopLeagueScore(topScorer.getId());
+        String topScorerName = toNameOrDefault(topScorer);
+        int topScore = topScorer != null ? getTopLeagueScore(topScorer.getId()) : 0;
 
         return GetOverallMemberStatsResponseDTO.of(
                 totalMembers,
                 totalActivityCount,
-                topScorer.getName(),
-                topScore);
+                topScorerName,
+                topScore
+        );
     }
 
     @Override
@@ -65,6 +68,8 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
         List<Member> members = memberRepository.findByNameContaining(name);
         return GetMemberListResponseDTO.of(members);
     }
+
+    // ===== 내부 계산 메서드 =====
 
     private int countDistinctEventParticipants(LocalDateTime start, LocalDateTime end) {
         return activityApplicationRepository.countDistinctMemberIdByCreatedAtBetween(start, end);
@@ -75,13 +80,11 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     }
 
     private Member findTopEarner(LocalDateTime start, LocalDateTime end) {
-        return pointHistoryRepository.findTopEarner(start, end)
-                .orElseThrow(() -> new NoSuchMemberException("해당 기간에 포인트를 적립한 회원이 없습니다."));
+        return pointHistoryRepository.findTopEarner(start, end).orElse(null);
     }
 
     private Member findTopSpender(LocalDateTime start, LocalDateTime end) {
-        return pointHistoryRepository.findTopSpender(start, end)
-                .orElseThrow(() -> new NoSuchMemberException("해당 기간에 포인트를 사용한 회원이 없습니다."));
+        return pointHistoryRepository.findTopSpender(start, end).orElse(null);
     }
 
     private long countTotalMembers() {
@@ -93,11 +96,14 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     }
 
     private Member findTopLeagueMember() {
-        return memberRepository.findTopScorerMember()
-                .orElseThrow(() -> new NoSuchMemberException("리그에서 활동한 회원이 없습니다."));
+        return memberRepository.findTopScorerMember().orElse(null);
     }
 
     private int getTopLeagueScore(Long memberId) {
         return memberRepository.sumScoreByMemberId(memberId);
+    }
+
+    private String toNameOrDefault(Member member) {
+        return member != null ? member.getName() : "없음";
     }
 }
