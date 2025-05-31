@@ -2,6 +2,7 @@ package kr.tennispark.activity.user.application.service;
 
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
+import kr.tennispark.activity.common.domain.enums.ActivityType;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.activity.common.domain.exception.NoSuchActivityException;
 import kr.tennispark.activity.user.application.exception.DuplicateApplicationException;
@@ -22,17 +23,23 @@ public class ActivityCommandService {
 
     @Transactional
     public void applyActivity(Member member, Long activityId) {
-        Activity activity = loadAndLockActivity(activityId);
+        apply(member, activityId, ActivityType.GENERAL);
+    }
 
+    @Transactional
+    public void applyAcademy(Member member, Long activityId) {
+        apply(member, activityId, ActivityType.ACADEMY);
+    }
+
+    private void apply(Member member, Long activityId, ActivityType type) {
+        Activity activity = loadAndLockActivity(activityId, type);
         preventDuplicate(member, activity);
-
         activity.incrementParticipant();
-
         recordApplication(member, activity);
     }
 
-    private Activity loadAndLockActivity(Long activityId) {
-        return activityRepository.findForUpdate(activityId)
+    private Activity loadAndLockActivity(Long activityId, ActivityType type) {
+        return activityRepository.findForUpdate(activityId, type)
                 .orElseThrow(NoSuchActivityException::new);
     }
 

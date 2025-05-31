@@ -16,8 +16,8 @@ import org.springframework.stereotype.Repository;
 public interface UserActivityRepository extends JpaRepository<Activity, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select a from Activity a where a.id = :id and a.status = true and a.type = 'GENERAL'")
-    Optional<Activity> findForUpdate(@Param("id") Long id);
+    @Query("select a from Activity a where a.id = :id and a.status = true and a.type = :type")
+    Optional<Activity> findForUpdate(@Param("id") Long id, @Param("type") ActivityType type);
 
     @Query("select a from Activity a where a.date >= :date and a.type = :type and a.status = true")
     List<Activity> findAllGeneralActivitiesFrom(@Param("date") LocalDate date, @Param("type") ActivityType type);

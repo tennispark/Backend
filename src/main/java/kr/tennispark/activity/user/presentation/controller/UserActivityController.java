@@ -43,4 +43,11 @@ public class UserActivityController {
         GetActivityResponse response = queryService.getAllAvailableActivitiesFromToday();
         return ResponseEntity.ok(ApiUtils.success(response));
     }
+
+    @PostMapping("/academies/{activityId}/apply")
+    public ResponseEntity<ApiResult<String>> applyAcademy(@LoginMember Member member,
+                                                           @PathVariable Long activityId) {
+        commandService.applyAcademy(member, activityId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiUtils.success());
+    }
 }
