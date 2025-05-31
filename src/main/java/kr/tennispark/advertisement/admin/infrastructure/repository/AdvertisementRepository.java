@@ -5,7 +5,9 @@ import kr.tennispark.advertisement.admin.application.exception.NoSuchAdvertiseme
 import kr.tennispark.advertisement.common.domain.entity.Advertisement;
 import kr.tennispark.advertisement.common.domain.entity.enums.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
 
     List<Advertisement> findAllByPosition(Position position);

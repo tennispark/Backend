@@ -10,6 +10,8 @@ import kr.tennispark.common.exception.base.NotFoundException;
 import kr.tennispark.common.exception.base.UnsupportedTypeException;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
+import kr.tennispark.qr.application.exception.BadQrCreateException;
+import kr.tennispark.qr.application.exception.FailToCreateQRPayloadException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,5 +92,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body("유효하지 않은 토큰입니다.");
+    }
+
+    @ExceptionHandler(FailToCreateQRPayloadException.class)
+    public ResponseEntity<?> handleFailToCreateQRPayloadException(FailToCreateQRPayloadException e) {
+        return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
+
+    @ExceptionHandler(BadQrCreateException.class)
+    public ResponseEntity<?> handleBadQrCreateException(BadQrCreateException e) {
+        return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
 }

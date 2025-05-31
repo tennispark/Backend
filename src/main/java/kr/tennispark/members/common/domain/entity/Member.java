@@ -14,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
-import kr.tennispark.members.common.domain.entity.association.Point;
+import kr.tennispark.point.common.domain.entity.Point;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
