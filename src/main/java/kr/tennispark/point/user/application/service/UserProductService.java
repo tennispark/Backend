@@ -21,7 +21,7 @@ public class UserProductService {
     private final ProductRepository productRepository;
     private final QrService qrService;
 
-    @Value("${qr.url.product.suffix}")
+    @Value("${qr.product.suffix}")
     private String qrUrlSuffix;
 
     public GetAllProductResponse getAllProducts() {
