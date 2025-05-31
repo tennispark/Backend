@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import java.time.LocalTime;
 import java.util.List;
+import kr.tennispark.activity.common.domain.enums.ActivityType;
 import kr.tennispark.activity.common.domain.enums.CourtType;
 import kr.tennispark.activity.common.domain.enums.Days;
 import kr.tennispark.activity.common.domain.vo.Place;
@@ -20,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -54,6 +56,11 @@ public class ActivityInfo extends BaseEntity {
     @Column(nullable = false)
     private Integer capacity;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ColumnDefault("'GENERAL'")
+    private ActivityType type = ActivityType.GENERAL;
+
     public static ActivityInfo of(CourtType courtType, String placeName, String address, LocalTime beginAt,
                                   LocalTime endAt,
                                   List<String> activeDays, Boolean isRecurring, Integer capacity) {
@@ -62,7 +69,8 @@ public class ActivityInfo extends BaseEntity {
                 ScheduledTime.of(beginAt, endAt),
                 Days.from(activeDays),
                 isRecurring,
-                capacity);
+                capacity,
+                ActivityType.GENERAL);
     }
 
     public void modifyActivityInfoDetails(

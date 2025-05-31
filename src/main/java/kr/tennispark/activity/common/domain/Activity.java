@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
+import kr.tennispark.activity.common.domain.enums.ActivityType;
 import kr.tennispark.activity.common.domain.enums.CourtType;
 import kr.tennispark.activity.common.domain.exception.CapacityExceededException;
 import kr.tennispark.activity.common.domain.vo.Place;
@@ -18,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -52,6 +54,11 @@ public class Activity extends BaseEntity {
     @Embedded
     private Place place;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ColumnDefault("'GENERAL'")
+    private ActivityType type = ActivityType.GENERAL;
+
     public static Activity of(ActivityInfo template, LocalDate date) {
         return new Activity(
                 template,
@@ -63,7 +70,8 @@ public class Activity extends BaseEntity {
                 0,
                 template.getCapacity(),
                 template.getCourtType(),
-                template.getPlace()
+                template.getPlace(),
+                template.getType()
         );
     }
 
