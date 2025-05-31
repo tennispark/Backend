@@ -34,9 +34,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof MemberPrincipal memberPrincipal) {
-            memberPrincipal.getMember();
+            return memberPrincipal.getMember();
         }
-
         return null;
     }
 }
