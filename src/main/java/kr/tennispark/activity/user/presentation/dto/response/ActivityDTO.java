@@ -25,7 +25,7 @@ public record ActivityDTO(
                 a.getScheduledTime().getEndAt().format(TIME_FMT),
                 a.getParticipantCount(),
                 a.getCapacity(),
-                a.getCourtType().name(),
+                a.getActivityName().name(),
                 new PlaceDTO(a.getPlace().getName(), a.getPlace().getAddress())
         );
     }

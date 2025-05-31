@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
+import kr.tennispark.activity.common.domain.enums.ActivityName;
 import kr.tennispark.activity.common.domain.enums.ActivityType;
 import kr.tennispark.activity.common.domain.enums.CourtType;
 import kr.tennispark.activity.common.domain.exception.CapacityExceededException;
@@ -47,10 +48,6 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     private Integer capacity;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private CourtType courtType;
-
     @Embedded
     private Place place;
 
@@ -58,6 +55,10 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("'GENERAL'")
     private ActivityType type = ActivityType.GENERAL;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ActivityName activityName;
 
     public static Activity of(ActivityInfo template, LocalDate date) {
         return new Activity(
@@ -69,9 +70,9 @@ public class Activity extends BaseEntity {
                 ),
                 0,
                 template.getCapacity(),
-                template.getCourtType(),
                 template.getPlace(),
-                template.getType()
+                template.getType(),
+                template.getActivityName()
         );
     }
 
