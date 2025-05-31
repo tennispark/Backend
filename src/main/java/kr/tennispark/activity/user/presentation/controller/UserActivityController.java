@@ -3,6 +3,7 @@ package kr.tennispark.activity.user.presentation.controller;
 
 import kr.tennispark.activity.user.application.service.ActivityCommandService;
 import kr.tennispark.activity.user.application.service.ActivityQueryService;
+import kr.tennispark.activity.user.presentation.dto.response.GetAcademyResponse;
 import kr.tennispark.activity.user.presentation.dto.response.GetActivityResponse;
 import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
@@ -35,6 +36,19 @@ public class UserActivityController {
     public ResponseEntity<ApiResult<String>> applyActivity(@LoginMember Member member,
                                                            @PathVariable Long activityId) {
         commandService.applyActivity(member, activityId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiUtils.success());
+    }
+
+    @GetMapping("/academies")
+    public ResponseEntity<ApiResult<GetAcademyResponse>> getAllAcademies() {
+        GetAcademyResponse response = queryService.getAllAvailableAcademiesFromToday();
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
+
+    @PostMapping("/academies/{activityId}/apply")
+    public ResponseEntity<ApiResult<String>> applyAcademy(@LoginMember Member member,
+                                                           @PathVariable Long activityId) {
+        commandService.applyAcademy(member, activityId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiUtils.success());
     }
 }

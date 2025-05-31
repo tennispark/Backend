@@ -4,22 +4,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import kr.tennispark.activity.common.domain.Activity;
 
-public record ActivityDTO(
+public record AcademyDTO(
         Long id,
         String date,
         String startAt,
         String endAt,
         int participantCount,
         int capacity,
-        String courtType,
+        String lessonType,
         PlaceDTO place,
         String courtName
 ) {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM.dd(E)", Locale.KOREAN);
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static ActivityDTO of(Activity a) {
-        return new ActivityDTO(
+    public static AcademyDTO of(Activity a) {
+        return new AcademyDTO(
                 a.getId(),
                 a.getDate().format(DATE_FMT),
                 a.getScheduledTime().getBeginAt().format(TIME_FMT),
