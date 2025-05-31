@@ -5,4 +5,5 @@ public enum PointReason {
     EVENT,
     BUY,
     RECOMMEND_FRIEND,
+    MATCH_WIN,
 }

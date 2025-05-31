@@ -1,6 +1,8 @@
 package kr.tennispark.membership.application.service;
 
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
+import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.membership.application.exception.MembershipAlreadyExistsException;
 import kr.tennispark.membership.common.domain.entity.Membership;
 import kr.tennispark.membership.infrastructure.repository.MembershipRepository;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MembershipService {
 
+    private final MemberRepository memberRepository;
     private final MembershipRepository membershipRepository;
 
     @Transactional
@@ -31,6 +34,9 @@ public class MembershipService {
                 request.period()
         );
 
+        member.updateMemberShipType(MemberShipType.MEMBERSHIP);
+
+        memberRepository.save(member);
         membershipRepository.save(membership);
     }
 }

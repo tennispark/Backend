@@ -1,6 +1,8 @@
 package kr.tennispark.members.user.application.service;
 
+import java.util.List;
 import kr.tennispark.event.common.domain.Event;
+import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.association.Point;
 import kr.tennispark.members.common.domain.entity.association.PointHistory;
@@ -18,6 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
+
+    private static final Integer WIN_POINT = 10;
+    private static final Integer WIN_MATCH_POINT = 3;
+    private static final Integer DRAW_MATCH_POINT = 2;
+    private static final Integer LOSE_MATCH_POINT = 1;
 
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
@@ -50,5 +57,25 @@ public class MemberService {
 
         point.addPoint(event.getPoint());
         pointHistoryRepository.save(PointHistory.of(point, member, event.getPoint(), PointReason.EVENT));
+    }
+
+    public void earnPointByMatch(List<Member> members) {
+        for (Member member : members) {
+            Point pointEntity = pointRepository.getByMemberId(member.getId());
+            pointEntity.addPoint(WIN_POINT);
+
+            pointHistoryRepository.save(PointHistory.of(pointEntity, member, WIN_POINT, PointReason.MATCH_WIN));
+        }
+    }
+
+    public void processMatchPoint(List<Member> members, MatchOutcome matchOutcome) {
+        for (Member member : members) {
+            int matchPoint = switch (matchOutcome) {
+                case WIN -> WIN_MATCH_POINT;
+                case DRAW -> DRAW_MATCH_POINT;
+                case LOSE -> LOSE_MATCH_POINT;
+            };
+            member.increaseMatchPoint(matchPoint);
+        }
     }
 }
