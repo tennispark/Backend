@@ -15,7 +15,7 @@ public record PointHistoryDto(
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
 
-    public static PointHistoryDto fromEntity(PointHistory history) {
+    public static PointHistoryDto of(PointHistory history) {
         PointReason reason = history.getReason();
         String title = String.format("%s - %s", reason.getDefaultTitle(), history.getDetail());
         String type = reason.makeType();
