@@ -14,7 +14,7 @@ public record ProductDto(
         return new ProductDto(
                 product.getId(),
                 product.getName(),
-                product.getPrice(),
+                product.getPoint(),
                 product.getImageUrl()
         );
     }
