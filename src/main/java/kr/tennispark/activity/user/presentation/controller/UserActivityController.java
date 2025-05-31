@@ -3,6 +3,7 @@ package kr.tennispark.activity.user.presentation.controller;
 
 import kr.tennispark.activity.user.application.service.ActivityCommandService;
 import kr.tennispark.activity.user.application.service.ActivityQueryService;
+import kr.tennispark.activity.user.presentation.dto.response.GetAcademyResponse;
 import kr.tennispark.activity.user.presentation.dto.response.GetActivityResponse;
 import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
@@ -39,8 +40,8 @@ public class UserActivityController {
     }
 
     @GetMapping("/academies")
-    public ResponseEntity<ApiResult<GetActivityResponse>> getAllAcademies() {
-        GetActivityResponse response = queryService.getAllAvailableActivitiesFromToday();
+    public ResponseEntity<ApiResult<GetAcademyResponse>> getAllAcademies() {
+        GetAcademyResponse response = queryService.getAllAvailableAcademiesFromToday();
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
