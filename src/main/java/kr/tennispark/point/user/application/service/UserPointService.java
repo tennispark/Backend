@@ -1,10 +1,12 @@
 package kr.tennispark.point.user.application.service;
 
 import java.util.List;
+import kr.tennispark.activity.common.domain.exception.InvalidActivityCombinationException;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.point.common.domain.entity.Point;
 import kr.tennispark.point.common.domain.entity.PointHistory;
 import kr.tennispark.point.common.domain.entity.enums.PointReason;
+import kr.tennispark.point.user.application.exception.PointNegativeValueException;
 import kr.tennispark.point.user.infrastrurcture.repository.PointHistoryRepository;
 import kr.tennispark.point.user.infrastrurcture.repository.PointRepository;
 import kr.tennispark.point.user.presentation.dto.response.GetMemberPointHistoryResponse;
@@ -23,9 +25,12 @@ public class UserPointService {
 
     @Transactional
     public void applyPoint(Member member, int points, PointReason reason){
+        if(points<0) throw new PointNegativeValueException();
         Point point = pointRepository.getByMemberId(member.getId());
 
-        point.updatePoint(points);
+        int signedPoint = reason.isEarned() ? Math.abs(points) : -Math.abs(points);
+
+        point.updatePoint(signedPoint);
         pointHistoryRepository.save(PointHistory.of(point, member, points, reason));
     }
 
