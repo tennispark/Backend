@@ -5,6 +5,7 @@ import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.point.user.application.service.UserPointService;
+import kr.tennispark.point.user.presentation.dto.response.GetMemberPointHistoryResponse;
 import kr.tennispark.point.user.presentation.dto.response.GetMemberPointResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class UserPointController {
     @GetMapping("/me")
     public ResponseEntity<ApiResult<GetMemberPointResponse>> getMyPoint(@LoginMember Member member){
         GetMemberPointResponse response = pointService.getMemberPoint(member);
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
+
+    @GetMapping("/me/history")
+    public ResponseEntity<ApiResult<GetMemberPointHistoryResponse>> getMyPointHistory(@LoginMember Member member){
+        GetMemberPointHistoryResponse response = pointService.getMemberPointHistory(member);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 }
