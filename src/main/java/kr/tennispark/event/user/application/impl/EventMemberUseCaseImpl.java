@@ -8,6 +8,8 @@ import kr.tennispark.event.user.application.exception.AlreadyAttendEventExceptio
 import kr.tennispark.event.user.infrastructure.repository.EventApplicationRepository;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.application.service.MemberService;
+import kr.tennispark.point.common.domain.entity.enums.PointReason;
+import kr.tennispark.point.user.application.service.UserPointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ public class EventMemberUseCaseImpl implements EventMemberUseCase {
     private final EventRepository eventRepository;
     private final EventApplicationRepository eventApplicationRepository;
 
-    private final MemberService memberService;
+    private final UserPointService pointService;
 
     @Override
     public void attendEvent(Long eventId, Member member) {
@@ -28,7 +30,7 @@ public class EventMemberUseCaseImpl implements EventMemberUseCase {
         validateNotAlreadyAttended(event, member);
 
         applyForEvent(member, event);
-        memberService.earnEventPoint(member, event);
+        pointService.applyPoint(member, event.getPoint(), PointReason.EVENT);
     }
 
     private void validateNotAlreadyAttended(Event event, Member member) {

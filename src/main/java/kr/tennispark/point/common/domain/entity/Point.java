@@ -30,7 +30,7 @@ public class Point extends BaseEntity {
         return new Point(member, 0);
     }
 
-    public void addPoint(int amount) {
+    public void updatePoint(int amount) {
         this.totalPoint += amount;
     }
 }

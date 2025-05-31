@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final UserPointService pointService;
 
     @Transactional
     public void createMember(RegisterMemberRequest request) {
@@ -42,10 +41,5 @@ public class MemberService {
 
     public boolean existsMemberByPhone(String phoneNumber) {
         return memberRepository.existsByPhone_Number(phoneNumber);
-    }
-
-
-    public void earnEventPoint(Member member, Event event) {
-        pointService.earnPoint(member, event.getPoint(), PointReason.EVENT);
     }
 }

@@ -19,10 +19,10 @@ public class UserPointService {
     private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
-    public void earnPoint(Member member, int addPoints, PointReason reason){
+    public void applyPoint(Member member, int points, PointReason reason){
         Point point = pointRepository.getByMemberId(member.getId());
 
-        point.addPoint(addPoints);
-        pointHistoryRepository.save(PointHistory.of(point, member, addPoints, reason));
+        point.updatePoint(points);
+        pointHistoryRepository.save(PointHistory.of(point, member, points, reason));
     }
 }
