@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import kr.tennispark.event.user.infrastructure.repository.EventApplicationRepository;
+import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
+import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplicationRepository;
 import kr.tennispark.members.admin.presentation.dto.response.GetMemberListResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberActivityStatsResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.members.user.infrastructure.repository.PointHistoryRepository;
@@ -23,7 +25,9 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
 
     private final MemberRepository memberRepository;
     private final PointHistoryRepository pointHistoryRepository;
-    private final EventApplicationRepository eventApplicationRepository;
+
+    private final UserActivityApplicationRepository activityApplicationRepository;
+    private final ActivityRepository activityRepository;
 
     @Override
     public GetMonthlyMemberActivityStatsResponseDTO getMonthlyActivityStats(LocalDate from, LocalDate to) {
@@ -63,7 +67,7 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     }
 
     private int countDistinctEventParticipants(LocalDateTime start, LocalDateTime end) {
-        return eventApplicationRepository.countDistinctMemberIdByCreatedAtBetween(start, end);
+        return activityApplicationRepository.countDistinctMemberIdByCreatedAtBetween(start, end);
     }
 
     private int sumEarnedPoints(LocalDateTime start, LocalDateTime end) {
@@ -81,11 +85,11 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     }
 
     private long countTotalMembers() {
-        return memberRepository.count();
+        return memberRepository.countByMemberShipType(MemberShipType.MEMBERSHIP);
     }
 
     private long countTotalEventApplications() {
-        return eventApplicationRepository.count();
+        return activityRepository.count();
     }
 
     private Member findTopLeagueMember() {
