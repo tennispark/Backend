@@ -14,8 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MembershipService {
 
-        private final MembershipRepository membershipRepository;
+    private final MembershipRepository membershipRepository;
 
+    @Transactional
     public void registerMembership(Member member, RegisterMembershipRequest request) {
         if (membershipRepository.existsByMember(member)) {
             throw new MembershipAlreadyExistsException();
