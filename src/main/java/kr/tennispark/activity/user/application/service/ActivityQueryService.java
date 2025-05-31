@@ -16,18 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ActivityQueryService {
+    private static final String ZONE = "Asia/Seoul";
 
     private final UserActivityRepository activityRepository;
 
     public GetActivityResponse getAllAvailableActivitiesFromToday() {
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = LocalDate.now(ZoneId.of(ZONE));
         List<Activity> activities = activityRepository.findAllGeneralActivitiesFrom(today, ActivityType.GENERAL);
         return GetActivityResponse.of(activities);
     }
 
 
     public GetAcademyResponse getAllAvailableAcademiesFromToday() {
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = LocalDate.now(ZoneId.of(ZONE));
         List<Activity> activities = activityRepository.findAllGeneralActivitiesFrom(today, ActivityType.ACADEMY);
         return GetAcademyResponse.of(activities);
     }
