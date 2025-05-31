@@ -4,6 +4,7 @@ import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
 import kr.tennispark.activity.admin.infrastructure.repository.AdminActivityApplicationRepository;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityApplicationRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
@@ -52,6 +53,15 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 request.activeDays(),
                 request.isRecurring(),
                 request.participantCount());
+    }
+
+    @Override
+    public void modifyActivityApplication(Long applicantId, Long activityId,
+                                          ManageActivityApplicationRequestDTO request) {
+        ActivityApplication activityApplication = activityApplicationRepository.getByMemberIdAndActivityId(
+                applicantId, activityId);
+
+        activityApplication.modifyStatus(request.applicationStatus());
     }
 
     @Override

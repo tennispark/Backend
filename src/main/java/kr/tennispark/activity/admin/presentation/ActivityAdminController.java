@@ -2,6 +2,7 @@ package kr.tennispark.activity.admin.presentation;
 
 import jakarta.validation.Valid;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityApplicationRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
@@ -61,6 +62,15 @@ public class ActivityAdminController {
     public ResponseEntity<ApiResult<?>> modifyActivityInfo(@PathVariable Long activityId,
                                                            @RequestBody @Valid ManageActivityInfoRequestDTO request) {
         actUseCase.modifyActivityInfoDetails(activityId, request);
+        return ResponseEntity.ok(ApiUtils.success());
+    }
+
+    @PutMapping("/activities/{activityId}/applicants/{applicantId}")
+    public ResponseEntity<ApiResult<?>> modifyActivityApplicant(
+            @PathVariable Long activityId,
+            @PathVariable Long applicantId,
+            @RequestBody ManageActivityApplicationRequestDTO request) {
+        actUseCase.modifyActivityApplication(applicantId, activityId, request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 }
