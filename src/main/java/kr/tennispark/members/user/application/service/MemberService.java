@@ -7,6 +7,7 @@ import kr.tennispark.point.common.domain.entity.PointHistory;
 import kr.tennispark.point.common.domain.entity.enums.PointReason;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
+import kr.tennispark.point.user.application.service.UserPointService;
 import kr.tennispark.point.user.infrastrurcture.repository.PointHistoryRepository;
 import kr.tennispark.point.user.infrastrurcture.repository.PointRepository;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
@@ -20,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PointRepository pointRepository;
-    private final PointHistoryRepository pointHistoryRepository;
+    private final UserPointService pointService;
 
     @Transactional
     public void createMember(RegisterMemberRequest request) {
@@ -46,9 +46,6 @@ public class MemberService {
 
 
     public void earnEventPoint(Member member, Event event) {
-        Point point = pointRepository.getByMemberId(member.getId());
-
-        point.addPoint(event.getPoint());
-        pointHistoryRepository.save(PointHistory.of(point, member, event.getPoint(), PointReason.EVENT));
+        pointService.earnPoint(member, event.getPoint(), PointReason.EVENT);
     }
 }
