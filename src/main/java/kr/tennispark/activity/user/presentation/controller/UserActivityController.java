@@ -37,4 +37,10 @@ public class UserActivityController {
         commandService.applyActivity(member, activityId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiUtils.success());
     }
+
+    @GetMapping("/academies")
+    public ResponseEntity<ApiResult<GetActivityResponse>> getAllAcademies() {
+        GetActivityResponse response = queryService.getAllAvailableActivitiesFromToday();
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
 }
