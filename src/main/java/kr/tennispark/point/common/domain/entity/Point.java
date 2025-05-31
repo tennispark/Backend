@@ -1,4 +1,4 @@
-package kr.tennispark.members.common.domain.entity.association;
+package kr.tennispark.point.common.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

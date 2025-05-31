@@ -1,4 +1,4 @@
-package kr.tennispark.members.common.domain.entity.enums;
+package kr.tennispark.point.common.domain.entity.enums;
 
 public enum PointReason {
     ATTENDANCE,

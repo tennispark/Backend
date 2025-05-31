@@ -1,7 +1,7 @@
 package kr.tennispark.members.user.infrastructure.repository;
 
 import java.util.Optional;
-import kr.tennispark.members.common.domain.entity.association.Point;
+import kr.tennispark.point.common.domain.entity.Point;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
 

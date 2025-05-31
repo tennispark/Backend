@@ -1,4 +1,4 @@
-package kr.tennispark.members.common.domain.entity.association;
+package kr.tennispark.point.common.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.common.domain.entity.enums.PointReason;
+import kr.tennispark.point.common.domain.entity.enums.PointReason;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
