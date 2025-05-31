@@ -40,7 +40,14 @@ public class PointHistory extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PointReason reason;
 
+    @Column(length = 100)
+    private String detail;
+
     public static PointHistory of(Point point, Member member, int amount, PointReason reason) {
-        return new PointHistory(point, member, amount, reason);
+        return new PointHistory(point, member, amount, reason, null);
+    }
+
+    public static PointHistory of(Point point, Member member, int amount, PointReason reason,String detail) {
+        return new PointHistory(point, member, amount, reason, detail);
     }
 }
