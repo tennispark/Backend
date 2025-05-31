@@ -16,8 +16,10 @@ import kr.tennispark.membership.common.domain.entity.enums.CourtType;
 import kr.tennispark.membership.common.domain.entity.enums.MembershipStatus;
 import kr.tennispark.membership.common.domain.entity.enums.MembershipType;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -36,7 +38,8 @@ public class Membership extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private MembershipStatus membershipStatus;
+    @ColumnDefault("'APPROVED'")
+    private MembershipStatus membershipStatus = MembershipStatus.APPROVED;
 
     @Column(length = 100, nullable = false)
     private String reason;
@@ -47,9 +50,25 @@ public class Membership extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CourtType court;
+    private CourtType courtType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "period", nullable = false, length = 10)
     private ActivityDuration period;
+
+    private Membership(Member member, String recommender, String reason, MembershipType membershipType, CourtType court,
+                      ActivityDuration period) {
+        this.member = member;
+        this.recommender = recommender;
+        this.reason = reason;
+        this.membershipType = membershipType;
+        this.courtType = court;
+        this.period = period;
+    }
+
+    public static Membership of(
+            Member member, String recommender, String reason, MembershipType membershipType, CourtType court,
+            ActivityDuration period){
+       return new Membership(member, recommender, reason, membershipType, court,period);
+    }
 }
