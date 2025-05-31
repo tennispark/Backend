@@ -22,6 +22,7 @@ public class AdminProductService {
     private final MemberRepository memberRepository;
     private final PointService pointService;
 
+    @Transactional
     public void purchaseProduct(String token) {
         PurchasePayload payload = qrService.parseToken(token, PurchasePayload.class);
         Product product = productRepository.getById(payload.productId());
