@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.enums.ActivityName;
-import kr.tennispark.activity.common.domain.enums.CourtType;
 
 public record ManageActivityInfoRequestDTO(
         @NotNull(message = "활동 시작 시간은 필수입니다.") LocalTime beginAt,

@@ -13,7 +13,6 @@ import java.time.LocalTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.enums.ActivityName;
 import kr.tennispark.activity.common.domain.enums.ActivityType;
-import kr.tennispark.activity.common.domain.enums.CourtType;
 import kr.tennispark.activity.common.domain.enums.Days;
 import kr.tennispark.activity.common.domain.vo.Place;
 import kr.tennispark.activity.common.domain.vo.ScheduledTime;
