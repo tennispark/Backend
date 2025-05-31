@@ -8,10 +8,10 @@ import kr.tennispark.membership.common.domain.entity.enums.CourtType;
 import kr.tennispark.membership.common.domain.entity.enums.MembershipType;
 
 public record RegisterMembershipRequest(
-        @NotNull MembershipType membershipType,
-        @NotBlank @Size(max = 100) String reason,
-        @NotNull CourtType courtType,
-        @NotNull ActivityDuration period,
+        @NotNull(message = "멤버십 타입은 필수입니다.") MembershipType membershipType,
+        @NotBlank(message = "멤버십 가입 이유는 필수입니다.") @Size(max = 100) String reason,
+        @NotNull(message = "코트 타입은 필수입니다.") CourtType courtType,
+        @NotNull(message = "멤버십 기간은 필수입니다.") ActivityDuration period,
         @Size(max = 50) String recommender
 ) {
 }
