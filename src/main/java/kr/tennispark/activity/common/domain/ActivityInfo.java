@@ -62,10 +62,13 @@ public class ActivityInfo extends BaseEntity {
     @Column(nullable = false)
     private ActivityName activityName;
 
+    @Column(nullable = false)
+    private String courtName;
+
     public static ActivityInfo of(ActivityName activityName,String placeName, String address,
                                   LocalTime beginAt, LocalTime endAt,
                                   List<String> activeDays, Boolean isRecurring,
-                                  Integer capacity) {
+                                  Integer capacity, String courtName) {
         activityName.validateWith(ActivityType.GENERAL);
         return new ActivityInfo(
                 Place.of(placeName, address),
@@ -74,12 +77,13 @@ public class ActivityInfo extends BaseEntity {
                 isRecurring,
                 capacity,
                 ActivityType.GENERAL,
-                activityName);
+                activityName,
+                courtName);
     }
 
     public void modifyActivityInfoDetails(
             ActivityName activityName, String placeName, String address, LocalTime beginAt, LocalTime endAt,
-            List<String> activeDays, Boolean isRecurring, Integer capacity) {
+            List<String> activeDays, Boolean isRecurring, Integer capacity, String courtName) {
         activityName.validateWith(type);
         this.place = Place.of(placeName, address);
         this.time = ScheduledTime.of(beginAt, endAt);
@@ -87,5 +91,6 @@ public class ActivityInfo extends BaseEntity {
         this.isRecurring = isRecurring;
         this.capacity = capacity;
         this.activityName = activityName;
+        this.courtName = courtName;
     }
 }

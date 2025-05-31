@@ -16,6 +16,7 @@ public record ManageActivityInfoRequestDTO(
         @NotNull(message = "코트 타입은 필수입니다.") ActivityName courtType,
         @NotBlank(message = "활동 장소 이름은 필수입니다.") String placeName,
         @NotBlank(message = "활동 장소 주소는 필수입니다.") String address,
-        @NotNull(message = "활동 반복 유무는 필수입니다.") Boolean isRecurring
+        @NotNull(message = "활동 반복 유무는 필수입니다.") Boolean isRecurring,
+        @NotBlank(message = "코트 이름은 필수입니다.") String courtName
 ) {
 }

@@ -60,6 +60,9 @@ public class Activity extends BaseEntity {
     @Column(nullable = false)
     private ActivityName activityName;
 
+    @Column(nullable = false)
+    private String courtName;
+
     public static Activity of(ActivityInfo template, LocalDate date) {
         return new Activity(
                 template,
@@ -72,7 +75,8 @@ public class Activity extends BaseEntity {
                 template.getCapacity(),
                 template.getPlace(),
                 template.getType(),
-                template.getActivityName()
+                template.getActivityName(),
+                template.getCourtName()
         );
     }
 
