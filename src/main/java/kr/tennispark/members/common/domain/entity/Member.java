@@ -117,4 +117,8 @@ public class Member extends BaseEntity {
         this.matchPoint += point;
     }
 
+    public void updateMemberShipType(MemberShipType memberShipType) {
+        this.memberShipType = memberShipType;
+    }
+
 }
