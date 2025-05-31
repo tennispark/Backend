@@ -26,7 +26,7 @@ public class EventAdminUseCaseImpl implements EventAdminUseCase {
     private final QrService qrService;
     @Value("${qr.url.prefix}")
     private String qrUrlPrefix;
-    @Value("${qr.url.event-suffix}")
+    @Value("${qr.url.event.suffix}")
     private String qrUrlSuffix;
 
     @Override
