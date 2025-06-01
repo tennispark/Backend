@@ -12,7 +12,7 @@ import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberSta
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
-import kr.tennispark.members.user.infrastructure.repository.PointHistoryRepository;
+import kr.tennispark.point.user.infrastrurcture.repository.PointHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

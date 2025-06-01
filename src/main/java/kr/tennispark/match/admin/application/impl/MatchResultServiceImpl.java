@@ -14,6 +14,8 @@ import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultExce
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
+import kr.tennispark.point.common.application.service.PointService;
+import kr.tennispark.point.common.domain.entity.enums.PointReason;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class MatchResultServiceImpl implements MatchResultService {
+
+    private static final Integer WIN_POINT = 10;
+
+    private static final Integer WIN_MATCH_POINT = 3;
+    private static final Integer DRAW_MATCH_POINT = 2;
+    private static final Integer LOSE_MATCH_POINT = 1;
+
+    private final PointService pointService;
 
     private final MemberRepository memberRepository;
     private final MatchResultRepository matchResultRepository;
@@ -68,12 +78,15 @@ public class MatchResultServiceImpl implements MatchResultService {
     }
 
     private void rewardWinningTeam(MatchOutcome outcome, List<Member> members) {
-        memberService.processMatchPoint(members, outcome);
+        processMatchPoint(members, outcome);
 
-        if (outcome == MatchOutcome.WIN) {
-            memberService.earnPointByMatch(members);
+        for (Member member : members) {
+            if (outcome == MatchOutcome.WIN) {
+                pointService.applyPoint(member, WIN_POINT, PointReason.WIN_MATCH, "매치 승리");
+            }
         }
     }
+
 
     private List<Member> fetchMembersByIds(List<Long> ids) {
         return memberRepository.findAllById(ids);
@@ -100,6 +113,17 @@ public class MatchResultServiceImpl implements MatchResultService {
             return MatchOutcome.LOSE;
         } else {
             return MatchOutcome.DRAW;
+        }
+    }
+
+    private void processMatchPoint(List<Member> members, MatchOutcome matchOutcome) {
+        for (Member member : members) {
+            int matchPoint = switch (matchOutcome) {
+                case WIN -> WIN_MATCH_POINT;
+                case DRAW -> DRAW_MATCH_POINT;
+                case LOSE -> LOSE_MATCH_POINT;
+            };
+            member.increaseMatchPoint(matchPoint);
         }
     }
 }
