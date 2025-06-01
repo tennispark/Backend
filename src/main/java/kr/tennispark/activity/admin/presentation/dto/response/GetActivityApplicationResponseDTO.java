@@ -10,6 +10,7 @@ public record GetActivityApplicationResponseDTO(
     public static GetActivityApplicationResponseDTO of(Page<Activity> activities) {
         Page<ActivityApplicationDTO> applications = activities.map(activity ->
                 ActivityApplicationDTO.of(
+                        activity.getId(),
                         activity.getPlace().getName(),
                         activity.getScheduledTime().getBeginAt(),
                         activity.getScheduledTime().getEndAt(),
@@ -21,6 +22,7 @@ public record GetActivityApplicationResponseDTO(
     }
 
     public record ActivityApplicationDTO(
+            Long id,
             String name,
             LocalTime startAt,
             LocalTime endAt,
@@ -28,13 +30,14 @@ public record GetActivityApplicationResponseDTO(
             int capacity
     ) {
         public static ActivityApplicationDTO of(
+                Long id,
                 String name,
                 LocalTime startAt,
                 LocalTime endAt,
                 int participantCount,
                 int capacity
         ) {
-            return new ActivityApplicationDTO(name, startAt, endAt, participantCount, capacity);
+            return new ActivityApplicationDTO(id, name, startAt, endAt, participantCount, capacity);
         }
 
     }

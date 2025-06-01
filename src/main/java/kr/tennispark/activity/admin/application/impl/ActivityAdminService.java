@@ -62,6 +62,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 applicantId, activityId);
 
         activityApplication.modifyStatus(request.applicationStatus());
+
     }
 
     @Override

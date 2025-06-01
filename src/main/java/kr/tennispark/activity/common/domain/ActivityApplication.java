@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import kr.tennispark.activity.admin.application.exception.AlreadyApprovedApplicationException;
+import kr.tennispark.activity.admin.application.exception.AlreadyCanceledApplicationException;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
@@ -46,14 +48,26 @@ public class ActivityApplication extends BaseEntity {
     }
 
     public void cancel() {
+        if (this.applicationStatus == ApplicationStatus.CANCELED) {
+            throw new AlreadyCanceledApplicationException();
+        }
         this.applicationStatus = ApplicationStatus.CANCELED;
+    }
+
+    public void approve() {
+        if (this.applicationStatus == ApplicationStatus.APPROVED) {
+            throw new AlreadyApprovedApplicationException();
+        }
+        this.applicationStatus = ApplicationStatus.APPROVED;
     }
 
     public void modifyStatus(ApplicationStatus status) {
         if (status == ApplicationStatus.CANCELED) {
             cancel();
+            activity.decrementParticipant();
         } else {
-            this.applicationStatus = status;
+            approve();
+            activity.incrementParticipant();
         }
     }
 }

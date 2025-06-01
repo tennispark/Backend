@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import kr.tennispark.activity.common.domain.enums.CourtType;
 import kr.tennispark.activity.common.domain.exception.CapacityExceededException;
+import kr.tennispark.activity.common.domain.exception.ParticipantUnderflowException;
 import kr.tennispark.activity.common.domain.vo.Place;
 import kr.tennispark.activity.common.domain.vo.ScheduledTime;
 import kr.tennispark.common.domain.BaseEntity;
@@ -72,6 +73,13 @@ public class Activity extends BaseEntity {
             throw new CapacityExceededException();
         }
         this.participantCount++;
+    }
+
+    public void decrementParticipant() {
+        if (participantCount <= 0) {
+            throw new ParticipantUnderflowException();
+        }
+        this.participantCount--;
     }
 }
 
