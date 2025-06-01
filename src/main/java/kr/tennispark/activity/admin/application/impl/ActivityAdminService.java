@@ -36,7 +36,8 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 request.endAt(),
                 request.activeDays(),
                 request.isRecurring(),
-                request.participantCount());
+                request.participantCount(),
+                request.courtName());
 
         activityInfoRepository.save(act);
     }
@@ -52,7 +53,8 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 request.endAt(),
                 request.activeDays(),
                 request.isRecurring(),
-                request.participantCount());
+                request.participantCount(),
+                request.courtName());
     }
 
     @Override
