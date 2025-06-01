@@ -14,6 +14,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     boolean existsByTemplateAndDate(ActivityInfo template, LocalDate date);
 
+    long count();
+  
     Page<Activity> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     default Activity getById(Long activityId) {

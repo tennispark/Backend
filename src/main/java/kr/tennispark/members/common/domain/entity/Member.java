@@ -59,6 +59,9 @@ public class Member extends BaseEntity {
     private Point point;
 
     @Column(nullable = false)
+    private Integer matchPoint = 0;
+
+    @Column(nullable = false)
     private String instagramId;
 
     @Column(nullable = false)
@@ -83,6 +86,7 @@ public class Member extends BaseEntity {
         this.tennisCareer = tennisCareer;
         this.recommender = recommender;
         this.point = Point.of(this);
+        this.matchPoint = 0;
         this.instagramId = instagramId;
         this.gender = gender;
         this.registrationSource = registrationSource;
@@ -107,6 +111,14 @@ public class Member extends BaseEntity {
                 && (isBlank(recommender))) {
             throw new InvalidMemberException("가입 경로가 친구 추천인 경우, 추천인 아이디는 필수입니다.");
         }
+    }
+
+    public void increaseMatchPoint(Integer point) {
+        this.matchPoint += point;
+    }
+
+    public void updateMemberShipType(MemberShipType memberShipType) {
+        this.memberShipType = memberShipType;
     }
 
 }
