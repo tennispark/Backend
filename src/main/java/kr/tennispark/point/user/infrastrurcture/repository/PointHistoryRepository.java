@@ -1,12 +1,15 @@
-package kr.tennispark.members.user.infrastructure.repository;
+package kr.tennispark.point.user.infrastrurcture.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.common.domain.entity.association.PointHistory;
+import kr.tennispark.point.common.domain.entity.PointHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PointHistoryRepository extends JpaRepository<PointHistory, Long> {
 
     @Query("""
@@ -36,4 +39,6 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             ORDER BY SUM(ph.amount) ASC
             """)
     Optional<Member> findTopSpender(LocalDateTime start, LocalDateTime end);
+
+    List<PointHistory> findAllByMember(Member member);
 }

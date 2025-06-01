@@ -1,10 +1,11 @@
-package kr.tennispark.members.common.domain.entity.association;
+package kr.tennispark.point.common.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.point.common.domain.exception.NotEnoughPointException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +31,10 @@ public class Point extends BaseEntity {
         return new Point(member, 0);
     }
 
-    public void addPoint(int amount) {
+    public void updatePoint(int amount) {
+        if (totalPoint + amount < 0) {
+            throw new NotEnoughPointException();
+        }
         this.totalPoint += amount;
     }
 }

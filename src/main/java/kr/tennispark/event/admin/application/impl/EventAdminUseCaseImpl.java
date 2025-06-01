@@ -22,15 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventAdminUseCaseImpl implements EventAdminUseCase {
 
     private static final Integer MAX_EVENT_COUNT = 5;
-
-    @Value("${qr.url.prefix}")
-    private String qrUrlPrefix;
-
-    @Value("${qr.url.suffix}")
-    private String qrUrlSuffix;
-
     private final EventRepository eventRepository;
     private final QrService qrService;
+    @Value("${qr.url.prefix}")
+    private String qrUrlPrefix;
+    @Value("${qr.event.suffix}")
+    private String qrUrlSuffix;
 
     @Override
     public GetEventResponseDTO getAllEvents(int page, int size) {
