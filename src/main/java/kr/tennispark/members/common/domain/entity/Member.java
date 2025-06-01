@@ -2,14 +2,19 @@ package kr.tennispark.members.common.domain.entity;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
+import kr.tennispark.members.common.domain.entity.association.Point;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
@@ -49,6 +54,13 @@ public class Member extends BaseEntity {
 
     private String recommender;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "point_id", nullable = false)
+    private Point point;
+
+    @Column(nullable = false)
+    private Integer matchPoint = 0;
+
     @Column(nullable = false)
     private String instagramId;
 
@@ -73,6 +85,8 @@ public class Member extends BaseEntity {
         this.year = year;
         this.tennisCareer = tennisCareer;
         this.recommender = recommender;
+        this.point = Point.of(this);
+        this.matchPoint = 0;
         this.instagramId = instagramId;
         this.gender = gender;
         this.registrationSource = registrationSource;
@@ -97,6 +111,14 @@ public class Member extends BaseEntity {
                 && (isBlank(recommender))) {
             throw new InvalidMemberException("가입 경로가 친구 추천인 경우, 추천인 아이디는 필수입니다.");
         }
+    }
+
+    public void increaseMatchPoint(Integer point) {
+        this.matchPoint += point;
+    }
+
+    public void updateMemberShipType(MemberShipType memberShipType) {
+        this.memberShipType = memberShipType;
     }
 
 }

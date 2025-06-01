@@ -2,8 +2,8 @@ package kr.tennispark.match.admin.application.impl;
 
 import java.util.List;
 import kr.tennispark.match.admin.application.MatchResultService;
+import kr.tennispark.match.admin.infrastructure.MatchParticipationRepository;
 import kr.tennispark.match.admin.infrastructure.MatchResultRepository;
-import kr.tennispark.match.admin.infrastructure.MemberRecordRepository;
 import kr.tennispark.match.admin.presentation.dto.request.SaveMatchResultRequestDTO;
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO;
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
@@ -12,6 +12,7 @@ import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,9 @@ public class MatchResultServiceImpl implements MatchResultService {
 
     private final MemberRepository memberRepository;
     private final MatchResultRepository matchResultRepository;
-    private final MemberRecordRepository memberRecordRepository;
+    private final MatchParticipationRepository matchParticipationRepository;
+
+    private final MemberService memberService;
 
     @Override
     public void saveMatchResult(SaveMatchResultRequestDTO request) {
@@ -42,6 +45,9 @@ public class MatchResultServiceImpl implements MatchResultService {
 
         MatchOutcome teamAOutcome = determineMatchOutcome(request.teamA().score(), request.teamB().score());
         MatchOutcome teamBOutcome = determineMatchOutcome(request.teamB().score(), request.teamA().score());
+
+        rewardWinningTeam(teamAOutcome, teamAMembers);
+        rewardWinningTeam(teamBOutcome, teamBMembers);
 
         saveMemberRecords(teamAMembers, matchResult, teamAOutcome, request.teamA().score());
         saveMemberRecords(teamBMembers, matchResult, teamBOutcome, request.teamB().score());
@@ -61,6 +67,14 @@ public class MatchResultServiceImpl implements MatchResultService {
         return GetMemberSummaryResponseDTO.of(memberSummaryDTOS);
     }
 
+    private void rewardWinningTeam(MatchOutcome outcome, List<Member> members) {
+        memberService.processMatchPoint(members, outcome);
+
+        if (outcome == MatchOutcome.WIN) {
+            memberService.earnPointByMatch(members);
+        }
+    }
+
     private List<Member> fetchMembersByIds(List<Long> ids) {
         return memberRepository.findAllById(ids);
     }
@@ -75,7 +89,7 @@ public class MatchResultServiceImpl implements MatchResultService {
                                    int score) {
         members.forEach(member -> {
             MatchParticipation record = MatchParticipation.of(member, matchResult, matchOutcome, score);
-            memberRecordRepository.save(record);
+            matchParticipationRepository.save(record);
         });
     }
 
