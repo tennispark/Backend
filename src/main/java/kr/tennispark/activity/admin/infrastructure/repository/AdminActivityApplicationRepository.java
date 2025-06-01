@@ -1,5 +1,6 @@
 package kr.tennispark.activity.admin.infrastructure.repository;
 
+import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import kr.tennispark.activity.admin.application.exception.NoSuchActivityApplicationException;
 import kr.tennispark.activity.common.domain.Activity;
@@ -7,6 +8,7 @@ import kr.tennispark.activity.common.domain.ActivityApplication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 public interface AdminActivityApplicationRepository extends JpaRepository<ActivityApplication, Long> {
@@ -22,6 +24,7 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
             """)
     Optional<ActivityApplication> findByMember_IdAndActivity_Id(Long memberId, Long activityId);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     default ActivityApplication getByMemberIdAndActivityId(Long memberId, Long activityId) {
         return findByMember_IdAndActivity_Id(memberId, activityId)
                 .orElseThrow(NoSuchActivityApplicationException::new);
