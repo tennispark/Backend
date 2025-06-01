@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AdminProductService {
 
+    private static final int BASIC_QUANTITY = 1;
+
     private final QrService qrService;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
@@ -27,6 +29,7 @@ public class AdminProductService {
         PurchasePayload payload = qrService.parseToken(token, PurchasePayload.class);
         Product product = productRepository.getById(payload.productId());
         Member member = memberRepository.getById(payload.memberId());
+        product.decreaseStock(BASIC_QUANTITY);
         pointService.applyPoint(member, product.getPoint(), PointReason.BUY, product.getName());
     }
 }

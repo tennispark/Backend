@@ -3,6 +3,7 @@ package kr.tennispark.point.common.domain.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import kr.tennispark.common.domain.BaseEntity;
+import kr.tennispark.point.common.domain.exception.OutOfStockException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,11 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("0")
     private Integer quantity;
+
+    public void decreaseStock(int qty) {
+        if (quantity < qty) {
+            throw new OutOfStockException();
+        }
+        quantity -= qty;
+    }
 }
