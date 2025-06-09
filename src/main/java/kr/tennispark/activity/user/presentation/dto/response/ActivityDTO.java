@@ -15,7 +15,7 @@ public record ActivityDTO(
         PlaceDTO place,
         String courtName
 ) {
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy.MM.dd(E)", Locale.KOREAN);
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     public static ActivityDTO of(Activity a) {
