@@ -2,7 +2,7 @@ package kr.tennispark.activity.user.presentation.controller;
 
 import jakarta.validation.Valid;
 import kr.tennispark.activity.user.application.service.ActivityCertificationService;
-import kr.tennispark.activity.user.presentation.dto.response.PostCertificationRequest;
+import kr.tennispark.activity.user.presentation.dto.request.PostCertificationRequest;
 import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;

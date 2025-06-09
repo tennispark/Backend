@@ -1,4 +1,4 @@
-package kr.tennispark.activity.user.presentation.dto.response;
+package kr.tennispark.activity.user.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 
