@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -40,7 +39,6 @@ public class QrService {
     }
 
     // request를 암호화한 qr 생성
-    @Transactional
     public String createPayloadQr(Object payload, String path) {
         String token = tokenCodec.encode(payload);
 

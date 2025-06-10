@@ -29,6 +29,7 @@ public class UserProductService {
         return GetAllProductResponse.of(products);
     }
 
+    @Transactional
     public PurchaseProductResponse createPurchaseQr(long productId, Member member) {
         Product product = productRepository.getById(productId);
 
