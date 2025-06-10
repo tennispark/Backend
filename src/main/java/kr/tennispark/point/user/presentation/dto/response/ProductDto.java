@@ -6,6 +6,7 @@ import kr.tennispark.point.common.domain.entity.Product;
 public record ProductDto(
         Long productId,
         String name,
+        String brand,
         Integer price,
         String imageUrl
 ) {
@@ -14,6 +15,7 @@ public record ProductDto(
         return new ProductDto(
                 product.getId(),
                 product.getName(),
+                product.getBrand(),
                 product.getPoint(),
                 product.getImageUrl()
         );
