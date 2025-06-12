@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class RedisTokenService {
 
     private static final String REFRESH_PREFIX = "refresh:";
-    private static final String BLACKLIST_PREFIX = "blacklist:";
 
     private final RedisRepository redisRepository;
 
@@ -39,9 +38,5 @@ public class RedisTokenService {
 
     private String buildRefreshKey(String value) {
         return REFRESH_PREFIX + value;
-    }
-
-    private String buildBlacklistKey(String accessToken) {
-        return BLACKLIST_PREFIX + accessToken;
     }
 }
