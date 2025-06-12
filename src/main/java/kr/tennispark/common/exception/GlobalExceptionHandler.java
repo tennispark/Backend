@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleJwtException(JwtException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body("유효하지 않은 토큰입니다.");
+                .body(ApiUtils.error(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."));
     }
 
     @ExceptionHandler(FailToCreateQRPayloadException.class)
