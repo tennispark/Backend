@@ -3,6 +3,7 @@ package kr.tennispark.common.exception;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.util.stream.Collectors;
+import kr.tennispark.auth.admin.application.exception.MismatchedRoleTokenException;
 import kr.tennispark.auth.common.application.exception.ExpiredTokenException;
 import kr.tennispark.common.exception.base.DuplicateException;
 import kr.tennispark.common.exception.base.InvalidException;
@@ -101,6 +102,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadQrCreateException.class)
     public ResponseEntity<?> handleBadQrCreateException(BadQrCreateException e) {
+        return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
+
+    @ExceptionHandler(MismatchedRoleTokenException.class)
+    public ResponseEntity<?> handleMismatchedRoleTokenException(MismatchedRoleTokenException e) {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
 }
