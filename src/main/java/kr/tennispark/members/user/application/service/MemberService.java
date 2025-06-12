@@ -2,7 +2,7 @@ package kr.tennispark.members.user.application.service;
 
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
-import kr.tennispark.match.user.infrastructure.repository.MatchParticipationRepository;
+import kr.tennispark.match.user.infrastructure.repository.UserMatchParticipationRepository;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
@@ -19,7 +19,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MatchPointRankingRepository rankingRepository;
-    private final MatchParticipationRepository participationRepository;
+    private final UserMatchParticipationRepository participationRepository;
 
     @Transactional
     public void createMember(RegisterMemberRequest request) {

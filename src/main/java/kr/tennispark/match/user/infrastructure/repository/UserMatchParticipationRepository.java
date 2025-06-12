@@ -4,7 +4,7 @@ import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MatchParticipationRepository extends JpaRepository<MatchParticipation, Long> {
+public interface UserMatchParticipationRepository extends JpaRepository<MatchParticipation, Long> {
 
     long countByMemberIdAndMatchOutcome(Long memberId, MatchOutcome outcome);
 }
