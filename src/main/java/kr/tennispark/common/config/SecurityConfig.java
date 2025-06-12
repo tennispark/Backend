@@ -3,6 +3,7 @@ package kr.tennispark.common.config;
 import static kr.tennispark.common.constant.JwtConstants.ADMIN_ROLE_VALUE;
 
 import kr.tennispark.auth.admin.infrastructure.config.AdminProps;
+import kr.tennispark.common.security.CustomAuthenticationEntryPoint;
 import kr.tennispark.common.security.JwtToAdminAuthenticationConverter;
 import kr.tennispark.common.security.JwtToMemberAuthenticationConverter;
 import kr.tennispark.common.security.handler.CustomAccessDeniedHandler;
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final JwtToAdminAuthenticationConverter jwtToAdminConverter;
     private final JwtToMemberAuthenticationConverter jwtAuthConverter;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     @Order(0)
@@ -41,7 +43,9 @@ public class SecurityConfig {
                                 "/api/admin/auth/logout"
                         ).permitAll()
                         .anyRequest().hasRole(ADMIN_ROLE_VALUE))
-                .exceptionHandling(eh -> eh.accessDeniedHandler(accessDeniedHandler))
+                .exceptionHandling(eh -> eh
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint))
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtToAdminConverter)));
         return http.build();
@@ -60,7 +64,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
                         .requestMatchers("/api/members/auth/**").permitAll()
                         .anyRequest().authenticated())
-                .exceptionHandling(eh -> eh.accessDeniedHandler(accessDeniedHandler))
+                .exceptionHandling(eh -> eh
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint))
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)));
 
