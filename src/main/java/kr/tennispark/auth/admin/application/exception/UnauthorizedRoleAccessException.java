@@ -3,9 +3,9 @@ package kr.tennispark.auth.admin.application.exception;
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.HttpStatus;
 
-public class MismatchedRoleTokenException extends RuntimeException {
+public class UnauthorizedRoleAccessException extends RuntimeException {
 
-    private final String message = "요구된 역할과 토큰의 역할이 일치하지 않습니다.";
+    private final String message = "권한이 없는 사용자입니다.";
 
     public ApiUtils.ApiResult<?> body() {
         return ApiUtils.error(HttpStatus.FORBIDDEN, message);

@@ -1,6 +1,6 @@
 package kr.tennispark.auth.admin.application.service;
 
-import kr.tennispark.auth.admin.application.exception.MismatchedRoleTokenException;
+import kr.tennispark.auth.admin.application.exception.UnauthorizedRoleAccessException;
 import kr.tennispark.auth.common.application.JwtTokenProvider;
 import kr.tennispark.auth.common.application.dto.TokenDTO;
 import kr.tennispark.auth.common.application.exception.ExpiredTokenException;
@@ -34,7 +34,7 @@ public class AdminTokenService {
     private void validate(String refreshToken) {
         String role = jwtTokenProvider.getRole(refreshToken);
         if (!role.equals(ROLE)) {
-            throw new MismatchedRoleTokenException();
+            throw new UnauthorizedRoleAccessException();
         }
 
         if (blacklistService.isBlacklisted(refreshToken)) {
