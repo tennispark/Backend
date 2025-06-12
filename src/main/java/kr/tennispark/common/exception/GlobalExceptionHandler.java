@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleJwtException(JwtException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body("유효하지 않은 토큰입니다.");
+                .body(ApiUtils.error(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."));
     }
 
     @ExceptionHandler(FailToCreateQRPayloadException.class)
@@ -102,5 +102,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadQrCreateException.class)
     public ResponseEntity<?> handleBadQrCreateException(BadQrCreateException e) {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResult<?>> handleIllegalState(IllegalStateException e) {
+        log.error("시스템 상태 오류: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiUtils.error(HttpStatus.INTERNAL_SERVER_ERROR, "요청 처리 중 오류가 발생했습니다."));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResult<?>> handleUnexpected(Exception e) {
+        log.error("처리되지 않은 예외 발생", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiUtils.error(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다."));
     }
 }

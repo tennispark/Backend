@@ -2,7 +2,10 @@ package kr.tennispark.activity.admin.presentation;
 
 import jakarta.validation.Valid;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
+import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityApplicationRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
@@ -32,6 +35,23 @@ public class ActivityAdminController {
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
+    @GetMapping("/activities/applications")
+    public ResponseEntity<ApiResult<GetActivityApplicationResponseDTO>> getActivityApplicationList(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        GetActivityApplicationResponseDTO response = actUseCase.getActivityApplicationList(page, size);
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
+
+    @GetMapping("/activities/{activityId}/applicants")
+    public ResponseEntity<ApiResult<GetActivityApplicantResponseDTO>> getActivityApplicantList(
+            @PathVariable Long activityId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        GetActivityApplicantResponseDTO response = actUseCase.getActivityApplicantList(activityId, page, size);
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
+
     @PostMapping("/activities")
     public ResponseEntity<ApiResult<?>> registerActivityInfo(@RequestBody @Valid ManageActivityInfoRequestDTO request) {
         actUseCase.registerActivityInfo(request);
@@ -42,6 +62,15 @@ public class ActivityAdminController {
     public ResponseEntity<ApiResult<?>> modifyActivityInfo(@PathVariable Long activityId,
                                                            @RequestBody @Valid ManageActivityInfoRequestDTO request) {
         actUseCase.modifyActivityInfoDetails(activityId, request);
+        return ResponseEntity.ok(ApiUtils.success());
+    }
+
+    @PutMapping("/activities/{activityId}/applicants/{applicantId}")
+    public ResponseEntity<ApiResult<?>> modifyActivityApplicant(
+            @PathVariable Long activityId,
+            @PathVariable Long applicantId,
+            @RequestBody ManageActivityApplicationRequestDTO request) {
+        actUseCase.modifyActivityApplication(applicantId, activityId, request);
         return ResponseEntity.ok(ApiUtils.success());
     }
 }

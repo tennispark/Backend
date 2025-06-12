@@ -7,7 +7,9 @@ public enum PointReason {
     ATTENDANCE("출석체크", true),
     EVENT("이벤트 참여", true),
     BUY("상품 구매", false),
-    RECOMMEND_FRIEND("친구 추천", true);
+    RECOMMEND_FRIEND("친구 추천", true),
+    WIN_MATCH("경기 승리", true),
+    ;
 
     private final String defaultTitle;
     private final boolean earned;      // true → 지급, false → 차감
