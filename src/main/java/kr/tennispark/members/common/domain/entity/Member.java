@@ -14,12 +14,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
-import kr.tennispark.point.common.domain.entity.Point;
 import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.entity.enums.RegistrationSource;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.common.domain.exception.InvalidMemberException;
+import kr.tennispark.point.common.domain.entity.Point;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,6 +59,7 @@ public class Member extends BaseEntity {
     private Point point;
 
     @Column(nullable = false)
+    @ColumnDefault("0")
     private Integer matchPoint = 0;
 
     @Column(nullable = false)
