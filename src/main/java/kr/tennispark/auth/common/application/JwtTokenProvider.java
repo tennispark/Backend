@@ -61,4 +61,20 @@ public class JwtTokenProvider {
             throw new InvalidTokenException();
         }
     }
+
+    public Instant getExpires(String token) {
+        try {
+            return jwtDecoder.decode(token).getExpiresAt();
+        } catch (JwtException e) {
+            throw new InvalidTokenException();
+        }
+    }
+
+    public String getRole(String token) {
+        try {
+            return jwtDecoder.decode(token).getClaim(ROLE_CLAIM);
+        } catch (JwtException e) {
+            throw new InvalidTokenException();
+        }
+    }
 }
