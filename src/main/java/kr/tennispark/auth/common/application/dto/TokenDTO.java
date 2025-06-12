@@ -1,4 +1,4 @@
-package kr.tennispark.auth.user.application.dto;
+package kr.tennispark.auth.common.application.dto;
 
 import lombok.Builder;
 

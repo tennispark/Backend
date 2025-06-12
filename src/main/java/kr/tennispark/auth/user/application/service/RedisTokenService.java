@@ -2,7 +2,7 @@ package kr.tennispark.auth.user.application.service;
 
 
 import java.time.Duration;
-import kr.tennispark.auth.user.application.exception.ExpiredTokenException;
+import kr.tennispark.auth.common.application.exception.ExpiredTokenException;
 import kr.tennispark.common.infrastructure.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package kr.tennispark.auth.user.application.exception;
+package kr.tennispark.auth.common.application.exception;
 
 import kr.tennispark.common.exception.base.InvalidException;
 

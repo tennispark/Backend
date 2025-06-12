@@ -4,7 +4,7 @@ import static kr.tennispark.common.constant.JwtConstants.ROLE_CLAIM;
 
 import java.time.Duration;
 import java.time.Instant;
-import kr.tennispark.auth.user.application.exception.InvalidTokenException;
+import kr.tennispark.auth.common.application.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;

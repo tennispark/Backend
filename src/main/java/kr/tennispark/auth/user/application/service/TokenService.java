@@ -1,7 +1,7 @@
 package kr.tennispark.auth.user.application.service;
 
 import kr.tennispark.auth.common.application.JwtTokenProvider;
-import kr.tennispark.auth.user.application.dto.TokenDTO;
+import kr.tennispark.auth.common.application.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package kr.tennispark.auth.user.application.service;
 
-import kr.tennispark.auth.user.application.dto.TokenDTO;
+import kr.tennispark.auth.common.application.dto.TokenDTO;
 import kr.tennispark.auth.user.application.exception.MemberAlreadyExistsException;
 import kr.tennispark.auth.user.application.exception.PhoneNotVerifiedException;
 import kr.tennispark.auth.user.application.exception.PhoneVerificationFailedException;
