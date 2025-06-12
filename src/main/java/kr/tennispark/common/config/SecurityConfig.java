@@ -1,8 +1,10 @@
 package kr.tennispark.common.config;
 
+import kr.tennispark.auth.admin.infrastructure.config.AdminProps;
 import kr.tennispark.common.security.JwtToMemberAuthenticationConverter;
 import kr.tennispark.common.security.handler.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableConfigurationProperties(AdminProps.class)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
