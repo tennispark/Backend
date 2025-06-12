@@ -103,4 +103,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleBadQrCreateException(BadQrCreateException e) {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResult<?>> handleIllegalState(IllegalStateException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiUtils.error(HttpStatus.INTERNAL_SERVER_ERROR, "요청 처리 중 오류가 발생했습니다."));
+    }
 }
