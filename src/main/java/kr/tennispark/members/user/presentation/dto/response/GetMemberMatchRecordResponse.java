@@ -1,6 +1,6 @@
 package kr.tennispark.members.user.presentation.dto.response;
 
-public record MemberMatchRecordResponse(
+public record GetMemberMatchRecordResponse(
         long wins,
         long draws,
         long losses,

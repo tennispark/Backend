@@ -7,7 +7,7 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
-import kr.tennispark.members.user.presentation.dto.response.MemberMatchRecordResponse;
+import kr.tennispark.members.user.presentation.dto.response.GetMemberMatchRecordResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +42,7 @@ public class MemberService {
         return memberRepository.existsByPhone_Number(phoneNumber);
     }
 
-    public MemberMatchRecordResponse getMemberRecord(Member member) {
+    public GetMemberMatchRecordResponse getMemberMatchRecord(Member member) {
         long wins = participationRepository.countByMemberIdAndMatchOutcome(member.getId(), MatchOutcome.WIN);
         long draws = participationRepository.countByMemberIdAndMatchOutcome(member.getId(), MatchOutcome.DRAW);
         long losses = participationRepository.countByMemberIdAndMatchOutcome(member.getId(), MatchOutcome.LOSE);
@@ -50,6 +50,6 @@ public class MemberService {
         int matchPoint = member.getMatchPoint();
         long ranking = rankingRepository.getRank(member.getId());
 
-        return new MemberMatchRecordResponse(wins, draws, losses, matchPoint, ranking);
+        return new GetMemberMatchRecordResponse(wins, draws, losses, matchPoint, ranking);
     }
 }
