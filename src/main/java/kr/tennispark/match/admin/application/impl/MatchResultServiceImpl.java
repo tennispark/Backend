@@ -14,7 +14,6 @@ import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
-import kr.tennispark.members.user.application.service.MemberService;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.point.common.application.service.PointService;
 import kr.tennispark.point.common.domain.entity.enums.PointReason;
@@ -41,8 +40,6 @@ public class MatchResultServiceImpl implements MatchResultService {
     private final MatchParticipationRepository matchParticipationRepository;
 
     private final ApplicationEventPublisher eventPublisher;
-
-    private final MemberService memberService;
 
     private static GetMemberSummaryResponseDTO convertMembersToDTO(List<Member> members) {
         List<MemberSummaryDTO> memberSummaryDTOS = members.stream()
