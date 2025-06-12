@@ -1,12 +1,16 @@
 package kr.tennispark.common.config;
 
+import static kr.tennispark.common.constant.JwtConstants.ADMIN_ROLE_VALUE;
+
 import kr.tennispark.auth.admin.infrastructure.config.AdminProps;
+import kr.tennispark.common.security.JwtToAdminAuthenticationConverter;
 import kr.tennispark.common.security.JwtToMemberAuthenticationConverter;
 import kr.tennispark.common.security.handler.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,9 +24,31 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final JwtToAdminAuthenticationConverter jwtToAdminConverter;
     private final JwtToMemberAuthenticationConverter jwtAuthConverter;
 
     @Bean
+    @Order(0)
+    public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/admin/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/admin/auth/login",
+                                "/api/admin/auth/token/refresh",
+                                "/api/admin/auth/logout"
+                        ).permitAll()
+                        .anyRequest().hasRole(ADMIN_ROLE_VALUE))
+                .exceptionHandling(eh -> eh.accessDeniedHandler(accessDeniedHandler))
+                .oauth2ResourceServer(oauth -> oauth
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtToAdminConverter)));
+        return http.build();
+    }
+
+    @Bean
+    @Order(1)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
@@ -33,7 +59,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
                         .requestMatchers("/api/members/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(eh -> eh.accessDeniedHandler(accessDeniedHandler))
                 .oauth2ResourceServer(oauth -> oauth
