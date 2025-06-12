@@ -1,5 +1,7 @@
 package kr.tennispark.auth.admin.application.service;
 
+import static kr.tennispark.common.constant.JwtConstants.ADMIN_ROLE_VALUE;
+
 import kr.tennispark.auth.admin.application.exception.UnauthorizedRoleAccessException;
 import kr.tennispark.auth.common.application.JwtTokenProvider;
 import kr.tennispark.auth.common.application.dto.TokenDTO;
@@ -12,15 +14,14 @@ import org.springframework.stereotype.Service;
 public class AdminTokenService {
 
     private static final String SUBJECT = "admin";
-    private static final String ROLE = "ADMIN";
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AdminRedisBlacklistService blacklistService;
 
     public TokenDTO issueTokensFor() {
         TokenDTO tokens = TokenDTO.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(SUBJECT, ROLE))
-                .refreshToken(jwtTokenProvider.createRefreshToken(SUBJECT, ROLE))
+                .accessToken(jwtTokenProvider.createAccessToken(SUBJECT, ADMIN_ROLE_VALUE))
+                .refreshToken(jwtTokenProvider.createRefreshToken(SUBJECT, ADMIN_ROLE_VALUE))
                 .build();
         return tokens;
     }
@@ -33,7 +34,7 @@ public class AdminTokenService {
 
     private void validate(String refreshToken) {
         String role = jwtTokenProvider.getRole(refreshToken);
-        if (!role.equals(ROLE)) {
+        if (!role.equals(ADMIN_ROLE_VALUE)) {
             throw new UnauthorizedRoleAccessException();
         }
 

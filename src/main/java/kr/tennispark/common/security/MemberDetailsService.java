@@ -1,6 +1,7 @@
 package kr.tennispark.common.security;
 
 import static kr.tennispark.common.constant.JwtConstants.ROLE_PREFIX;
+import static kr.tennispark.common.constant.JwtConstants.USER_ROLE_VALUE;
 
 import java.util.List;
 import kr.tennispark.members.common.domain.entity.Member;
@@ -24,7 +25,7 @@ public class MemberDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("존재하지 않는 회원 전화번호"));
         return new MemberPrincipal(member,
-                List.of(new SimpleGrantedAuthority(ROLE_PREFIX + "USER")));   // 수정 필요
+                List.of(new SimpleGrantedAuthority(ROLE_PREFIX + USER_ROLE_VALUE)));
     }
 }
 

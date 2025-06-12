@@ -1,5 +1,7 @@
 package kr.tennispark.auth.user.application.service;
 
+import static kr.tennispark.common.constant.JwtConstants.USER_ROLE_VALUE;
+
 import kr.tennispark.auth.common.application.JwtTokenProvider;
 import kr.tennispark.auth.common.application.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +16,8 @@ public class TokenService {
 
     public TokenDTO issueTokensFor(String phoneNumber) {
         TokenDTO tokens = TokenDTO.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(phoneNumber, "USER"))
-                .refreshToken(jwtTokenProvider.createRefreshToken(phoneNumber, "USER"))
+                .accessToken(jwtTokenProvider.createAccessToken(phoneNumber, USER_ROLE_VALUE))
+                .refreshToken(jwtTokenProvider.createRefreshToken(phoneNumber, USER_ROLE_VALUE))
                 .build();
         redisTokenService.saveRefreshToken(phoneNumber, tokens.refreshToken());
         return tokens;
