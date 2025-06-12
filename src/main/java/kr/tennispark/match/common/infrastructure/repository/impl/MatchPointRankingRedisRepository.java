@@ -3,6 +3,7 @@ package kr.tennispark.match.common.infrastructure.repository.impl;
 import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +20,19 @@ public class MatchPointRankingRedisRepository implements MatchPointRankingReposi
 
     @Override
     public Long getRank(Long memberId) {
-        Long rank = redis.opsForZSet().reverseRank(KEY, memberId.toString());
-        return rank == null ? null : rank + 1;
+        String memberKey = memberId.toString();
+        ZSetOperations<String, String> zSet = redis.opsForZSet();
+
+        Long rank = zSet.reverseRank(KEY, memberKey);
+        if (rank == null) {
+            zSet.add(KEY, memberKey, 0.0);
+            rank = zSet.reverseRank(KEY, memberKey);
+
+            if (rank == null) {
+                throw new IllegalStateException("Redis에 순위 추가 후에도 조회되지 않습니다.");
+            }
+        }
+
+        return rank + 1;
     }
 }
