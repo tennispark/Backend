@@ -2,6 +2,7 @@ package kr.tennispark.auth.admin.application.service;
 
 import kr.tennispark.auth.admin.application.exception.AdminLoginFailedException;
 import kr.tennispark.auth.admin.infrastructure.config.AdminProps;
+import kr.tennispark.auth.admin.presentation.dto.requeest.AdminLoginRequest;
 import kr.tennispark.auth.admin.presentation.dto.response.AdminLoginResponse;
 import kr.tennispark.auth.common.application.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class AdminAuthService {
     private final PasswordEncoder encoder;
     private final AdminTokenService tokenService;
 
-    public AdminLoginResponse login(String id, String pw) {
-        if (!props.id().equals(id) || !encoder.matches(pw, props.password())) {
+    public AdminLoginResponse login(AdminLoginRequest request) {
+        if (!props.id().equals(request.id()) || !encoder.matches(request.password(), props.password())) {
             throw new AdminLoginFailedException();
         }
         TokenDTO tokens = tokenService.issueTokensFor();
