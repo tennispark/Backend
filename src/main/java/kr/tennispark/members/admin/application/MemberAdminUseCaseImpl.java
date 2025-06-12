@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
 import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplicationRepository;
+import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
 import kr.tennispark.members.admin.presentation.dto.response.GetMemberListResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberActivityStatsResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
@@ -26,6 +29,7 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     private final PointHistoryRepository pointHistoryRepository;
     private final UserActivityApplicationRepository activityApplicationRepository;
     private final ActivityRepository activityRepository;
+    private final MatchPointRankingRepository rankingRepository;
 
     @Override
     public GetMonthlyMemberActivityStatsResponseDTO getMonthlyActivityStats(LocalDate from, LocalDate to) {
@@ -66,7 +70,13 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
     @Override
     public GetMemberListResponseDTO getMemberList(String name) {
         List<Member> members = memberRepository.findByNameContaining(name);
-        return GetMemberListResponseDTO.of(members);
+        Map<Long, Integer> rankMap = members.stream()
+                .collect(Collectors.toMap(
+                        Member::getId,
+                        m -> rankingRepository.getRank(m.getId()).intValue()
+                ));
+
+        return GetMemberListResponseDTO.of(members, rankMap);
     }
 
     // ===== 내부 계산 메서드 =====

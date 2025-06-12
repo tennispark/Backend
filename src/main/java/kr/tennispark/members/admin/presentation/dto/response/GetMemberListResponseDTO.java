@@ -1,24 +1,17 @@
 package kr.tennispark.members.admin.presentation.dto.response;
 
 import java.util.List;
+import java.util.Map;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 
 public record GetMemberListResponseDTO(List<MemberDTO> members) {
 
-    public static GetMemberListResponseDTO of(List<Member> members) {
-        List<MemberDTO> memberDTOs = members.stream()
-                .map(member -> MemberDTO.of(
-                        member.getId(),
-                        member.getPhone().getNumber(),
-                        member.getName(),
-                        member.getTennisCareer(),
-                        member.getYear(),
-                        member.getInstagramId(),
-                        member.getMemberShipType()
-                ))
+    public static GetMemberListResponseDTO of(List<Member> members, Map<Long, Integer> ranks) {
+        List<MemberDTO> dtos = members.stream()
+                .map(member -> MemberDTO.of(member, ranks.getOrDefault(member.getId(), 0)))
                 .toList();
-        return new GetMemberListResponseDTO(memberDTOs);
+        return new GetMemberListResponseDTO(dtos);
     }
 
     public record MemberDTO(
@@ -26,13 +19,20 @@ public record GetMemberListResponseDTO(List<MemberDTO> members) {
             String phoneNumber,
             String name,
             String tennisCareer,
-            int year,
-            String instagramId,
+            int matchPoint,
+            int ranking,
             MemberShipType memberShipType
     ) {
-        public static MemberDTO of(Long memberId, String phoneNumber, String name, String tennisCareer, int year,
-                                   String instagramId, MemberShipType memberShipType) {
-            return new MemberDTO(memberId, phoneNumber, name, tennisCareer, year, instagramId, memberShipType);
+        public static MemberDTO of(Member member, int ranking) {
+            return new MemberDTO(
+                    member.getId(),
+                    member.getPhone().getNumber(),
+                    member.getName(),
+                    member.getTennisCareer(),
+                    member.getMatchPoint(),
+                    ranking,
+                    member.getMemberShipType()
+            );
         }
     }
 }

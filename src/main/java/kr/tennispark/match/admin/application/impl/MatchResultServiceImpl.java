@@ -7,16 +7,18 @@ import kr.tennispark.match.admin.infrastructure.MatchResultRepository;
 import kr.tennispark.match.admin.presentation.dto.request.SaveMatchResultRequestDTO;
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO;
 import kr.tennispark.match.admin.presentation.dto.response.GetMemberSummaryResponseDTO.MemberSummaryDTO;
+import kr.tennispark.match.common.application.dto.MatchPointIncreasedEvent;
 import kr.tennispark.match.common.domain.entity.MatchResult;
 import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.user.application.service.MemberService;
+import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.point.common.application.service.PointService;
 import kr.tennispark.point.common.domain.entity.enums.PointReason;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +39,14 @@ public class MatchResultServiceImpl implements MatchResultService {
     private final MatchResultRepository matchResultRepository;
     private final MatchParticipationRepository matchParticipationRepository;
 
-    private final MemberService memberService;
+    private final ApplicationEventPublisher eventPublisher;
+
+    private static GetMemberSummaryResponseDTO convertMembersToDTO(List<Member> members) {
+        List<MemberSummaryDTO> memberSummaryDTOS = members.stream()
+                .map(member -> MemberSummaryDTO.of(member.getId(), member.getName()))
+                .toList();
+        return GetMemberSummaryResponseDTO.of(memberSummaryDTOS);
+    }
 
     @Override
     public void saveMatchResult(SaveMatchResultRequestDTO request) {
@@ -70,13 +79,6 @@ public class MatchResultServiceImpl implements MatchResultService {
         return convertMembersToDTO(members);
     }
 
-    private static GetMemberSummaryResponseDTO convertMembersToDTO(List<Member> members) {
-        List<MemberSummaryDTO> memberSummaryDTOS = members.stream()
-                .map(member -> MemberSummaryDTO.of(member.getId(), member.getName()))
-                .toList();
-        return GetMemberSummaryResponseDTO.of(memberSummaryDTOS);
-    }
-
     private void rewardWinningTeam(MatchOutcome outcome, List<Member> members) {
         processMatchPoint(members, outcome);
 
@@ -89,7 +91,13 @@ public class MatchResultServiceImpl implements MatchResultService {
 
 
     private List<Member> fetchMembersByIds(List<Long> ids) {
-        return memberRepository.findAllById(ids);
+        List<Member> members = memberRepository.findAllById(ids);
+
+        if (members.size() != ids.size()) {
+            throw new NoSuchMemberException();
+        }
+
+        return members;
     }
 
     private void validateMemberDuplication(List<Long> teamAIds, List<Long> teamBIds) {
@@ -124,6 +132,8 @@ public class MatchResultServiceImpl implements MatchResultService {
                 case LOSE -> LOSE_MATCH_POINT;
             };
             member.increaseMatchPoint(matchPoint);
+            eventPublisher.publishEvent(
+                    new MatchPointIncreasedEvent(member.getId(), matchPoint));
         }
     }
 }
