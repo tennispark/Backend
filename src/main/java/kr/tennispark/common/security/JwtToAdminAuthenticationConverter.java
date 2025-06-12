@@ -1,7 +1,5 @@
 package kr.tennispark.common.security;
 
-
-import static kr.tennispark.common.constant.JwtConstants.ADMIN_ROLE_VALUE;
 import static kr.tennispark.common.constant.JwtConstants.ROLE_CLAIM;
 import static kr.tennispark.common.constant.JwtConstants.ROLE_PREFIX;
 
@@ -20,13 +18,10 @@ public class JwtToAdminAuthenticationConverter implements Converter<Jwt, Abstrac
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
         String role = jwt.getClaimAsString(ROLE_CLAIM);
-        if (!ADMIN_ROLE_VALUE.equals(role)) {
-            return null;
-        }
 
         return new UsernamePasswordAuthenticationToken(
                 ADMIN_PRINCIPAL,
                 "N/A",
-                List.of(new SimpleGrantedAuthority(ROLE_PREFIX + ADMIN_ROLE_VALUE)));
+                List.of(new SimpleGrantedAuthority(ROLE_PREFIX + role)));
     }
 }
