@@ -25,7 +25,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(CONTENT_TYPE);
         String json = objectMapper.writeValueAsString(
-                ApiUtils.error(HttpStatus.FORBIDDEN, "접근이 거부되었습니다.")
+                ApiUtils.error(HttpStatus.FORBIDDEN, "권한이 없는 사용자입니다.")
         );
         response.getWriter().write(json);
     }

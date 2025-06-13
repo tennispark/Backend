@@ -1,6 +1,6 @@
 package kr.tennispark.common.config;
 
-import kr.tennispark.auth.infrastructure.sms.SmsProperties;
+import kr.tennispark.auth.user.infrastructure.sms.SmsProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
