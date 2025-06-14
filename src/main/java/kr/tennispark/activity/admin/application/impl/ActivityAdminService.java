@@ -1,5 +1,7 @@
 package kr.tennispark.activity.admin.application.impl;
 
+import java.time.LocalDate;
+import java.util.List;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
@@ -28,6 +30,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     private final ActivityRepository activityRepository;
 
     @Override
+    @Transactional
     public void registerActivityInfo(ManageActivityInfoRequestDTO request) {
         ActivityInfo act = ActivityInfo.of(request.courtType(),
                 request.placeName(),
@@ -43,8 +46,9 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
-    public void modifyActivityInfoDetails(Long activityId, ManageActivityInfoRequestDTO request) {
-        ActivityInfo activityInfo = activityInfoRepository.getById(activityId);
+    @Transactional
+    public void modifyActivityInfoDetails(Long activityInfoId, ManageActivityInfoRequestDTO request) {
+        ActivityInfo activityInfo = activityInfoRepository.getById(activityInfoId);
 
         activityInfo.modifyActivityInfoDetails(request.courtType(),
                 request.placeName(),
@@ -58,6 +62,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
+    @Transactional
     public void modifyActivityApplication(Long applicantId, Long activityId,
                                           ManageActivityApplicationRequestDTO request) {
         ActivityApplication activityApplication = activityApplicationRepository.getByMemberIdAndActivityId(
@@ -65,6 +70,16 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
         activityApplication.modifyStatus(request.applicationStatus());
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteActivityInfo(Long activityInfoId) {
+        ActivityInfo activityInfo = activityInfoRepository.getById(activityInfoId);
+        List<Activity> activities = activityRepository.findAllByTemplateAndDateAfter(activityInfo, LocalDate.now());
+
+        activityRepository.deleteAll(activities);
+        activityInfoRepository.delete(activityInfo);
     }
 
     @Override

@@ -10,9 +10,11 @@ public interface ActivityAdminUseCase {
 
     void registerActivityInfo(ManageActivityInfoRequestDTO request);
 
-    void modifyActivityInfoDetails(Long activityId, ManageActivityInfoRequestDTO requestDTO);
+    void modifyActivityInfoDetails(Long activityInfoId, ManageActivityInfoRequestDTO requestDTO);
 
     void modifyActivityApplication(Long applicantId, Long activityId, ManageActivityApplicationRequestDTO request);
+
+    void deleteActivityInfo(Long activityInfoId);
 
     GetActivityResponseInfoDTO getActivityInfoList(Integer page, Integer size);
 
