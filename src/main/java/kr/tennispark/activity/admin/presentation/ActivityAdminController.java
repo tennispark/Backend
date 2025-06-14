@@ -11,6 +11,7 @@ import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,6 +72,12 @@ public class ActivityAdminController {
             @PathVariable Long applicantId,
             @RequestBody ManageActivityApplicationRequestDTO request) {
         actUseCase.modifyActivityApplication(applicantId, activityId, request);
+        return ResponseEntity.ok(ApiUtils.success());
+    }
+
+    @DeleteMapping("/activities/{activityId}")
+    public ResponseEntity<ApiResult<?>> deleteActivityInfo(@PathVariable Long activityId) {
+        actUseCase.deleteActivityInfo(activityId);
         return ResponseEntity.ok(ApiUtils.success());
     }
 }
