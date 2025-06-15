@@ -25,7 +25,7 @@ jobs:
       - name: Make application.yml
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.PROPERTIES }}" | base64 -d > src/main/resources/application.yml
+          printf '%s' "${{ secrets.PROPERTIES }}" > src/main/resources/application.yml 
 
       - name: Build by Gradle
         run: |
