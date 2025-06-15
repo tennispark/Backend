@@ -21,10 +21,10 @@ jobs:
       - name: Make application.yml
         shell: bash
         env:
-          APP_YML: ${{ secrets.TEST_PROPERTIES }}   # 그대로 환경변수로
+          APP_B64: ${{ secrets.TEST_PROPERTIES}}
         run: |
           mkdir -p src/main/resources
-          printf '%s\n' "$APP_YML" > src/main/resources/application.yml
+          echo "$APP_B64" | base64 --decode > src/main/resources/application.yml
 
       - name: Run tests
         run: |

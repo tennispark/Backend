@@ -25,11 +25,10 @@ jobs:
       - name: Make application.yml
         shell: bash
         env:
-          APP_YML: ${{ secrets.PROPERTIES }}
+          APP_B64: ${{ secrets.PROPERTIES}}
         run: |
           mkdir -p src/main/resources
-          printf '%s\n' "$APP_YML" > src/main/resources/application.yml
-
+          echo "$APP_B64" | base64 --decode > src/main/resources/application.yml
 
       - name: Yml check
         run: |
