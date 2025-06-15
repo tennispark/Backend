@@ -20,12 +20,11 @@ jobs:
 
       - name: Make application.yml
         shell: bash
+        env:
+          APP_YML: ${{ secrets.TEST_PROPERTIES }}   # 그대로 환경변수로
         run: |
           mkdir -p src/main/resources
-          bash -c "cat << 'EOF' > src/main/resources/application.yml
-          ${{ secrets.TEST_PROPERTIES }}
-          EOF
-          "
+          printf '%s\n' "$APP_YML" > src/main/resources/application.yml
 
       - name: Run tests
         run: |
