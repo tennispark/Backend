@@ -22,11 +22,13 @@ jobs:
         shell: bash
         run: |
           mkdir -p src/main/resources
-          bash -c "cat << 'EOF' > src/main/resources/application.yml
-          ${{ secrets.TEST_PROPERTIES }}
-          EOF
-          "
-          
-      - name: Run tests
-        run: |
-          ./gradlew test
+
+          cat <<EOF > tmp_app.yml
+  $(cat test-secret.txt)
+  EOF
+  
+          sed 's/^ *//' tmp_app.yml > src/main/resources/application.yml
+
+  - name: Run tests
+    run: |
+      ./gradlew test
