@@ -18,12 +18,15 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
-
       - name: Make application.yml
+        shell: bash
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.TEST_PROPERTIES }}" > src/main/resources/application.yml
-
+          bash -c "cat << 'EOF' > src/main/resources/application.yml
+          ${{ secrets.TEST_PROPERTIES }}
+          EOF
+          "
+          
       - name: Run tests
         run: |
           ./gradlew test
