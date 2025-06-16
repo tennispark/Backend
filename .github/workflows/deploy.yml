@@ -30,10 +30,6 @@ jobs:
           mkdir -p src/main/resources
           echo "$APP_B64" | base64 --decode > src/main/resources/application.yml
 
-      - name: Yml check
-        run: |
-          cat src/main/resources/application.yml
-
       - name: Build by Gradle
         run: |
           chmod +x ./gradlew
