@@ -24,7 +24,7 @@ public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase 
     public void saveAdvertisement(SaveAdvertisementRequestDTO request) {
         validateAdvertisementLimit(request.position());
 
-        Advertisement advertisement = Advertisement.of(request.imageUrl(), request.position());
+        Advertisement advertisement = Advertisement.of(request.imageUrl(), request.position(), request.linkUrl());
 
         advertisementRepository.save(advertisement);
     }
@@ -40,7 +40,7 @@ public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase 
     @Transactional
     public void updateAdvertisement(SaveAdvertisementRequestDTO request, Long advertisementId) {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
-        advertisement.updateImageUrl(request.imageUrl());
+        advertisement.updateAdvertisement(request.imageUrl(), request.linkUrl());
     }
 
     @Override

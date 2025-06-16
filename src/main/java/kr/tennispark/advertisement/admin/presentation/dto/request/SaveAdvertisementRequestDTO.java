@@ -4,6 +4,7 @@ import kr.tennispark.advertisement.common.domain.entity.enums.Position;
 
 public record SaveAdvertisementRequestDTO(
         String imageUrl,
-        Position position
+        Position position,
+        String linkUrl
 ) {
 }
