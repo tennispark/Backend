@@ -24,7 +24,7 @@ public record GetActivityApplicationResponseDTO(
 
     public record ActivityApplicationDTO(
             Long id,
-            String name,
+            String placeName,
             String courtName,
             LocalTime startAt,
             LocalTime endAt,
@@ -33,14 +33,14 @@ public record GetActivityApplicationResponseDTO(
     ) {
         public static ActivityApplicationDTO of(
                 Long id,
-                String name,
+                String placeName,
                 String courtName,
                 LocalTime startAt,
                 LocalTime endAt,
                 int participantCount,
                 int capacity
         ) {
-            return new ActivityApplicationDTO(id, name, courtName, startAt, endAt, participantCount, capacity);
+            return new ActivityApplicationDTO(id, placeName, courtName, startAt, endAt, participantCount, capacity);
         }
 
     }
