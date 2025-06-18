@@ -12,6 +12,7 @@ public record GetActivityApplicationResponseDTO(
                 ActivityApplicationDTO.of(
                         activity.getId(),
                         activity.getPlace().getName(),
+                        activity.getCourtName(),
                         activity.getScheduledTime().getBeginAt(),
                         activity.getScheduledTime().getEndAt(),
                         activity.getParticipantCount(),
@@ -23,7 +24,8 @@ public record GetActivityApplicationResponseDTO(
 
     public record ActivityApplicationDTO(
             Long id,
-            String name,
+            String placeName,
+            String courtName,
             LocalTime startAt,
             LocalTime endAt,
             int participantCount,
@@ -31,13 +33,14 @@ public record GetActivityApplicationResponseDTO(
     ) {
         public static ActivityApplicationDTO of(
                 Long id,
-                String name,
+                String placeName,
+                String courtName,
                 LocalTime startAt,
                 LocalTime endAt,
                 int participantCount,
                 int capacity
         ) {
-            return new ActivityApplicationDTO(id, name, startAt, endAt, participantCount, capacity);
+            return new ActivityApplicationDTO(id, placeName, courtName, startAt, endAt, participantCount, capacity);
         }
 
     }
