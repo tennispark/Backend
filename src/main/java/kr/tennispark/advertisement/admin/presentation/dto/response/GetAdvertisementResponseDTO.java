@@ -8,7 +8,7 @@ public record GetAdvertisementResponseDTO(List<AdvertisementDTO> advertisements)
 
     public static GetAdvertisementResponseDTO of(List<Advertisement> advertisements) {
         List<AdvertisementDTO> advertisementDTOs = advertisements.stream()
-                .map(ad -> AdvertisementDTO.of(ad.getId(), ad.getPosition(), ad.getImageUrl()))
+                .map(ad -> AdvertisementDTO.of(ad.getId(), ad.getPosition(), ad.getImageUrl(), ad.getLinkUrl()))
                 .toList();
 
         return new GetAdvertisementResponseDTO(advertisementDTOs);
@@ -17,10 +17,11 @@ public record GetAdvertisementResponseDTO(List<AdvertisementDTO> advertisements)
     public record AdvertisementDTO(
             Long id,
             Position position,
-            String imageUrl
+            String imageUrl,
+            String linkUrl
     ) {
-        public static AdvertisementDTO of(Long id, Position position, String imageUrl) {
-            return new AdvertisementDTO(id, position, imageUrl);
+        public static AdvertisementDTO of(Long id, Position position, String imageUrl, String linkUrl) {
+            return new AdvertisementDTO(id, position, imageUrl, linkUrl);
         }
     }
 
