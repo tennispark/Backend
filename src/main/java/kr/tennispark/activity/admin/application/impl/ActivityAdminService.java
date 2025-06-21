@@ -82,7 +82,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         ActivityApplication activityApplication = activityApplicationRepository.getByMemberIdAndActivityId(
                 applicantId, activityId);
 
-        activityApplication.modifyStatus(request.applicationStatus());
+        activityApplication.changeStatus(request.applicationStatus());
 
     }
 

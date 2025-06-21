@@ -9,8 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import kr.tennispark.activity.admin.application.exception.AlreadyApprovedApplicationException;
-import kr.tennispark.activity.admin.application.exception.AlreadyCanceledApplicationException;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
@@ -47,28 +45,30 @@ public class ActivityApplication extends BaseEntity {
         return new ActivityApplication(m, a, ApplicationStatus.PENDING);
     }
 
-    public void cancel() {
-        if (this.applicationStatus == ApplicationStatus.CANCELED) {
-            throw new AlreadyCanceledApplicationException();
+    private static int participantChange(ApplicationStatus from, ApplicationStatus to) {
+        boolean wasCounted = from.isCounted();
+        boolean willCount = to.isCounted();
+        if (wasCounted && !willCount) {
+            return -1;
         }
-        this.applicationStatus = ApplicationStatus.CANCELED;
+        if (!wasCounted && willCount) {
+            return +1;
+        }
+        return 0;
     }
 
-    public void approve() {
-        if (this.applicationStatus == ApplicationStatus.APPROVED) {
-            throw new AlreadyApprovedApplicationException();
+    public void changeStatus(ApplicationStatus nextStatus) {
+        if (this.applicationStatus == nextStatus) {
+            return;
         }
-        this.applicationStatus = ApplicationStatus.APPROVED;
-    }
 
-    public void modifyStatus(ApplicationStatus status) {
-        if (status == ApplicationStatus.CANCELED) {
-            cancel();
-            activity.decrementParticipant();
-        } else {
-            approve();
+        int change = participantChange(this.applicationStatus, nextStatus);
+        if (change > 0) {
             activity.incrementParticipant();
+        } else if (change < 0) {
+            activity.decrementParticipant();
         }
+        this.applicationStatus = nextStatus;
     }
 }
 
