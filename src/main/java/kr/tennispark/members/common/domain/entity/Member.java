@@ -50,7 +50,7 @@ public class Member extends BaseEntity {
     private int year;
 
     @Column(nullable = false)
-    private String tennisCareer;
+    private Integer tennisCareer;
 
     private String recommender;
 
@@ -78,7 +78,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
 
-    private Member(Phone phone, String name, int year, String tennisCareer, String recommender,
+    private Member(Phone phone, String name, int year, Integer tennisCareer, String recommender,
                    String instagramId, Gender gender, RegistrationSource registrationSource) {
         validateRecommender(registrationSource, recommender);
         this.phone = phone;
@@ -93,7 +93,7 @@ public class Member extends BaseEntity {
         this.registrationSource = registrationSource;
     }
 
-    public static Member of(Phone phone, String name, int year, String tennisCareer, String recommender,
+    public static Member of(Phone phone, String name, int year, Integer tennisCareer, String recommender,
                             String instagramId, Gender gender, RegistrationSource registrationSource) {
         return new Member(
                 phone,

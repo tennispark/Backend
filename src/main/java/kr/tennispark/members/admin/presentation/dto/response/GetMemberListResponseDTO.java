@@ -18,7 +18,7 @@ public record GetMemberListResponseDTO(List<MemberDTO> members) {
             Long memberId,
             String phoneNumber,
             String name,
-            String tennisCareer,
+            Integer tennisCareer,
             int matchPoint,
             int ranking,
             MemberShipType memberShipType
