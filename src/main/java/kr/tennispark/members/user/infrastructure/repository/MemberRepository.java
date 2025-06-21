@@ -6,6 +6,7 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -40,4 +41,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             WHERE m.id = :memberId
             """)
     Integer sumScoreByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Query("UPDATE Member m SET m.tennisCareer = m.tennisCareer + 1")
+    void bulkIncreaseTennisCareer();
 }

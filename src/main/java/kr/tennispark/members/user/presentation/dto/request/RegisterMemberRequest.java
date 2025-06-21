@@ -20,8 +20,9 @@ public record RegisterMemberRequest(
         @NotNull(message = "성별은 필수입니다.")
         Gender gender,
 
-        @NotBlank(message = "테니스 경력은 필수입니다.")
-        String tennisCareer,
+        @NotNull(message = "테니스 경력은 필수입니다.")
+        @Min(0)
+        Integer tennisCareer,
 
         @NotNull(message = "출생 연도는 필수입니다.")
         @Min(value = 1900, message = "출생 연도는 1900년 이후여야 합니다.")
