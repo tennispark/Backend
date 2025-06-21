@@ -43,8 +43,8 @@ public class ActivityApplication extends BaseEntity {
     @Column(nullable = false)
     private ApplicationStatus applicationStatus;
 
-    public static ActivityApplication approve(Member m, Activity a) {
-        return new ActivityApplication(m, a, ApplicationStatus.APPROVED);
+    public static ActivityApplication of(Member m, Activity a) {
+        return new ActivityApplication(m, a, ApplicationStatus.PENDING);
     }
 
     public void cancel() {
