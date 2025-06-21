@@ -17,6 +17,10 @@ public record WeekPeriod(LocalDate start) {
         return new WeekPeriod(start);
     }
 
+    public static LocalDate today() {
+        return LocalDate.now(ZONE_ID);
+    }
+
     public LocalDate toDate(Days day) {
         return start.with(TemporalAdjusters.nextOrSame(day.toDayOfWeek()));
     }

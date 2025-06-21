@@ -14,6 +14,7 @@ import kr.tennispark.activity.admin.presentation.dto.response.GetActivityRespons
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
+import kr.tennispark.activity.common.domain.vo.WeekPeriod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +43,20 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 request.participantCount(),
                 request.courtName());
 
-        activityInfoRepository.save(act);
+        act = activityInfoRepository.save(act);
+        generateInitialActivities(act);
+    }
+
+    private void generateInitialActivities(ActivityInfo template) {
+        LocalDate today = WeekPeriod.today();
+        WeekPeriod week = WeekPeriod.current();
+
+        List<Activity> activities = template.getActiveDays().stream()
+                .map(day -> Activity.of(template, week.toDate(day)))
+                .filter(act -> !act.getDate().isBefore(today))
+                .toList();
+
+        activityRepository.saveAll(activities);
     }
 
     @Override
