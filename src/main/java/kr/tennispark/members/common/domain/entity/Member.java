@@ -122,7 +122,4 @@ public class Member extends BaseEntity {
         this.memberShipType = memberShipType;
     }
 
-    public void increaseTennisCareer() {
-        tennisCareer++;
-    }
 }
