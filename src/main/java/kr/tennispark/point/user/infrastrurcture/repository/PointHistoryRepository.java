@@ -27,6 +27,7 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             AND ph.amount > 0 
             GROUP BY ph.point.member 
             ORDER BY SUM(ph.amount) DESC
+            LIMIT 1
             """)
     Optional<Member> findTopEarner(LocalDateTime start, LocalDateTime end);
 
@@ -36,7 +37,8 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             WHERE ph.createdAt BETWEEN :start AND :end 
             AND ph.amount < 0 
             GROUP BY ph.point.member 
-            ORDER BY SUM(ph.amount) ASC
+            ORDER BY SUM(ph.amount) ASC 
+            LIMIT 1
             """)
     Optional<Member> findTopSpender(LocalDateTime start, LocalDateTime end);
 
