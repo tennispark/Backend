@@ -6,9 +6,11 @@ import kr.tennispark.advertisement.admin.presentation.dto.request.SaveAdvertisem
 import kr.tennispark.advertisement.admin.presentation.dto.response.GetAdvertisementResponseDTO;
 import kr.tennispark.advertisement.common.domain.entity.Advertisement;
 import kr.tennispark.advertisement.common.domain.entity.enums.Position;
+import kr.tennispark.qr.application.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,15 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase {
 
     private static final Integer MAX_ADVERTISEMENTS_PER_POSITION = 3;
+    private static final String IMAGE_PREFIX = "ads/";
 
     private final AdvertisementRepository advertisementRepository;
+    private final S3UploadService uploadService;
 
     @Override
     @Transactional
-    public void saveAdvertisement(SaveAdvertisementRequestDTO request) {
+    public void saveAdvertisement(SaveAdvertisementRequestDTO request, MultipartFile image) {
         validateAdvertisementLimit(request.position());
+        String imageUrl = uploadService.uploadImageFile(image, IMAGE_PREFIX);
 
-        Advertisement advertisement = Advertisement.of(request.imageUrl(), request.position(), request.linkUrl());
+        Advertisement advertisement = Advertisement.of(imageUrl, request.position(), request.linkUrl());
 
         advertisementRepository.save(advertisement);
     }
@@ -38,9 +43,11 @@ public class AdvertisementAdminUseCaseImpl implements AdvertisementAdminUseCase 
 
     @Override
     @Transactional
-    public void updateAdvertisement(SaveAdvertisementRequestDTO request, Long advertisementId) {
+    public void updateAdvertisement(SaveAdvertisementRequestDTO request, MultipartFile image, Long advertisementId) {
         Advertisement advertisement = advertisementRepository.getById(advertisementId);
-        advertisement.updateAdvertisement(request.imageUrl(), request.linkUrl());
+
+        String imageUrl = uploadService.uploadImageFile(image, IMAGE_PREFIX);
+        advertisement.updateAdvertisement(imageUrl, request.linkUrl());
     }
 
     @Override

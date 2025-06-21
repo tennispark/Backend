@@ -53,7 +53,7 @@ public class ActivityCommandService {
 
     private void recordApplication(Member member, Activity activity) {
         ActivityApplication app =
-                ActivityApplication.approve(member, activity);
+                ActivityApplication.of(member, activity);
         applicationRepository.save(app);
     }
 }
