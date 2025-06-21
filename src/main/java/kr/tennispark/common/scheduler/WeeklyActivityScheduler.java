@@ -11,7 +11,7 @@ public class WeeklyActivityScheduler {
 
     private final WeeklyActivityGenerator generator;
 
-    @Scheduled(cron = "0 5 0 * * MON", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 5 0 * * FRI", zone = "Asia/Seoul")
     public void run() {
         generator.generateCurrentWeek();
     }
