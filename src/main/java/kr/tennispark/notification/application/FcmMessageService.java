@@ -48,7 +48,7 @@ public class FcmMessageService {
                 .build();
 
         try {
-            String response = FirebaseMessaging.getInstance().send(message);
+            FirebaseMessaging.getInstance().send(message);
         } catch (FirebaseMessagingException e) {
             log.warn("Failed to send FCM message to token: {} | reason: {}", token, e.getMessage());
             throw new FcmMessageSendFailureException();
