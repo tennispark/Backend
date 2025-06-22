@@ -1,4 +1,4 @@
-package kr.tennispark.alert.infrastructure;
+package kr.tennispark.notification.infrastructure;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
