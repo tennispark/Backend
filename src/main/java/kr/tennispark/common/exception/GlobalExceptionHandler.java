@@ -11,6 +11,7 @@ import kr.tennispark.common.exception.base.NotFoundException;
 import kr.tennispark.common.exception.base.UnsupportedTypeException;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
+import kr.tennispark.notification.application.exception.FcmMessageSendFailureException;
 import kr.tennispark.qr.application.exception.BadQrCreateException;
 import kr.tennispark.qr.application.exception.FailToCreateQRPayloadException;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +109,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedRoleAccessException.class)
     public ResponseEntity<?> handleMismatchedRoleTokenException(UnauthorizedRoleAccessException e) {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
+    
+    @ExceptionHandler(FcmMessageSendFailureException.class)
+    public ResponseEntity<ApiResult<String>> handleFcmMessageSendFailureException(
+            FcmMessageSendFailureException e) {
+        return ResponseEntity.status(e.status()).body((ApiUtils.error(e.status(), e.getMessage())));
     }
 
     @ExceptionHandler(IllegalStateException.class)
