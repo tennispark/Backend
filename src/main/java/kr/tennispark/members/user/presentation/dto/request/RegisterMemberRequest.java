@@ -35,7 +35,9 @@ public record RegisterMemberRequest(
         String recommender,
 
         @NotBlank(message = "인스타그램 ID는 필수입니다.")
-        String instagramId
+        String instagramId,
+
+        String fcmToken
 
 ) {
 }

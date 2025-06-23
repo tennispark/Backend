@@ -55,7 +55,6 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3"
     implementation 'io.github.openfeign:feign-jackson:12.1'
 
-
     // spring validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -78,6 +77,9 @@ dependencies {
 
     // configuration
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
 }
 
 tasks.named('test') {
