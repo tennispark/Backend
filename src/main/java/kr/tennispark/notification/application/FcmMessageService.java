@@ -1,9 +1,11 @@
 package kr.tennispark.notification.application;
 
+import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.SendResponse;
 import io.micrometer.common.util.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,13 +22,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FcmMessageService {
 
+    private static final int BATCH_SIZE = 500;
     private final MemberRepository memberRepository;
 
     public void sendBroadcastMessage(SendMessageRequestDTO request) {
         List<String> fcmTokens = getValidFcmTokens();
 
-        for (String token : fcmTokens) {
-            sendToToken(request, token);
+        // 500개씩 나눠서 전송
+        for (int i = 0; i < fcmTokens.size(); i += BATCH_SIZE) {
+            List<String> batch = fcmTokens.subList(i, Math.min(i + BATCH_SIZE, fcmTokens.size()));
+            sendMulticast(request, batch);
         }
     }
 
@@ -38,19 +43,31 @@ public class FcmMessageService {
                 .collect(Collectors.toList());
     }
 
-    private void sendToToken(SendMessageRequestDTO request, String token) {
-        Message message = Message.builder()
+    private void sendMulticast(SendMessageRequestDTO request, List<String> tokens) {
+        MulticastMessage message = MulticastMessage.builder()
                 .setNotification(Notification.builder()
                         .setTitle(request.title())
                         .setBody(request.content())
                         .build())
-                .setToken(token)
+                .addAllTokens(tokens)
                 .build();
 
         try {
-            FirebaseMessaging.getInstance().send(message);
+            BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
+
+            if (response.getFailureCount() > 0) {
+                List<SendResponse> failedResponses = response.getResponses().stream()
+                        .filter(r -> !r.isSuccessful())
+                        .toList();
+
+                for (int i = 0; i < failedResponses.size(); i++) {
+                    String failedToken = tokens.get(i);
+                    String error = failedResponses.get(i).getException().getMessage();
+                    log.warn("FCM 실패 - token: {}, error: {}", failedToken, error);
+                }
+            }
         } catch (FirebaseMessagingException e) {
-            log.warn("Failed to send FCM message to token: {} | reason: {}", token, e.getMessage());
+            log.error("FCM 멀티캐스트 전송 실패", e);
             throw new FcmMessageSendFailureException();
         }
     }
