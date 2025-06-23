@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p src/main/resources
           echo "$APP_B64" | base64 --decode > src/main/resources/application.yml
-          echo "$GOOGLE_JSON" > src/main/resources/firebase-service-account.json
+          echo "$GOOGLE_JSON" | base64 --decode > src/main/resources/firebase-service-account.json
 
       - name: Build by Gradle
         run: |
