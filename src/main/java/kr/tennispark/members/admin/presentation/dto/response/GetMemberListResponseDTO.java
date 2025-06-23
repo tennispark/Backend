@@ -3,6 +3,7 @@ package kr.tennispark.members.admin.presentation.dto.response;
 import java.util.List;
 import java.util.Map;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.members.common.domain.entity.enums.Gender;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 
 public record GetMemberListResponseDTO(List<MemberDTO> members) {
@@ -19,6 +20,7 @@ public record GetMemberListResponseDTO(List<MemberDTO> members) {
             String phoneNumber,
             String name,
             Integer tennisCareer,
+            Gender gender,
             int matchPoint,
             int ranking,
             MemberShipType memberShipType
@@ -29,6 +31,7 @@ public record GetMemberListResponseDTO(List<MemberDTO> members) {
                     member.getPhone().getNumber(),
                     member.getName(),
                     member.getTennisCareer(),
+                    member.getGender(),
                     member.getMatchPoint(),
                     ranking,
                     member.getMemberShipType()

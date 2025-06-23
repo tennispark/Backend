@@ -78,6 +78,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     private Member(Phone phone, String name, int year, Integer tennisCareer, String recommender,
                    String instagramId, Gender gender, RegistrationSource registrationSource) {
         validateRecommender(registrationSource, recommender);
@@ -120,6 +123,10 @@ public class Member extends BaseEntity {
 
     public void updateMemberShipType(MemberShipType memberShipType) {
         this.memberShipType = memberShipType;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }
