@@ -12,6 +12,7 @@ import kr.tennispark.common.exception.base.UnsupportedTypeException;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.notification.application.exception.FcmMessageSendFailureException;
+import kr.tennispark.notification.infrastructure.exception.FirebaseInitializationException;
 import kr.tennispark.qr.application.exception.BadQrCreateException;
 import kr.tennispark.qr.application.exception.FailToCreateQRPayloadException;
 import lombok.extern.slf4j.Slf4j;
@@ -110,11 +111,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleMismatchedRoleTokenException(UnauthorizedRoleAccessException e) {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
-    
+
     @ExceptionHandler(FcmMessageSendFailureException.class)
     public ResponseEntity<ApiResult<String>> handleFcmMessageSendFailureException(
             FcmMessageSendFailureException e) {
         return ResponseEntity.status(e.status()).body((ApiUtils.error(e.status(), e.getMessage())));
+    }
+
+    @ExceptionHandler(FirebaseInitializationException.class)
+    public ResponseEntity<ApiResult<String>> handleFirebaseInitializationException(
+            FirebaseInitializationException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiUtils.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
