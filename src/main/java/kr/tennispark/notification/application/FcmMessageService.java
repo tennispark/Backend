@@ -53,7 +53,7 @@ public class FcmMessageService {
                 .build();
 
         try {
-            BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
+            BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
 
             if (response.getFailureCount() > 0) {
                 List<SendResponse> failedResponses = response.getResponses().stream()
