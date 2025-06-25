@@ -2,6 +2,7 @@ package kr.tennispark.members.common.domain.entity;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -126,7 +127,10 @@ public class Member extends BaseEntity {
     }
 
     public void updateFcmToken(String fcmToken) {
-        this.fcmToken = fcmToken;
+        if (!StringUtils.isBlank(fcmToken)) {
+            this.fcmToken = fcmToken;
+        } else {
+            this.fcmToken = null;
+        }
     }
-
 }
