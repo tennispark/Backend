@@ -1,6 +1,5 @@
 package kr.tennispark.members.user.application.service;
 
-import io.micrometer.common.util.StringUtils;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
 import kr.tennispark.match.user.infrastructure.repository.UserMatchParticipationRepository;
@@ -36,7 +35,7 @@ public class MemberService {
                 request.gender(),
                 request.registrationSource()
         );
-        updateFcmToken(request, member);
+        member.updateFcmToken(request.fcmToken());
         memberRepository.save(member);
     }
 
@@ -55,9 +54,9 @@ public class MemberService {
         return GetMemberMatchRecordResponse.of(wins, draws, losses, matchPoint, ranking);
     }
 
-    private void updateFcmToken(RegisterMemberRequest request, Member member) {
-        if (!StringUtils.isBlank(request.fcmToken())) {
-            member.updateFcmToken(request.fcmToken());
-        }
+    @Transactional
+    public void updateFcmToken(Member member, String fcmToken) {
+        member.updateFcmToken(fcmToken);
+        memberRepository.save(member);
     }
 }
