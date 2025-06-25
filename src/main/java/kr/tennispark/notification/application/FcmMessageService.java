@@ -55,14 +55,11 @@ public class FcmMessageService {
         try {
             BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
 
-            if (response.getFailureCount() > 0) {
-                List<SendResponse> failedResponses = response.getResponses().stream()
-                        .filter(r -> !r.isSuccessful())
-                        .toList();
-
-                for (int i = 0; i < failedResponses.size(); i++) {
+            for (int i = 0; i < response.getResponses().size(); i++) {
+                SendResponse sendResponse = response.getResponses().get(i);
+                if (!sendResponse.isSuccessful()) {
                     String failedToken = tokens.get(i);
-                    String error = failedResponses.get(i).getException().getMessage();
+                    String error = sendResponse.getException().getMessage();
                     log.warn("FCM 실패 - token: {}, error: {}", failedToken, error);
                 }
             }
