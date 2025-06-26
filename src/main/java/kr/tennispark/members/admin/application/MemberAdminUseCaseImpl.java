@@ -86,27 +86,35 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
 
     @Override
     public GetTopMembersResponseDTO getTopMembers() {
-        List<MatchPointRankingRepository.RankingEntry> topEntries =
-                rankingRepository.findTop(TOP_MEMBER_COUNT);
+        List<MatchPointRankingRepository.RankingEntry> topEntries = rankingRepository.findTop(TOP_MEMBER_COUNT);
 
         if (topEntries.isEmpty()) {
             return GetTopMembersResponseDTO.of(List.of());
         }
 
-        List<Long> ids = topEntries.stream()
+        List<Member> members = fetchMembers(topEntries);
+        List<Member> ordered = orderMembers(topEntries, members);
+
+        return GetTopMembersResponseDTO.of(ordered);
+    }
+
+    private List<Member> fetchMembers(List<MatchPointRankingRepository.RankingEntry> entries) {
+        List<Long> ids = entries.stream()
                 .map(MatchPointRankingRepository.RankingEntry::memberId)
                 .toList();
-        List<Member> members = memberRepository.findByIdIn(ids);
-
-        Map<Long, Member> memberMap = members.stream()
+        return memberRepository.findByIdIn(ids);
+    }
+    
+    private List<Member> orderMembers(
+            List<MatchPointRankingRepository.RankingEntry> entries,
+            List<Member> members
+    ) {
+        Map<Long, Member> map = members.stream()
                 .collect(Collectors.toMap(Member::getId, Function.identity()));
-
-        List<Member> orderedMembers = topEntries.stream()
-                .map(entry -> memberMap.get(entry.memberId()))
+        return entries.stream()
+                .map(e -> map.get(e.memberId()))
                 .filter(Objects::nonNull)
                 .toList();
-
-        return GetTopMembersResponseDTO.of(orderedMembers);
     }
 
     // ===== 내부 계산 메서드 =====
