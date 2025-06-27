@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
 import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplicationRepository;
@@ -12,6 +14,7 @@ import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRep
 import kr.tennispark.members.admin.presentation.dto.response.GetMemberListResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberActivityStatsResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
+import kr.tennispark.members.admin.presentation.dto.response.GetTopMembersResponseDTO;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
@@ -24,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
+
+    private static final int TOP_MEMBER_COUNT = 10;
 
     private final MemberRepository memberRepository;
     private final PointHistoryRepository pointHistoryRepository;
@@ -77,6 +82,39 @@ public class MemberAdminUseCaseImpl implements MemberAdminUseCase {
                 ));
 
         return GetMemberListResponseDTO.of(members, rankMap);
+    }
+
+    @Override
+    public GetTopMembersResponseDTO getTopMembers() {
+        List<MatchPointRankingRepository.RankingEntry> topEntries = rankingRepository.findTop(TOP_MEMBER_COUNT);
+
+        if (topEntries.isEmpty()) {
+            return GetTopMembersResponseDTO.of(List.of());
+        }
+
+        List<Member> members = fetchMembers(topEntries);
+        List<Member> ordered = orderMembers(topEntries, members);
+
+        return GetTopMembersResponseDTO.of(ordered);
+    }
+
+    private List<Member> fetchMembers(List<MatchPointRankingRepository.RankingEntry> entries) {
+        List<Long> ids = entries.stream()
+                .map(MatchPointRankingRepository.RankingEntry::memberId)
+                .toList();
+        return memberRepository.findByIdIn(ids);
+    }
+    
+    private List<Member> orderMembers(
+            List<MatchPointRankingRepository.RankingEntry> entries,
+            List<Member> members
+    ) {
+        Map<Long, Member> map = members.stream()
+                .collect(Collectors.toMap(Member::getId, Function.identity()));
+        return entries.stream()
+                .map(e -> map.get(e.memberId()))
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     // ===== 내부 계산 메서드 =====

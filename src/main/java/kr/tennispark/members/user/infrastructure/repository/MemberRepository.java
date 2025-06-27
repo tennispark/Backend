@@ -45,4 +45,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("UPDATE Member m SET m.tennisCareer = m.tennisCareer + 1")
     void bulkIncreaseTennisCareer();
+
+    List<Member> findByIdIn(List<Long> memberIds);
 }
