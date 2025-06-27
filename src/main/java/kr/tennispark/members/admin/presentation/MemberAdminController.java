@@ -7,6 +7,7 @@ import kr.tennispark.members.admin.application.MemberAdminUseCase;
 import kr.tennispark.members.admin.presentation.dto.response.GetMemberListResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetMonthlyMemberActivityStatsResponseDTO;
 import kr.tennispark.members.admin.presentation.dto.response.GetOverallMemberStatsResponseDTO;
+import kr.tennispark.members.admin.presentation.dto.response.GetTopMembersResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,5 +37,10 @@ public class MemberAdminController {
     public ResponseEntity<ApiResult<GetMonthlyMemberActivityStatsResponseDTO>> getMonthlyMemberActivityStats(
             @RequestParam LocalDate from, @RequestParam LocalDate to) {
         return ResponseEntity.ok(ApiUtils.success(memberAdminUseCase.getMonthlyActivityStats(from, to)));
+    }
+
+    @GetMapping("member-activities/top")
+    public ResponseEntity<ApiResult<GetTopMembersResponseDTO>> getTopMembers() {
+        return ResponseEntity.ok(ApiUtils.success(memberAdminUseCase.getTopMembers()));
     }
 }
