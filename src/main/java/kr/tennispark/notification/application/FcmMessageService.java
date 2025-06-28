@@ -23,7 +23,15 @@ import org.springframework.stereotype.Service;
 public class FcmMessageService {
 
     private static final int BATCH_SIZE = 500;
+    private static final String TITLE = "Tennis Park";
     private final MemberRepository memberRepository;
+
+    public void sendMessage(List<String> tokens, String content) {
+        for (int i = 0; i < tokens.size(); i += BATCH_SIZE) {
+            List<String> batch = tokens.subList(i, Math.min(i + BATCH_SIZE, tokens.size()));
+            sendMulticast(new SendMessageRequestDTO(TITLE, content), batch);
+        }
+    }
 
     public void sendBroadcastMessage(SendMessageRequestDTO request) {
         List<String> fcmTokens = getValidFcmTokens();
