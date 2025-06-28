@@ -34,13 +34,11 @@ public class NotificationSchedule extends BaseEntity {
     @Column(nullable = false)
     private boolean isSent = false;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "notification_target_tokens", joinColumns = @JoinColumn(name = "schedule_id"))
-    @Column(name = "token", nullable = false)
-    private List<String> targetTokens;
+    @Column(nullable = false)
+    private String targetTokens;
 
-    public static NotificationSchedule of(Activity activity, NotificationType type, LocalDateTime scheduledTime, List<String> targetTokens) {
-        return new NotificationSchedule(activity, type, scheduledTime, false, targetTokens);
+    public static NotificationSchedule of(Activity activity, NotificationType type, LocalDateTime scheduledTime, String targetToken) {
+        return new NotificationSchedule(activity, type, scheduledTime, false, targetToken);
     }
 
     public void markAsSent() {
