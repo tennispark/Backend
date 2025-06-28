@@ -15,6 +15,7 @@ import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
+import kr.tennispark.notification.application.FcmMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,9 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
+    private static final String MESSAGE_CONTENT = "신청하신 활동이 확정되었습니다.";
+
     private final AdminActivityApplicationRepository activityApplicationRepository;
     private final ActivityInfoRepository activityInfoRepository;
     private final ActivityRepository activityRepository;
+
+    private final FcmMessageService messageService;
 
     @Override
     @Transactional
@@ -83,7 +88,13 @@ public class ActivityAdminService implements ActivityAdminUseCase {
                 applicantId, activityId);
 
         activityApplication.changeStatus(request.applicationStatus());
+        sendMessageIfApproved(request, activityApplication);
+    }
 
+    private void sendMessageIfApproved(ManageActivityApplicationRequestDTO request, ActivityApplication activityApplication) {
+        if (request.applicationStatus().isAccepted()) {
+            messageService.sendMessage(List.of(activityApplication.getMember().getFcmToken()), MESSAGE_CONTENT);
+        }
     }
 
     @Override
