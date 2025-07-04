@@ -24,6 +24,7 @@ public class FcmMessageService {
 
     private static final int BATCH_SIZE = 500;
     private static final String TITLE = "Tennis Park";
+
     private final MemberRepository memberRepository;
 
     public void sendMessage(List<String> tokens, String content) {

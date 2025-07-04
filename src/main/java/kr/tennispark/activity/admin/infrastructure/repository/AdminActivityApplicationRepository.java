@@ -1,6 +1,7 @@
 package kr.tennispark.activity.admin.infrastructure.repository;
 
 import jakarta.persistence.LockModeType;
+import java.util.List;
 import java.util.Optional;
 import kr.tennispark.activity.admin.application.exception.NoSuchActivityApplicationException;
 import kr.tennispark.activity.common.domain.Activity;
@@ -22,11 +23,13 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
                         JOIN FETCH aa.activity a
                         WHERE m.id = :memberId AND a.id = :activityId
             """)
-    Optional<ActivityApplication> findByMember_IdAndActivity_Id(Long memberId, Long activityId);
+    Optional<ActivityApplication> findByMemberIdAndActivityId(Long memberId, Long activityId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     default ActivityApplication getByMemberIdAndActivityId(Long memberId, Long activityId) {
-        return findByMember_IdAndActivity_Id(memberId, activityId)
+        return findByMemberIdAndActivityId(memberId, activityId)
                 .orElseThrow(NoSuchActivityApplicationException::new);
     }
+
+    List<ActivityApplication> findAllByActivity(Activity activity);
 }
