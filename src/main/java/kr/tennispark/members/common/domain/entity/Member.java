@@ -133,4 +133,12 @@ public class Member extends BaseEntity {
             this.fcmToken = null;
         }
     }
+
+    public void withdraw() {
+        if (!isStatus()) {
+            return;
+        }
+        delete();
+        point.delete();
+    }
 }
