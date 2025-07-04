@@ -49,6 +49,7 @@ public class SendActivityNotificationScheduler {
                 fcmMessageService.sendMessage(List.of(schedule.getTargetTokens()), message);
                 notificationScheduleRepository.delete(schedule);
 
+
             } catch (Exception e) {
                 log.error("알림 전송 실패: scheduleId={}", schedule.getId(), e);
             }

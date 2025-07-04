@@ -1,8 +1,12 @@
 package kr.tennispark.notification.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
-import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.notification.domain.entity.enums.NotificationType;
@@ -32,16 +36,11 @@ public class NotificationSchedule extends BaseEntity {
     private LocalDateTime scheduledTime;
 
     @Column(nullable = false)
-    private boolean isSent = false;
-
-    @Column(nullable = false)
     private String targetTokens;
 
-    public static NotificationSchedule of(Activity activity, NotificationType type, LocalDateTime scheduledTime, String targetToken) {
-        return new NotificationSchedule(activity, type, scheduledTime, false, targetToken);
+    public static NotificationSchedule of(Activity activity, NotificationType type, LocalDateTime scheduledTime,
+                                          String targetToken) {
+        return new NotificationSchedule(activity, type, scheduledTime, targetToken);
     }
 
-    public void markAsSent() {
-        this.isSent = true;
-    }
 }
