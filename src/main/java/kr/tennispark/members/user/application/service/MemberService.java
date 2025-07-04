@@ -1,5 +1,8 @@
 package kr.tennispark.members.user.application.service;
 
+import java.util.List;
+import kr.tennispark.activity.common.domain.ActivityApplication;
+import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplicationRepository;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
 import kr.tennispark.match.user.infrastructure.repository.UserMatchParticipationRepository;
@@ -20,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MatchPointRankingRepository rankingRepository;
     private final UserMatchParticipationRepository participationRepository;
+    private final UserActivityApplicationRepository applicationRepository;
 
     @Transactional
     public void createMember(RegisterMemberRequest request) {
@@ -58,5 +62,17 @@ public class MemberService {
     public void updateFcmToken(Member member, String fcmToken) {
         member.updateFcmToken(fcmToken);
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public void withdraw(Long memberId) {
+        Member member = memberRepository.getById(memberId);
+
+        member.withdraw();
+
+        List<ActivityApplication> apps =
+                applicationRepository.findActiveByMember(member);
+
+        apps.forEach(ActivityApplication::cancelByWithdrawal);
     }
 }
