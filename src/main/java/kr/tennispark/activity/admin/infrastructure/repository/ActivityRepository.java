@@ -8,6 +8,8 @@ import kr.tennispark.activity.common.domain.exception.NoSuchActivityException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,4 +27,14 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
         return findById(activityId)
                 .orElseThrow(NoSuchActivityException::new);
     }
+
+    @Query("""
+                SELECT a FROM Activity a
+                WHERE a.date BETWEEN :startOfWeek AND :endOfWeek
+                  AND a.capacity > a.participantCount
+            """)
+    List<Activity> findThisWeeksVacantActivities(
+            @Param("startOfWeek") LocalDate startOfWeek,
+            @Param("endOfWeek") LocalDate endOfWeek
+    );
 }

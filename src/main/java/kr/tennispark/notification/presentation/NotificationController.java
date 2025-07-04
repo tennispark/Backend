@@ -21,7 +21,7 @@ public class NotificationController {
     @PostMapping("/broadcast")
     public ResponseEntity<ApiResult<?>> sendBroadcastMessage(
             @RequestBody SendMessageRequestDTO request) {
-        messageService.sendBroadcastMessage(request);
+        messageService.sendBroadcastMessage(request.content());
         return ResponseEntity.ok(ApiUtils.success());
     }
 }
