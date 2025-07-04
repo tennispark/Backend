@@ -1,5 +1,6 @@
 package kr.tennispark.notification.application;
 
+import io.micrometer.common.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.ActivityApplication;
@@ -25,11 +26,14 @@ public class ActivityNotificationService {
     @Transactional
     public void notifyApprovedApplication(ActivityApplication application) {
         String fcmToken = application.getMember().getFcmToken();
+        if (StringUtils.isBlank(fcmToken)) {
+            return;
+        }
 
         messageService.sendMessage(List.of(fcmToken), MESSAGE_CONTENT);
 
-        LocalDateTime beginAt = LocalDateTime.from(
-                application.getActivity().getScheduledTime().getBeginAt());
+        LocalDateTime beginAt = application.getActivity().getDate()
+                .atTime(application.getActivity().getScheduledTime().getBeginAt());
 
         NotificationSchedule oneDayBefore = createNotificationSchedule(
                 application, NotificationType.ONE_DAY_BEFORE, beginAt.minusDays(ONE_DAY), fcmToken);
