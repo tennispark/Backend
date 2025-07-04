@@ -24,25 +24,33 @@ public class ActivityNotificationService {
 
     @Transactional
     public void notifyApprovedApplication(ActivityApplication application) {
-        messageService.sendMessage(List.of(application.getMember().getFcmToken()), MESSAGE_CONTENT);
+        String fcmToken = application.getMember().getFcmToken();
+
+        messageService.sendMessage(List.of(fcmToken), MESSAGE_CONTENT);
 
         LocalDateTime beginAt = LocalDateTime.from(
                 application.getActivity().getScheduledTime().getBeginAt());
 
-        NotificationSchedule oneDayBefore = NotificationSchedule.of(
-                application.getActivity(),
-                NotificationType.ONE_DAY_BEFORE,
-                beginAt.minusDays(ONE_DAY),
-                application.getMember().getFcmToken()
-        );
+        NotificationSchedule oneDayBefore = createNotificationSchedule(
+                application, NotificationType.ONE_DAY_BEFORE, beginAt.minusDays(ONE_DAY), fcmToken);
 
-        NotificationSchedule oneHourBefore = NotificationSchedule.of(
-                application.getActivity(),
-                NotificationType.ONE_HOUR_BEFORE,
-                beginAt.minusHours(ONE_HOUR),
-                application.getMember().getFcmToken()
-        );
+        NotificationSchedule oneHourBefore = createNotificationSchedule(
+                application, NotificationType.ONE_HOUR_BEFORE, beginAt.minusHours(ONE_HOUR), fcmToken);
 
         notificationScheduleRepository.saveAll(List.of(oneDayBefore, oneHourBefore));
+    }
+
+    private NotificationSchedule createNotificationSchedule(
+            ActivityApplication application,
+            NotificationType type,
+            LocalDateTime scheduledTime,
+            String fcmToken
+    ) {
+        return NotificationSchedule.of(
+                application.getActivity(),
+                type,
+                scheduledTime,
+                fcmToken
+        );
     }
 }
