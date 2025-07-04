@@ -1,5 +1,8 @@
 package kr.tennispark.members.user.application.service;
 
+import java.util.List;
+import kr.tennispark.activity.common.domain.ActivityApplication;
+import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplicationRepository;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
 import kr.tennispark.match.user.infrastructure.repository.UserMatchParticipationRepository;
@@ -8,6 +11,7 @@ import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.members.user.presentation.dto.request.RegisterMemberRequest;
 import kr.tennispark.members.user.presentation.dto.response.GetMemberMatchRecordResponse;
+import kr.tennispark.membership.infrastructure.repository.MembershipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MatchPointRankingRepository rankingRepository;
     private final UserMatchParticipationRepository participationRepository;
+    private final UserActivityApplicationRepository applicationRepository;
+    private final MembershipRepository membershipRepository;
 
     @Transactional
     public void createMember(RegisterMemberRequest request) {
@@ -58,5 +64,20 @@ public class MemberService {
     public void updateFcmToken(Member member, String fcmToken) {
         member.updateFcmToken(fcmToken);
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public void withdraw(Member member) {
+        Member dbMember = memberRepository.getById(member.getId());
+
+        dbMember.withdraw();
+
+        membershipRepository.findByMember(member)
+                .ifPresent(membershipRepository::delete);
+
+        List<ActivityApplication> apps =
+                applicationRepository.findActiveByMember(dbMember);
+
+        apps.forEach(ActivityApplication::cancelByWithdrawal);
     }
 }

@@ -70,5 +70,16 @@ public class ActivityApplication extends BaseEntity {
         }
         this.applicationStatus = nextStatus;
     }
+
+    public void cancelByWithdrawal() {
+        if (!this.applicationStatus.isCounted()) {
+            delete();
+            return;
+        }
+
+        activity.decrementParticipant();
+        this.applicationStatus = ApplicationStatus.CANCELED;
+        delete();
+    }
 }
 
