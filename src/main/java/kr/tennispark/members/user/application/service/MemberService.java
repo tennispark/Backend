@@ -65,13 +65,13 @@ public class MemberService {
     }
 
     @Transactional
-    public void withdraw(Long memberId) {
-        Member member = memberRepository.getById(memberId);
+    public void withdraw(Member member) {
+        Member dbMember = memberRepository.getById(member.getId());
 
-        member.withdraw();
+        dbMember.withdraw();
 
         List<ActivityApplication> apps =
-                applicationRepository.findActiveByMember(member);
+                applicationRepository.findActiveByMember(dbMember);
 
         apps.forEach(ActivityApplication::cancelByWithdrawal);
     }
