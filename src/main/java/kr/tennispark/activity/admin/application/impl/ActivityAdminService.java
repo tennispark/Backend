@@ -15,6 +15,7 @@ import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
+import kr.tennispark.notification.application.ActivityNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,9 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
-    private final AdminActivityApplicationRepository activityApplicationRepository;
-    private final ActivityInfoRepository activityInfoRepository;
+
+    private final ActivityNotificationService activityNotificationService;
+
     private final ActivityRepository activityRepository;
+    private final ActivityInfoRepository activityInfoRepository;
+    private final AdminActivityApplicationRepository activityApplicationRepository;
+
 
     @Override
     @Transactional
@@ -84,7 +89,11 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
         activityApplication.changeStatus(request.applicationStatus());
 
+        if (activityApplication.getApplicationStatus().isAccepted()) {
+            activityNotificationService.notifyApprovedApplication(activityApplication);
+        }
     }
+
 
     @Override
     @Transactional

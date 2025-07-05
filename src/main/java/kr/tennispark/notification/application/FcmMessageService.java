@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.notification.application.exception.FcmMessageSendFailureException;
-import kr.tennispark.notification.presentation.request.SendMessageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,15 +22,24 @@ import org.springframework.stereotype.Service;
 public class FcmMessageService {
 
     private static final int BATCH_SIZE = 500;
+    private static final String TITLE = "Tennis Park";
+
     private final MemberRepository memberRepository;
 
-    public void sendBroadcastMessage(SendMessageRequestDTO request) {
+    public void sendMessage(List<String> tokens, String content) {
+        for (int i = 0; i < tokens.size(); i += BATCH_SIZE) {
+            List<String> batch = tokens.subList(i, Math.min(i + BATCH_SIZE, tokens.size()));
+            sendMulticast(content, batch);
+        }
+    }
+
+    public void sendBroadcastMessage(String content) {
         List<String> fcmTokens = getValidFcmTokens();
 
         // 500개씩 나눠서 전송
         for (int i = 0; i < fcmTokens.size(); i += BATCH_SIZE) {
             List<String> batch = fcmTokens.subList(i, Math.min(i + BATCH_SIZE, fcmTokens.size()));
-            sendMulticast(request, batch);
+            sendMulticast(content, batch);
         }
     }
 
@@ -43,11 +51,11 @@ public class FcmMessageService {
                 .collect(Collectors.toList());
     }
 
-    private void sendMulticast(SendMessageRequestDTO request, List<String> tokens) {
+    private void sendMulticast(String content, List<String> tokens) {
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(Notification.builder()
-                        .setTitle(request.title())
-                        .setBody(request.content())
+                        .setTitle(TITLE)
+                        .setBody(content)
                         .build())
                 .addAllTokens(tokens)
                 .build();
