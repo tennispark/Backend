@@ -30,7 +30,8 @@ public class SendActivityNotificationScheduler {
     @Transactional
     public void sendScheduledNotifications() {
         LocalDateTime now = LocalDateTime.now();
-        List<NotificationSchedule> schedules = notificationScheduleRepository.findByScheduledTimeBefore(now);
+        List<NotificationSchedule> schedules = notificationScheduleRepository.findByScheduledTimeBeforeWithActivity(
+                now);
 
         if (schedules.isEmpty()) {
             return;
