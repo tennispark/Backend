@@ -17,11 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SendRecruitReminderScheduler {
 
-    private final Integer DAYS_TO_ADD = 6;
+    private static final Integer DAYS_TO_ADD = 6;
+
     private final FcmMessageService fcmMessageService;
     private final ActivityRepository activityRepository;
 
-    @Scheduled(cron = "0 0 10 ? * MON") // 매주 월요일 오전 10시
+    @Scheduled(cron = "0 30 8 ? * MON-THU")
     @Transactional(readOnly = true)
     public void sendRecruitReminder() {
         WeekPeriod period = WeekPeriod.current();
