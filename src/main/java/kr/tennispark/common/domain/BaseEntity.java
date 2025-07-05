@@ -38,4 +38,8 @@ public abstract class BaseEntity {
     public void delete() {
         this.status = false;
     }
+
+    public boolean isDeleted() {
+        return !this.status;
+    }
 }

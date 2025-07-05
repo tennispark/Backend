@@ -13,4 +13,8 @@ public enum ApplicationStatus {
     ApplicationStatus(boolean counted) {
         this.counted = counted;
     }
+
+    public boolean isAccepted() {
+        return this == APPROVED;
+    }
 }
