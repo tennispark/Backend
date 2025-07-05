@@ -46,6 +46,7 @@ public class SendActivityNotificationScheduler {
 
                 List<String> participantNames = adminActivityApplicationRepository.findAllByActivity(activity)
                         .stream()
+                        .filter(app -> !app.isDeleted() && !app.getMember().isDeleted())
                         .map(app -> app.getMember().getName())
                         .toList();
 
