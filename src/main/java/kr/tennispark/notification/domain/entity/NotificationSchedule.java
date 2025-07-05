@@ -36,7 +36,7 @@ public class NotificationSchedule extends BaseEntity {
     private LocalDateTime scheduledTime;
 
     @Column(nullable = false)
-    private String targetTokens;
+    private String targetToken;
 
     public static NotificationSchedule of(Activity activity, NotificationType type, LocalDateTime scheduledTime,
                                           String targetToken) {
