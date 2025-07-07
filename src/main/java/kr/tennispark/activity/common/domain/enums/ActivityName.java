@@ -1,9 +1,7 @@
 package kr.tennispark.activity.common.domain.enums;
 
 import kr.tennispark.activity.common.domain.exception.InvalidActivityCombinationException;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public enum ActivityName {
@@ -16,8 +14,9 @@ public enum ActivityName {
     BEGINNER(ActivityType.GENERAL),
 
     // 아카데미
-    FOREHAND_BACKHAND(ActivityType.ACADEMY),
-    VOLLEY_SERVE(ActivityType.ACADEMY);
+    LEVEL1(ActivityType.ACADEMY),
+    LEVEL2(ActivityType.ACADEMY),
+    LEVEL3(ActivityType.ACADEMY);
 
     private final ActivityType validType;
 
