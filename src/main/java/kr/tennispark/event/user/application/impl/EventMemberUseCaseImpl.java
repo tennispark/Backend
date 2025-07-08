@@ -26,14 +26,14 @@ public class EventMemberUseCaseImpl implements EventMemberUseCase {
     @Override
     public void attendEvent(Long eventId, Member member) {
         Event event = eventRepository.getById(eventId);
-        validateNotAlreadyAttended(event, member);
+        validateNotAlreadyAttended(member);
 
         applyForEvent(member, event);
         pointService.applyPoint(member, event.getPoint(), PointReason.EVENT, event.getTitle());
     }
 
-    private void validateNotAlreadyAttended(Event event, Member member) {
-        if (eventApplicationRepository.existsByEventAndMember(event, member)) {
+    private void validateNotAlreadyAttended(Member member) {
+        if (eventApplicationRepository.existsByMemberToday(member)) {
             throw new AlreadyAttendEventException();
         }
     }
