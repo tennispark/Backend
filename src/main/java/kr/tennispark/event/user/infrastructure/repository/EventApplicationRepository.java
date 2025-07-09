@@ -1,5 +1,6 @@
 package kr.tennispark.event.user.infrastructure.repository;
 
+import kr.tennispark.event.common.domain.Event;
 import kr.tennispark.event.common.domain.association.EventApplication;
 import kr.tennispark.members.common.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,9 +15,10 @@ public interface EventApplicationRepository extends JpaRepository<EventApplicati
                 SELECT COUNT(ea) > 0
                 FROM EventApplication ea
                 WHERE ea.member = :member
+                  AND ea.event = :event
                   AND DATE(ea.createdAt) = CURRENT_DATE
             """)
-    boolean existsByMemberToday(@Param("member") Member member);
+    boolean existsByMemberToday(@Param("member") Member member, @Param("event") Event event);
 
     long count();
 }
