@@ -32,6 +32,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
                 SELECT a FROM Activity a
                 WHERE a.date BETWEEN :startOfWeek AND :endOfWeek
                   AND a.capacity > a.participantCount
+                  AND a.type = 'GENERAL'
                   AND a.status = true
             """)
     List<Activity> findThisWeeksVacantActivities(
