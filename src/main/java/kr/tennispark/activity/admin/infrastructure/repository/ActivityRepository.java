@@ -1,6 +1,7 @@
 package kr.tennispark.activity.admin.infrastructure.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityInfo;
@@ -21,7 +22,14 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     long count();
 
-    Page<Activity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    @Query("""
+                SELECT a
+                FROM Activity a
+                WHERE a.createdAt >= :twoWeeksAgo
+                AND a.status = true
+                ORDER BY a.createdAt DESC
+            """)
+    Page<Activity> findRecentTwoWeeks(Pageable pageable, @Param("twoWeeksAgo") LocalDateTime twoWeeksAgo);
 
     default Activity getById(Long activityId) {
         return findById(activityId)

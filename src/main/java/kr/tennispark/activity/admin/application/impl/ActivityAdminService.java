@@ -1,6 +1,7 @@
 package kr.tennispark.activity.admin.application.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
+    private static final Integer TWO_WEEK = 2;
 
     private final ActivityNotificationService activityNotificationService;
 
@@ -114,7 +116,8 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
     @Override
     public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
-        Page<Activity> activityPage = activityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
+        Page<Activity> activityPage = activityRepository.findRecentTwoWeeks
+                (PageRequest.of(page, size), LocalDateTime.now().minusWeeks(TWO_WEEK));
 
         return GetActivityApplicationResponseDTO.of(activityPage);
     }
