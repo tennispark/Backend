@@ -16,7 +16,8 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             SELECT COALESCE(SUM(ph.amount), 0) 
             FROM PointHistory ph 
             WHERE ph.createdAt BETWEEN :start AND :end 
-            AND ph.amount > 0
+            AND ph.amount > 0 
+            AND ph.status = true 
             """)
     int sumAmountByCreatedAtBetweenAndAmountGreaterThan(LocalDateTime start, LocalDateTime end);
 
@@ -25,6 +26,7 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             FROM PointHistory ph
             WHERE ph.createdAt BETWEEN :start AND :end 
             AND ph.amount > 0 
+            AND ph.status = true 
             GROUP BY ph.point.member 
             ORDER BY SUM(ph.amount) DESC
             LIMIT 1
@@ -36,6 +38,7 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
             FROM PointHistory ph 
             WHERE ph.createdAt BETWEEN :start AND :end 
             AND ph.amount < 0 
+            AND ph.status = true 
             GROUP BY ph.point.member 
             ORDER BY SUM(ph.amount) ASC 
             LIMIT 1
