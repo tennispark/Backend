@@ -1,7 +1,6 @@
 package kr.tennispark.activity.admin.application.impl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
@@ -117,7 +116,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     @Override
     public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
         Page<Activity> activityPage = activityRepository.findRecentTwoWeeks
-                (PageRequest.of(page, size), LocalDateTime.now().minusWeeks(TWO_WEEK));
+                (PageRequest.of(page, size), LocalDate.now().minusWeeks(TWO_WEEK));
 
         return GetActivityApplicationResponseDTO.of(activityPage);
     }
