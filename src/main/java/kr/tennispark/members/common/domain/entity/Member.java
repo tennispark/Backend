@@ -138,6 +138,7 @@ public class Member extends BaseEntity {
         if (!isStatus()) {
             return;
         }
+        this.phone = this.phone.withdrawMasked(this.getId());
         delete();
         point.delete();
     }
