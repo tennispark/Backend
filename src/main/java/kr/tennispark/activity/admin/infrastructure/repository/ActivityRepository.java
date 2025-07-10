@@ -21,7 +21,14 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     long count();
 
-    Page<Activity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    @Query("""
+                SELECT a
+                FROM Activity a
+                WHERE a.date >= :twoWeeksAgo
+                AND a.status = true
+                ORDER BY a.createdAt DESC
+            """)
+    Page<Activity> findRecentTwoWeeks(Pageable pageable, @Param("twoWeeksAgo") LocalDate twoWeeksAgo);
 
     default Activity getById(Long activityId) {
         return findById(activityId)
