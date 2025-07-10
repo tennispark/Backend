@@ -21,6 +21,7 @@ public interface UserActivityApplicationRepository extends JpaRepository<Activit
                     SELECT COUNT(DISTINCT aa.member.id) 
                     FROM ActivityApplication aa
                     WHERE aa.createdAt BETWEEN :start AND :end
+                    AND aa.status = true
             """)
     int countDistinctMemberIdByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 

@@ -30,6 +30,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("""
             SELECT m 
             FROM Member m 
+            WHERE m.status = true
             ORDER BY m.matchPoint DESC
             LIMIT 1
             """)
@@ -39,6 +40,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             SELECT SUM(m.matchPoint)
             FROM Member m
             WHERE m.id = :memberId
+            AND m.status = true
             """)
     Integer sumScoreByMemberId(@Param("memberId") Long memberId);
 

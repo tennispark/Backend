@@ -17,6 +17,7 @@ public interface EventApplicationRepository extends JpaRepository<EventApplicati
                 WHERE ea.member = :member
                   AND ea.event = :event
                   AND DATE(ea.createdAt) = CURRENT_DATE
+                  AND ea.status = true
             """)
     boolean existsByMemberToday(@Param("member") Member member, @Param("event") Event event);
 
