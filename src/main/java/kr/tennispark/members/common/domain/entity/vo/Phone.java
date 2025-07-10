@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Phone {
 
+    private static final String MASKED_PHONE_SUFFIX = "_DELETED_";
     private static final Pattern PHONE_PATTERN = Pattern.compile("^010\\d{8}$");
 
     @Column(name = "phone_number", nullable = false, unique = true)
@@ -29,5 +30,9 @@ public class Phone {
             throw new InvalidMemberException("휴대폰 번호 형식이 올바르지 않습니다. 예: 01012345678");
         }
         return new Phone(value);
+    }
+
+    public Phone withdrawMasked(Long memberId) {
+        return new Phone(this.number + MASKED_PHONE_SUFFIX + memberId);
     }
 }
