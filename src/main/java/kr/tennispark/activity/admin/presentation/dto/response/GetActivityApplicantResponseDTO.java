@@ -9,7 +9,7 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
     public static GetActivityApplicantResponseDTO of(Page<ActivityApplication> applicants) {
         Page<ActivityApplicantDTO> applicantDTOs = applicants.map(applicant ->
                 ActivityApplicantDTO.of(
-                        applicant.getId(),
+                        applicant.getMember().getId(),
                         applicant.getMember().getName(),
                         applicant.getMember().getPhone().getNumber(),
                         applicant.getMember().getMemberShipType(),
