@@ -9,11 +9,11 @@ import kr.tennispark.activity.common.domain.enums.Days;
 public record WeekPeriod(LocalDate start) {
 
     private static final ZoneId ZONE_ID = ZoneId.of("Asia/Seoul");
-    private static final DayOfWeek WEEK_START = DayOfWeek.FRIDAY;
+    private static final DayOfWeek WEEK_START = DayOfWeek.MONDAY;
 
     public static WeekPeriod current() {
         LocalDate today = LocalDate.now(ZONE_ID);
-        LocalDate start = today.with(TemporalAdjusters.previousOrSame(WEEK_START));
+        LocalDate start = today.with(TemporalAdjusters.next(WEEK_START));
         return new WeekPeriod(start);
     }
 
