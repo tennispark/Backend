@@ -33,6 +33,9 @@ public class PointHistory extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column
+    private String memberName;
+
     @Column(nullable = false)
     private Integer amount;
 
@@ -44,10 +47,10 @@ public class PointHistory extends BaseEntity {
     private String detail;
 
     public static PointHistory of(Point point, Member member, int amount, PointReason reason) {
-        return new PointHistory(point, member, amount, reason, null);
+        return new PointHistory(point, member, member.getName(), amount, reason, null);
     }
 
-    public static PointHistory of(Point point, Member member, int amount, PointReason reason,String detail) {
-        return new PointHistory(point, member, amount, reason, detail);
+    public static PointHistory of(Point point, Member member, int amount, PointReason reason, String detail) {
+        return new PointHistory(point, member, member.getName(), amount, reason, detail);
     }
 }
