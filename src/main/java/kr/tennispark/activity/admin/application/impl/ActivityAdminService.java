@@ -92,9 +92,6 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
         if (activityApplication.getApplicationStatus().isAccepted()) {
             activityNotificationService.notifyApprovedApplication(activityApplication);
-
-            Activity activity = activityRepository.getById(activityId);
-            activity.incrementParticipant();
         }
     }
 
