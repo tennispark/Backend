@@ -34,7 +34,6 @@ public class ActivityCommandService {
     private void apply(Member member, Long activityId, ActivityType type) {
         Activity activity = loadAndLockActivity(activityId, type);
         preventDuplicate(member, activity);
-        activity.incrementParticipant();
         recordApplication(member, activity);
     }
 
