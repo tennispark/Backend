@@ -14,7 +14,14 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AdminActivityApplicationRepository extends JpaRepository<ActivityApplication, Long> {
 
-    Page<ActivityApplication> findAllByActivityOrderByCreatedAtDesc(Activity activity, Pageable pageable);
+    @Query("""
+                SELECT aa
+                FROM ActivityApplication aa
+                WHERE aa.activity = :activity
+                AND aa.member.status = true
+                ORDER BY aa.createdAt DESC
+            """)
+    Page<ActivityApplication> findAllValidByActivity(Activity activity, Pageable pageable);
 
     @Query("""
                         SELECT aa
