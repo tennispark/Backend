@@ -17,6 +17,12 @@ public record WeekPeriod(LocalDate start) {
         return new WeekPeriod(start);
     }
 
+    public static WeekPeriod thisWeek() {
+        LocalDate today = LocalDate.now(ZONE_ID);
+        LocalDate start = today.with(TemporalAdjusters.previousOrSame(WEEK_START));
+        return new WeekPeriod(start);
+    }
+
     public static LocalDate today() {
         return LocalDate.now(ZONE_ID);
     }
@@ -29,7 +35,7 @@ public record WeekPeriod(LocalDate start) {
         return !date.isBefore(start) && !date.isAfter(end());
     }
 
-    private LocalDate end() {
+    public LocalDate end() {
         return start.plusDays(6);
     }
 }
