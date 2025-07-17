@@ -3,7 +3,6 @@ package kr.tennispark.members.user.application.service;
 import java.util.List;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplicationRepository;
-import kr.tennispark.auth.user.application.service.AuthService;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
 import kr.tennispark.match.common.infrastructure.repository.MatchPointRankingRepository;
 import kr.tennispark.match.user.infrastructure.repository.UserMatchParticipationRepository;
@@ -27,7 +26,6 @@ public class MemberService {
     private final UserMatchParticipationRepository participationRepository;
     private final UserActivityApplicationRepository applicationRepository;
     private final MembershipRepository membershipRepository;
-    private final AuthService authService;
 
     @Transactional
     public void createMember(RegisterMemberRequest request) {
@@ -81,6 +79,5 @@ public class MemberService {
                 applicationRepository.findActiveByMember(dbMember);
 
         apps.forEach(ActivityApplication::cancelByWithdrawal);
-        authService.logout(dbMember);
     }
 }
