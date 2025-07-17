@@ -70,4 +70,9 @@ public class AuthService {
     public void logout(Member member) {
         tokenService.expireTokens(member.getPhone().getNumber());
     }
+
+    public void withdrawMember(Member member) {
+        memberService.withdraw(member);
+        logout(member);
+    }
 }

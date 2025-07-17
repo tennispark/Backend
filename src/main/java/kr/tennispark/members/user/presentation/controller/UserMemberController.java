@@ -10,7 +10,6 @@ import kr.tennispark.members.user.presentation.dto.response.GetMemberMatchRecord
 import kr.tennispark.members.user.presentation.dto.response.GetMyNameResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserMemberController {
 
     private final MemberService memberService;
-
-    @DeleteMapping("/me")
-    public ResponseEntity<ApiResult<String>> withdrawMember(@LoginMember Member member) {
-        memberService.withdraw(member);
-        return ResponseEntity.ok(ApiUtils.success());
-    }
 
     @GetMapping("/name/me")
     public ResponseEntity<ApiResult<GetMyNameResponse>> getMyName(@LoginMember Member member) {

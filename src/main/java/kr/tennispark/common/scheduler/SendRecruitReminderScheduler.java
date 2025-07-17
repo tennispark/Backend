@@ -1,5 +1,6 @@
 package kr.tennispark.common.scheduler;
 
+import java.time.LocalDate;
 import java.util.List;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
 import kr.tennispark.activity.common.domain.Activity;
@@ -25,10 +26,10 @@ public class SendRecruitReminderScheduler {
     @Scheduled(cron = "0 30 8 ? * MON-THU")
     @Transactional(readOnly = true)
     public void sendRecruitReminder() {
-        WeekPeriod period = WeekPeriod.current();
+        WeekPeriod period = WeekPeriod.thisWeek();
 
         List<Activity> activitiesWithVacancy = activityRepository.findThisWeeksVacantActivities(
-                period.start(), period.start().plusDays(DAYS_TO_ADD)
+                LocalDate.now(), period.end()
         );
 
         if (activitiesWithVacancy.isEmpty()) {

@@ -125,7 +125,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     public GetActivityApplicantResponseDTO getActivityApplicantList(Long activityId, Integer page, Integer size) {
         Activity activity = activityRepository.getById(activityId);
 
-        Page<ActivityApplication> applicantPage = activityApplicationRepository.findAllByActivityOrderByCreatedAtDesc(
+        Page<ActivityApplication> applicantPage = activityApplicationRepository.findAllValidByActivity(
                 activity, PageRequest.of(page, size));
 
         return GetActivityApplicantResponseDTO.of(applicantPage);
