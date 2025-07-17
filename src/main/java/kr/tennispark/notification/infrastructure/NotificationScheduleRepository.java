@@ -16,6 +16,7 @@ public interface NotificationScheduleRepository extends JpaRepository<Notificati
                 JOIN FETCH ns.activity a
                 WHERE ns.scheduledTime < :time
                 AND ns.status = true
+                AND a.status = true
             """)
     List<NotificationSchedule> findByScheduledTimeBeforeWithActivity(@Param("time") LocalDateTime time);
 }

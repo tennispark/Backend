@@ -23,6 +23,8 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
                         JOIN FETCH aa.activity a
                         WHERE m.id = :memberId AND a.id = :activityId
                         AND aa.status = true
+                        AND m.status = true
+                        AND a.status = true
             """)
     Optional<ActivityApplication> findByMemberIdAndActivityId(Long memberId, Long activityId);
 
