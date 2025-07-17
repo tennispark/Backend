@@ -17,8 +17,9 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
     @Query("""
                 SELECT aa
                 FROM ActivityApplication aa
+                JOIN FETCH aa.member m
                 WHERE aa.activity = :activity
-                AND aa.member.status = true
+                AND m.status = true
                 ORDER BY aa.createdAt DESC
             """)
     Page<ActivityApplication> findAllValidByActivity(Activity activity, Pageable pageable);
