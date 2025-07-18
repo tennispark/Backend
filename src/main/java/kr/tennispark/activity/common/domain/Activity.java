@@ -92,7 +92,7 @@ public class Activity extends BaseEntity {
     }
 
     public void decrementParticipant() {
-        if (participantCount <= 0) {
+        if (participantCount < 0) {
             throw new ParticipantUnderflowException();
         }
         this.participantCount--;

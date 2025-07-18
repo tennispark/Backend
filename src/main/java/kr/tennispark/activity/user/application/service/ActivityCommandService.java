@@ -10,6 +10,7 @@ import kr.tennispark.activity.user.infrastructure.repository.UserActivityApplica
 import kr.tennispark.activity.user.infrastructure.repository.UserActivityRepository;
 import kr.tennispark.members.common.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,20 @@ public class ActivityCommandService {
         Activity activity = loadAndLockActivity(activityId, type);
         activity.incrementApplicant();
         preventDuplicate(member, activity);
-        recordApplication(member, activity);
+        try {
+            recordApplication(member, activity);
+        } catch (DataIntegrityViolationException e) {
+            if (isDuplicateApplicationKeyViolation(e)) {
+                throw new DuplicateApplicationException();
+            }
+            throw e;
+        }
+    }
+
+    private boolean isDuplicateApplicationKeyViolation(DataIntegrityViolationException e) {
+        return e.getCause() != null &&
+                e.getCause().getMessage() != null &&
+                e.getCause().getMessage().contains("UK_member_activity");
     }
 
     private Activity loadAndLockActivity(Long activityId, ActivityType type) {
