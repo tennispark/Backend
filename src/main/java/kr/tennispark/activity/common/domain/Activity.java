@@ -46,6 +46,9 @@ public class Activity extends BaseEntity {
     private Integer participantCount = 0;
 
     @Column(nullable = false)
+    private Integer applicantCount = 0;
+
+    @Column(nullable = false)
     private Integer capacity;
 
     @Embedded
@@ -72,6 +75,7 @@ public class Activity extends BaseEntity {
                         template.getTime().getEndAt()
                 ),
                 0,
+                0,
                 template.getCapacity(),
                 template.getPlace(),
                 template.getType(),
@@ -92,6 +96,10 @@ public class Activity extends BaseEntity {
             throw new ParticipantUnderflowException();
         }
         this.participantCount--;
+    }
+
+    public void incrementApplicant() {
+        this.applicantCount++;
     }
 }
 
