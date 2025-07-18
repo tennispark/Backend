@@ -33,6 +33,7 @@ public class ActivityCommandService {
 
     private void apply(Member member, Long activityId, ActivityType type) {
         Activity activity = loadAndLockActivity(activityId, type);
+        activity.incrementApplicant();
         preventDuplicate(member, activity);
         recordApplication(member, activity);
     }

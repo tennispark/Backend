@@ -15,7 +15,7 @@ public record GetActivityApplicationResponseDTO(
                         activity.getCourtName(),
                         activity.getScheduledTime().getBeginAt(),
                         activity.getScheduledTime().getEndAt(),
-                        activity.getParticipantCount(),
+                        activity.getApplicantCount(),
                         activity.getCapacity()
                 )
         );
