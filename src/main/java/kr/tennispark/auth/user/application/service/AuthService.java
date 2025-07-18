@@ -71,6 +71,7 @@ public class AuthService {
         tokenService.expireTokens(member.getPhone().getNumber());
     }
 
+    @Transactional
     public void withdrawMember(Member member) {
         memberService.withdraw(member);
         logout(member);
