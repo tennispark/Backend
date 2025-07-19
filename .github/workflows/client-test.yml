@@ -1,0 +1,56 @@
+name: CD with Gradle
+
+on:
+  pull_request:
+    branches:
+      - client-test
+    types:
+      - closed
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: "adopt"
+
+      - name: Make application.yml
+        shell: bash
+        env:
+          APP_B64: ${{ secrets.TEST_PROPERTIES}}
+          GOOGLE_JSON: ${{ secrets.GOOGLE_JSON }}
+        run: |
+          mkdir -p src/main/resources
+          echo "$APP_B64" | base64 --decode > src/main/resources/application.yml
+          echo "$GOOGLE_JSON" > src/main/resources/firebase-service-account.json
+
+      - name: Build by Gradle
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build
+
+      - name: Docker build & push to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_TEST_REPO }} .
+          docker push ${{ secrets.DOCKER_TEST_REPO }}
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.TEST_HOST }}
+          username: ubuntu
+          key: ${{ secrets.TEST_KEY }}
+          script: |
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_TEST_REPO }}
+            sudo docker-compose up -d
+            sudo docker image prune -f
