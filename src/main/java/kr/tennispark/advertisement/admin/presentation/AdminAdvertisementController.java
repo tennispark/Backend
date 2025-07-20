@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/admin/advertisements")
 @RequiredArgsConstructor
-public class AdvertisementController {
+public class AdminAdvertisementController {
 
     private final AdvertisementAdminUseCase advertisementAdminUseCase;
 
