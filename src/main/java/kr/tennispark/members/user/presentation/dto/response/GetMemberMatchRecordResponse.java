@@ -5,15 +5,18 @@ public record GetMemberMatchRecordResponse(
         long draws,
         long losses,
         int matchPoint,
-        long ranking
+        long ranking,
+        double coupon
 ) {
     public static GetMemberMatchRecordResponse of(
             long wins,
             long draws,
             long losses,
             int matchPoint,
-            long ranking
+            long ranking,
+            double coupon
+
     ) {
-        return new GetMemberMatchRecordResponse(wins, draws, losses, matchPoint, ranking);
+        return new GetMemberMatchRecordResponse(wins, draws, losses, matchPoint, ranking, coupon);
     }
 }

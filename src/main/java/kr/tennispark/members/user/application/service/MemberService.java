@@ -57,7 +57,7 @@ public class MemberService {
         int matchPoint = member.getMatchPoint();
         long ranking = rankingRepository.getRank(member.getId());
 
-        return GetMemberMatchRecordResponse.of(wins, draws, losses, matchPoint, ranking);
+        return GetMemberMatchRecordResponse.of(wins, draws, losses, matchPoint, ranking, member.getCoupon());
     }
 
     @Transactional
