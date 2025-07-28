@@ -82,6 +82,9 @@ public class Member extends BaseEntity {
     @Column(name = "fcm_token")
     private String fcmToken;
 
+    @Column
+    private Double coupon;
+
     private Member(Phone phone, String name, int year, Integer tennisCareer, String recommender,
                    String instagramId, Gender gender, RegistrationSource registrationSource) {
         validateRecommender(registrationSource, recommender);
@@ -95,6 +98,7 @@ public class Member extends BaseEntity {
         this.instagramId = instagramId;
         this.gender = gender;
         this.registrationSource = registrationSource;
+        this.coupon = 0.0;
     }
 
     public static Member of(Phone phone, String name, int year, Integer tennisCareer, String recommender,
