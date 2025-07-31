@@ -55,7 +55,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
     private void generateInitialActivities(ActivityInfo template) {
         LocalDate today = WeekPeriod.today();
-        WeekPeriod week = WeekPeriod.current();
+        WeekPeriod week = WeekPeriod.thisWeek();
 
         List<Activity> activities = template.getActiveDays().stream()
                 .map(day -> Activity.of(template, week.toDate(day)))
