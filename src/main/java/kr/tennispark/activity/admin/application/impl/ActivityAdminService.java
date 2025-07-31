@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityAdminService implements ActivityAdminUseCase {
 
-    private static final Integer TWO_WEEK = 2;
+    private static final Integer ONE_WEEK = 1;
 
     private final ActivityNotificationService activityNotificationService;
 
@@ -55,7 +55,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
     private void generateInitialActivities(ActivityInfo template) {
         LocalDate today = WeekPeriod.today();
-        WeekPeriod week = WeekPeriod.current();
+        WeekPeriod week = WeekPeriod.thisWeek();
 
         List<Activity> activities = template.getActiveDays().stream()
                 .map(day -> Activity.of(template, week.toDate(day)))
@@ -120,7 +120,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     @Override
     public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
         Page<Activity> activityPage = activityRepository.findRecentTwoWeeks
-                (PageRequest.of(page, size), LocalDate.now().minusWeeks(TWO_WEEK));
+                (PageRequest.of(page, size), LocalDate.now().minusWeeks(ONE_WEEK));
 
         return GetActivityApplicationResponseDTO.of(activityPage);
     }
