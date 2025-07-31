@@ -102,6 +102,10 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         ActivityInfo activityInfo = activityInfoRepository.getById(activityInfoId);
         List<Activity> activities = activityRepository.findAllByTemplateAndDateAfter(activityInfo, LocalDate.now());
 
+        for (Activity activity : activities) {
+            activityApplicationRepository.deleteAllByActivity(activity);
+        }
+
         activityRepository.deleteAll(activities);
         activityInfoRepository.delete(activityInfo);
     }

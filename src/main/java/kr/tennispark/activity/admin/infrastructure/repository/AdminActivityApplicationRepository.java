@@ -43,4 +43,6 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
     }
 
     List<ActivityApplication> findAllByActivity(Activity activity);
+
+    void deleteAllByActivity(Activity activity);
 }

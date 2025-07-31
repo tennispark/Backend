@@ -16,6 +16,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
@@ -27,6 +29,8 @@ import lombok.NoArgsConstructor;
                 columnNames = {"member_id", "activity_id"}
         )
 )
+@SQLDelete(sql = "UPDATE activity_application SET status = false WHERE id = ?")
+@SQLRestriction("status = true")
 public class ActivityApplication extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
