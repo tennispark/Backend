@@ -16,7 +16,6 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.point.common.application.service.PointService;
-import kr.tennispark.point.common.domain.entity.enums.PointReason;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -82,11 +81,12 @@ public class MatchResultServiceImpl implements MatchResultService {
     private void rewardWinningTeam(MatchOutcome outcome, List<Member> members) {
         processMatchPoint(members, outcome);
 
-        for (Member member : members) {
-            if (outcome == MatchOutcome.WIN) {
-                pointService.applyPoint(member, WIN_POINT, PointReason.WIN_MATCH, "매치 승리");
-            }
-        }
+        // 요청으로 인해 포인트 지급 로직이 일시적으로 주석 처리됨
+//        for (Member member : members) {
+//            if (outcome == MatchOutcome.WIN) {
+//                pointService.applyPoint(member, WIN_POINT, PointReason.WIN_MATCH, "매치 승리");
+//            }
+//        }
     }
 
 
