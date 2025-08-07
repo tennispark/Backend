@@ -20,18 +20,18 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("status = true")
 public class MatchResult extends BaseEntity {
 
-    @Column(nullable = false, name = "team_a_score")
+    @Column(nullable = false, name = "my_team_score")
     private Integer myTeamScore;
 
-    @Column(nullable = false, name = "team_b_score")
+    @Column(nullable = false, name = "other_team_score")
     private Integer otherTeamScore;
 
     @Column(nullable = false)
     private LocalDate matchDate;
 
-    public static MatchResult of(Integer teamAScore, Integer teamBScore, LocalDate matchDate) {
-        validateMatchScores(teamAScore, teamBScore);
-        return new MatchResult(teamAScore, teamBScore, matchDate);
+    public static MatchResult of(Integer myTeamScore, Integer otherTeamScore, LocalDate matchDate) {
+        validateMatchScores(myTeamScore, otherTeamScore);
+        return new MatchResult(myTeamScore, otherTeamScore, matchDate);
     }
 
     private static void validateMatchScores(Integer teamAScore, Integer teamBScore) {
