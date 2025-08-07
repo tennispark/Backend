@@ -11,9 +11,7 @@ import kr.tennispark.match.common.application.dto.MatchPointIncreasedEvent;
 import kr.tennispark.match.common.domain.entity.MatchResult;
 import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
-import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.point.common.application.service.PointService;
 import lombok.RequiredArgsConstructor;
@@ -88,23 +86,6 @@ public class MatchResultServiceImpl implements MatchResultService {
 //                pointService.applyPoint(member, WIN_POINT, PointReason.WIN_MATCH, "매치 승리");
 //            }
 //        }
-    }
-
-
-    private List<Member> fetchMembersByIds(List<Long> ids) {
-        List<Member> members = memberRepository.findAllById(ids);
-
-        if (members.size() != ids.size()) {
-            throw new NoSuchMemberException();
-        }
-
-        return members;
-    }
-
-    private void validateMemberDuplication(List<Long> teamAIds, List<Long> teamBIds) {
-        if (teamAIds.stream().anyMatch(teamBIds::contains)) {
-            throw new InvalidMatchResultException("팀 A와 팀 B에 중복된 선수가 있습니다.");
-        }
     }
 
     private void saveMemberRecords(Member member, MatchResult matchResult, MatchOutcome matchOutcome,
