@@ -11,9 +11,7 @@ import kr.tennispark.match.common.application.dto.MatchPointIncreasedEvent;
 import kr.tennispark.match.common.domain.entity.MatchResult;
 import kr.tennispark.match.common.domain.entity.association.MatchParticipation;
 import kr.tennispark.match.common.domain.entity.enums.MatchOutcome;
-import kr.tennispark.match.common.domain.entity.exception.InvalidMatchResultException;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.point.common.application.service.PointService;
 import lombok.RequiredArgsConstructor;
@@ -49,27 +47,28 @@ public class MatchResultServiceImpl implements MatchResultService {
 
     @Override
     public void saveMatchResult(SaveMatchResultRequestDTO request) {
-        validateMemberDuplication(request.teamA().playerIds(), request.teamB().playerIds());
+        // 1) 참가자 조회
+        Member me = memberRepository.getById(request.memberId());
 
-        List<Member> teamAMembers = fetchMembersByIds(request.teamA().playerIds());
-        List<Member> teamBMembers = fetchMembersByIds(request.teamB().playerIds());
-
-        MatchResult matchResult = MatchResult.of(
-                request.teamA().score(),
-                request.teamB().score(),
+        MatchResult result = MatchResult.of(
+                request.myScore(),
+                request.opponentScore(),
                 request.matchDate()
         );
-        matchResultRepository.save(matchResult);
+        matchResultRepository.save(result);
 
-        MatchOutcome teamAOutcome = determineMatchOutcome(request.teamA().score(), request.teamB().score());
-        MatchOutcome teamBOutcome = determineMatchOutcome(request.teamB().score(), request.teamA().score());
+        MatchOutcome outcome = determineMatchOutcome(request.myScore(), request.opponentScore());
 
-        rewardWinningTeam(teamAOutcome, teamAMembers);
-        rewardWinningTeam(teamBOutcome, teamBMembers);
+        rewardWinningTeam(outcome, me);
 
-        saveMemberRecords(teamAMembers, matchResult, teamAOutcome, request.teamA().score());
-        saveMemberRecords(teamBMembers, matchResult, teamBOutcome, request.teamB().score());
+        saveMemberRecords(
+                me,
+                result,
+                outcome,
+                request.myScore()
+        );
     }
+
 
     @Override
     public GetMemberSummaryResponseDTO searchMemberNameForMatchResult(String memberName) {
@@ -78,8 +77,8 @@ public class MatchResultServiceImpl implements MatchResultService {
         return convertMembersToDTO(members);
     }
 
-    private void rewardWinningTeam(MatchOutcome outcome, List<Member> members) {
-        processMatchPoint(members, outcome);
+    private void rewardWinningTeam(MatchOutcome outcome, Member member) {
+        processMatchPoint(member, outcome);
 
         // 요청으로 인해 포인트 지급 로직이 일시적으로 주석 처리됨
 //        for (Member member : members) {
@@ -89,29 +88,10 @@ public class MatchResultServiceImpl implements MatchResultService {
 //        }
     }
 
-
-    private List<Member> fetchMembersByIds(List<Long> ids) {
-        List<Member> members = memberRepository.findAllById(ids);
-
-        if (members.size() != ids.size()) {
-            throw new NoSuchMemberException();
-        }
-
-        return members;
-    }
-
-    private void validateMemberDuplication(List<Long> teamAIds, List<Long> teamBIds) {
-        if (teamAIds.stream().anyMatch(teamBIds::contains)) {
-            throw new InvalidMatchResultException("팀 A와 팀 B에 중복된 선수가 있습니다.");
-        }
-    }
-
-    private void saveMemberRecords(List<Member> members, MatchResult matchResult, MatchOutcome matchOutcome,
+    private void saveMemberRecords(Member member, MatchResult matchResult, MatchOutcome matchOutcome,
                                    int score) {
-        members.forEach(member -> {
-            MatchParticipation record = MatchParticipation.of(member, matchResult, matchOutcome, score);
-            matchParticipationRepository.save(record);
-        });
+        MatchParticipation record = MatchParticipation.of(member, matchResult, matchOutcome, score);
+        matchParticipationRepository.save(record);
     }
 
     private MatchOutcome determineMatchOutcome(int teamAScore, int teamBScore) {
@@ -124,16 +104,14 @@ public class MatchResultServiceImpl implements MatchResultService {
         }
     }
 
-    private void processMatchPoint(List<Member> members, MatchOutcome matchOutcome) {
-        for (Member member : members) {
-            int matchPoint = switch (matchOutcome) {
-                case WIN -> WIN_MATCH_POINT;
-                case DRAW -> DRAW_MATCH_POINT;
-                case LOSE -> LOSE_MATCH_POINT;
-            };
-            member.increaseMatchPoint(matchPoint);
-            eventPublisher.publishEvent(
-                    new MatchPointIncreasedEvent(member.getId(), matchPoint));
-        }
+    private void processMatchPoint(Member member, MatchOutcome matchOutcome) {
+        int matchPoint = switch (matchOutcome) {
+            case WIN -> WIN_MATCH_POINT;
+            case DRAW -> DRAW_MATCH_POINT;
+            case LOSE -> LOSE_MATCH_POINT;
+        };
+        member.increaseMatchPoint(matchPoint);
+        eventPublisher.publishEvent(
+                new MatchPointIncreasedEvent(member.getId(), matchPoint));
     }
 }
