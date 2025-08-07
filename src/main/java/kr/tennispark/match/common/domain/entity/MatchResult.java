@@ -21,10 +21,10 @@ import org.hibernate.annotations.SQLRestriction;
 public class MatchResult extends BaseEntity {
 
     @Column(nullable = false, name = "team_a_score")
-    private Integer teamAScore;
+    private Integer myTeamScore;
 
     @Column(nullable = false, name = "team_b_score")
-    private Integer teamBScore;
+    private Integer otherTeamScore;
 
     @Column(nullable = false)
     private LocalDate matchDate;
