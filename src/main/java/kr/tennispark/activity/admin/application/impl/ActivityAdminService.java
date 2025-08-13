@@ -119,8 +119,10 @@ public class ActivityAdminService implements ActivityAdminUseCase {
 
     @Override
     public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
-        Page<Activity> activityPage = activityRepository.findRecentTwoWeeks
-                (PageRequest.of(page, size), LocalDate.now().minusWeeks(ONE_WEEK));
+        LocalDate fromDate = WeekPeriod.thisWeek().start();
+
+        Page<Activity> activityPage =
+                activityRepository.findFromDate(PageRequest.of(page, size), fromDate);
 
         return GetActivityApplicationResponseDTO.of(activityPage);
     }
