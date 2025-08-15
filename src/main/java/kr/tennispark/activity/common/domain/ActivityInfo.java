@@ -39,7 +39,7 @@ public class ActivityInfo extends BaseEntity {
     @Embedded
     private ScheduledTime time;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "active_days",
             joinColumns = @JoinColumn(name = "info_id"))
     @Column(name = "active_day")
@@ -64,7 +64,7 @@ public class ActivityInfo extends BaseEntity {
     @Column(nullable = false)
     private String courtName;
 
-    public static ActivityInfo of(ActivityName activityName,String placeName, String address,
+    public static ActivityInfo of(ActivityName activityName, String placeName, String address,
                                   LocalTime beginAt, LocalTime endAt,
                                   List<String> activeDays, Boolean isRecurring,
                                   Integer capacity, String courtName) {
