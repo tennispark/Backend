@@ -6,6 +6,8 @@ import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.members.common.domain.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,5 +36,31 @@ public interface UserActivityApplicationRepository extends JpaRepository<Activit
             """)
     List<ActivityApplication> findActiveByMember(@Param("member") Member member);
 
-
+    @Query(
+            value = """
+                        SELECT aa
+                        FROM ActivityApplication aa
+                        JOIN FETCH aa.activity a
+                        JOIN FETCH a.template t
+                        WHERE aa.member.id = :memberId
+                          AND aa.status = true
+                          AND a.status = true
+                          AND t.status = true
+                        ORDER BY aa.createdAt DESC
+                    """,
+            countQuery = """
+                        SELECT COUNT(aa.id)
+                        FROM ActivityApplication aa
+                        JOIN aa.activity a
+                        JOIN a.template t
+                        WHERE aa.member.id = :memberId
+                        AND aa.status = true
+                        AND a.status = true
+                        AND t.status = true
+                    """
+    )
+    Page<ActivityApplication> findMyApplications(
+            @Param("memberId") Long memberId,
+            Pageable pageable
+    );
 }
