@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ApplicationStatus {
     PENDING(false),
+    WAITING(false),
     APPROVED(true),
     CANCELED(false);
 
