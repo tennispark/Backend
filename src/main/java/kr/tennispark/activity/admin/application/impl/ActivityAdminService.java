@@ -118,7 +118,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
-    public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
+    public GetActivityApplicationResponseDTO getActivityList(Integer page, Integer size) {
         LocalDate fromDate = WeekPeriod.thisWeek().start();
 
         Page<Activity> activityPage =

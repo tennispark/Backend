@@ -40,7 +40,7 @@ public class ActivityAdminController {
     public ResponseEntity<ApiResult<GetActivityApplicationResponseDTO>> getActivityApplicationList(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        GetActivityApplicationResponseDTO response = actUseCase.getActivityApplicationList(page, size);
+        GetActivityApplicationResponseDTO response = actUseCase.getActivityList(page, size);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 

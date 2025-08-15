@@ -18,7 +18,7 @@ public interface ActivityAdminUseCase {
 
     GetActivityResponseInfoDTO getActivityInfoList(Integer page, Integer size);
 
-    GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size);
+    GetActivityApplicationResponseDTO getActivityList(Integer page, Integer size);
 
     GetActivityApplicantResponseDTO getActivityApplicantList(Long activityId, Integer page, Integer size);
 
