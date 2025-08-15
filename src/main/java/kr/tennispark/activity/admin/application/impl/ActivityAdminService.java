@@ -2,6 +2,7 @@ package kr.tennispark.activity.admin.application.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
@@ -14,6 +15,7 @@ import kr.tennispark.activity.admin.presentation.dto.response.GetActivityRespons
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
+import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
 import kr.tennispark.notification.application.ActivityNotificationService;
 import lombok.RequiredArgsConstructor;
@@ -124,7 +126,19 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         Page<Activity> activityPage =
                 activityRepository.findFromDate(PageRequest.of(page, size), fromDate);
 
-        return GetActivityResponseDTO.of(activityPage);
+        List<Long> activityIds = activityPage.getContent().stream()
+                .map(Activity::getId)
+                .toList();
+
+        Map<Long, Long> pendingCountMap = activityApplicationRepository
+                .countPendingByActivityIds(activityIds, ApplicationStatus.PENDING)
+                .stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        AdminActivityApplicationRepository.PendingCountRow::getActivityId,
+                        AdminActivityApplicationRepository.PendingCountRow::getCnt
+                ));
+
+        return GetActivityResponseDTO.of(activityPage, pendingCountMap);
     }
 
     @Override
