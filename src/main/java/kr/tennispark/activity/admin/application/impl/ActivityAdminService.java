@@ -9,7 +9,7 @@ import kr.tennispark.activity.admin.infrastructure.repository.AdminActivityAppli
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityApplicationRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
-import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
@@ -118,13 +118,13 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
-    public GetActivityApplicationResponseDTO getActivityList(Integer page, Integer size) {
+    public GetActivityResponseDTO getActivityList(Integer page, Integer size) {
         LocalDate fromDate = WeekPeriod.thisWeek().start();
 
         Page<Activity> activityPage =
                 activityRepository.findFromDate(PageRequest.of(page, size), fromDate);
 
-        return GetActivityApplicationResponseDTO.of(activityPage);
+        return GetActivityResponseDTO.of(activityPage);
     }
 
     @Override

@@ -4,12 +4,12 @@ import java.time.LocalTime;
 import kr.tennispark.activity.common.domain.Activity;
 import org.springframework.data.domain.Page;
 
-public record GetActivityApplicationResponseDTO(
-        Page<ActivityApplicationDTO> applications
+public record GetActivityResponseDTO(
+        Page<ActivityDTO> applications
 ) {
-    public static GetActivityApplicationResponseDTO of(Page<Activity> activities) {
-        Page<ActivityApplicationDTO> applications = activities.map(activity ->
-                ActivityApplicationDTO.of(
+    public static GetActivityResponseDTO of(Page<Activity> activities) {
+        Page<ActivityDTO> applications = activities.map(activity ->
+                ActivityDTO.of(
                         activity.getId(),
                         activity.getPlace().getName(),
                         activity.getCourtName(),
@@ -19,10 +19,10 @@ public record GetActivityApplicationResponseDTO(
                         activity.getCapacity()
                 )
         );
-        return new GetActivityApplicationResponseDTO(applications);
+        return new GetActivityResponseDTO(applications);
     }
 
-    public record ActivityApplicationDTO(
+    public record ActivityDTO(
             Long id,
             String placeName,
             String courtName,
@@ -31,7 +31,7 @@ public record GetActivityApplicationResponseDTO(
             int participantCount,
             int capacity
     ) {
-        public static ActivityApplicationDTO of(
+        public static ActivityDTO of(
                 Long id,
                 String placeName,
                 String courtName,
@@ -40,7 +40,7 @@ public record GetActivityApplicationResponseDTO(
                 int participantCount,
                 int capacity
         ) {
-            return new ActivityApplicationDTO(id, placeName, courtName, startAt, endAt, participantCount, capacity);
+            return new ActivityDTO(id, placeName, courtName, startAt, endAt, participantCount, capacity);
         }
 
     }

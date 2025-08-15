@@ -5,7 +5,7 @@ import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityApplicationRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
-import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
@@ -37,10 +37,10 @@ public class ActivityAdminController {
     }
 
     @GetMapping("/activities/applications")
-    public ResponseEntity<ApiResult<GetActivityApplicationResponseDTO>> getActivityApplicationList(
+    public ResponseEntity<ApiResult<GetActivityResponseDTO>> getActivityList(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        GetActivityApplicationResponseDTO response = actUseCase.getActivityList(page, size);
+        GetActivityResponseDTO response = actUseCase.getActivityList(page, size);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 
