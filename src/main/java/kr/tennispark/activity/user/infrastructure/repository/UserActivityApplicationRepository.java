@@ -30,7 +30,9 @@ public interface UserActivityApplicationRepository extends JpaRepository<Activit
             FROM ActivityApplication aa
             WHERE aa.member = :member
               AND aa.status = true
-              AND aa.applicationStatus IN ('PENDING','APPROVED')
+              AND aa.applicationStatus IN ('PENDING','APPROVED', 'WAINTING')
             """)
     List<ActivityApplication> findActiveByMember(@Param("member") Member member);
+
+
 }
