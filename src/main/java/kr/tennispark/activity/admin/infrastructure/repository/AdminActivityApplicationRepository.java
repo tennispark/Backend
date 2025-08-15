@@ -20,7 +20,7 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
                 JOIN FETCH aa.member m
                 WHERE aa.activity = :activity
                 AND m.status = true
-                ORDER BY aa.createdAt DESC
+                ORDER BY aa.createdAt ASC
             """)
     Page<ActivityApplication> findAllValidByActivity(Activity activity, Pageable pageable);
 
