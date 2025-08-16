@@ -42,9 +42,9 @@ public class NotificationPublisher {
     }
 
     @Transactional
-    public void broadcast(NotificationCategory category, String content) {
+    public void broadcast(String content) {
         List<Member> members = memberRepo.findAllWithValidFcmToken();
-        notifyMembers(members, category, content);
+        notifyMembers(members, NotificationCategory.ANNOUNCEMENT, content);
     }
 
     private void batchSave(List<Notification> rows) {
