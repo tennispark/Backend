@@ -36,7 +36,7 @@ public class SendRecruitReminderScheduler {
             return;
         }
 
-        String message = NotificationMessageFactory.createRecruitReminderMessage(activitiesWithVacancy);
+        String message = NotificationMessageFactory.recruitReminderMessage(activitiesWithVacancy);
         publisher.broadcast(message);
     }
 }

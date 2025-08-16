@@ -1,8 +1,10 @@
 package kr.tennispark.notification.application;
 
-import java.time.LocalTime;
 import java.util.List;
+import java.util.StringJoiner;
 import kr.tennispark.activity.common.domain.Activity;
+import kr.tennispark.activity.common.domain.ActivityApplication;
+import kr.tennispark.common.utils.ActivityHeaderFormat;
 import kr.tennispark.notification.domain.entity.enums.NotificationType;
 import org.springframework.stereotype.Service;
 
@@ -10,60 +12,62 @@ import org.springframework.stereotype.Service;
 public class NotificationMessageFactory {
 
     private static final String COMMON_SUFFIX = "님들과 테니스 활동 예정입니다. 다른분들을 위해 꼭 늦지 않고 도착해주세요.";
-    private static final String ONE_DAY_FORMAT = "내일 %s %s %s에서 %s " + COMMON_SUFFIX;
-    private static final String ONE_HOUR_FORMAT = "잠시후 %s %s %s에서 %s " + COMMON_SUFFIX;
+    private static final String ONE_DAY_FORMAT = "내일 %02d시 %s %s에서 %s " + COMMON_SUFFIX;
+    private static final String ONE_HOUR_FORMAT = "잠시후 %02d시 %s %s에서 %s " + COMMON_SUFFIX;
     private static final String RECRUIT_PREFIX = "이번주 테니스파크 활동 추가모집합니다. ";
     private static final String RECRUIT_FORMAT = "%s %s %d석";
-    private static final String TIME_FORMAT = "%02d시";
     private static final String DELIMITER = ", ";
 
-    public static String createMessage(NotificationType type, Activity activity, List<String> participantNames) {
-        String time = formatTime(activity.getScheduledTime().getBeginAt());
-        String place = activity.getPlace().getName();
-        String courtName = activity.getCourtName();
-        int remainingSeats = activity.getCapacity() - activity.getParticipantCount();
+    private static final String APPROVE_MESSAGE_SUFFIX = " 활동 신청이 승인되었습니다.";
+    private static final String CANCEL_MESSAGE_SUFFIX = " 활동 신청이 거절되었습니다.";
+    private static final String WAITING_MESSAGE_SUFFIX = " 활동 신청이 대기 상태로 변경되었습니다.";
 
-        String names = formatNames(participantNames);
+    public static String applicationStatusMessage(ActivityApplication app) {
+        String head = ActivityHeaderFormat.header(app.getActivity());
+        String suffix = switch (app.getApplicationStatus()) {
+            case APPROVED -> APPROVE_MESSAGE_SUFFIX;
+            case CANCELED -> CANCEL_MESSAGE_SUFFIX;
+            case WAITING -> WAITING_MESSAGE_SUFFIX;
+            case PENDING -> "";
+        };
+        return head + suffix;
+    }
+
+    public static String reminderMessage(NotificationType type,
+                                         Activity activity,
+                                         List<String> participantNames) {
+        String names = joinNames(participantNames);
+        int hour = activity.getScheduledTime().getBeginAt().getHour();
+        String place = activity.getPlace().getName();
+        String court = activity.getCourtName();
 
         return switch (type) {
-            case ONE_DAY_BEFORE -> String.format(
-                    ONE_DAY_FORMAT, time, place, courtName, names
-            );
-            case ONE_HOUR_BEFORE -> String.format(
-                    ONE_HOUR_FORMAT, time, place, courtName, names
-            );
-            case RECRUIT_REMINDER -> String.format(
-                    RECRUIT_PREFIX, place, remainingSeats
-            );
+            case ONE_DAY_BEFORE -> String.format(ONE_DAY_FORMAT, hour, place, court, names);
+            case ONE_HOUR_BEFORE -> String.format(ONE_HOUR_FORMAT, hour, place, court, names);
+            case RECRUIT_REMINDER -> recruitSingle(activity);
         };
     }
 
-    public static String createRecruitReminderMessage(List<Activity> activities) {
-        StringBuilder message = new StringBuilder(RECRUIT_PREFIX);
-
-        for (Activity activity : activities) {
-            String place = activity.getPlace().getName();
-            String courtType = activity.getCourtName();
-            int remainingSeats = activity.getCapacity() - activity.getParticipantCount();
-
-            message.append(String.format(RECRUIT_FORMAT, place, courtType, remainingSeats)).append(DELIMITER);
+    public static String recruitReminderMessage(List<Activity> activities) {
+        StringJoiner sj = new StringJoiner(DELIMITER, RECRUIT_PREFIX, "");
+        for (Activity a : activities) {
+            sj.add(recruitLine(a));
         }
-
-        removeDelimiter(message);
-        return message.toString();
+        return sj.toString();
     }
 
-    private static void removeDelimiter(StringBuilder message) {
-        if (message.toString().endsWith(DELIMITER)) {
-            message.setLength(message.length() - DELIMITER.length());
-        }
+    private static String recruitSingle(Activity a) {
+        return RECRUIT_PREFIX + recruitLine(a);
     }
 
-    private static String formatTime(LocalTime time) {
-        return String.format(TIME_FORMAT, time.getHour());
+    private static String recruitLine(Activity a) {
+        String place = a.getPlace().getName();
+        String court = a.getCourtName();
+        int remaining = a.getCapacity() - a.getParticipantCount();
+        return String.format(RECRUIT_FORMAT, place, court, remaining);
     }
 
-    private static String formatNames(List<String> names) {
+    private static String joinNames(List<String> names) {
         return String.join(DELIMITER, names);
     }
 }

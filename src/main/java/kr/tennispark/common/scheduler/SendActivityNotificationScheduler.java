@@ -53,7 +53,7 @@ public class SendActivityNotificationScheduler {
                         .map(app -> app.getMember().getName())
                         .toList();
 
-                String message = NotificationMessageFactory.createMessage(
+                String message = NotificationMessageFactory.reminderMessage(
                         schedule.getNotificationType(),
                         activity,
                         participantNames
