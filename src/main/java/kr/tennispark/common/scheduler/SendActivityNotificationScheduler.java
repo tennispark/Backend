@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import kr.tennispark.activity.admin.infrastructure.repository.AdminActivityApplicationRepository;
 import kr.tennispark.activity.common.domain.Activity;
-import kr.tennispark.notification.application.FcmMessageService;
+import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.application.NotificationMessageFactory;
+import kr.tennispark.notification.application.NotificationPublisher;
 import kr.tennispark.notification.domain.entity.NotificationSchedule;
+import kr.tennispark.notification.domain.entity.enums.NotificationCategory;
 import kr.tennispark.notification.infrastructure.NotificationScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SendActivityNotificationScheduler {
 
-    private final FcmMessageService fcmMessageService;
+    private final NotificationPublisher publisher;
     private final NotificationScheduleRepository notificationScheduleRepository;
     private final AdminActivityApplicationRepository adminActivityApplicationRepository;
 
@@ -37,7 +39,7 @@ public class SendActivityNotificationScheduler {
             return;
         }
 
-        Map<String, List<String>> messageToTokens = new HashMap<>();
+        Map<String, List<Member>> messageToTokens = new HashMap<>();
         List<NotificationSchedule> schedulesToDelete = new ArrayList<>();
 
         for (NotificationSchedule schedule : schedules) {
@@ -58,7 +60,7 @@ public class SendActivityNotificationScheduler {
                 );
 
                 messageToTokens.computeIfAbsent(message, k -> new ArrayList<>())
-                        .add(schedule.getTargetToken());
+                        .add(schedule.getMember());
 
                 schedulesToDelete.add(schedule);
 
@@ -68,9 +70,9 @@ public class SendActivityNotificationScheduler {
         }
 
         // 그룹핑된 메시지별 FCM 전송
-        for (Map.Entry<String, List<String>> entry : messageToTokens.entrySet()) {
-            List<String> tokens = entry.getValue();
-            fcmMessageService.sendMessage(tokens, entry.getKey());
+        for (Map.Entry<String, List<Member>> entry : messageToTokens.entrySet()) {
+            List<Member> members = entry.getValue();
+            publisher.notifyMembers(members, NotificationCategory.MATCHING_GUIDE, entry.getKey());
         }
 
         notificationScheduleRepository.deleteAll(schedulesToDelete);

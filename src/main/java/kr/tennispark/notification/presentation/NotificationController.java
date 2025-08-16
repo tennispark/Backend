@@ -2,7 +2,7 @@ package kr.tennispark.notification.presentation;
 
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
-import kr.tennispark.notification.application.FcmMessageService;
+import kr.tennispark.notification.application.NotificationPublisher;
 import kr.tennispark.notification.presentation.request.SendMessageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class NotificationController {
 
-    private final FcmMessageService messageService;
+    private final NotificationPublisher publisher;
 
     @PostMapping("/broadcast")
     public ResponseEntity<ApiResult<?>> sendBroadcastMessage(
             @RequestBody SendMessageRequestDTO request) {
-        messageService.sendBroadcastMessage(request.content());
+        publisher.broadcast(request.content());
         return ResponseEntity.ok(ApiUtils.success());
     }
 }

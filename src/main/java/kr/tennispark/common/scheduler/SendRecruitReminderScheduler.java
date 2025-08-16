@@ -5,8 +5,8 @@ import java.util.List;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
-import kr.tennispark.notification.application.FcmMessageService;
 import kr.tennispark.notification.application.NotificationMessageFactory;
+import kr.tennispark.notification.application.NotificationPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,7 +20,7 @@ public class SendRecruitReminderScheduler {
 
     private static final Integer DAYS_TO_ADD = 6;
 
-    private final FcmMessageService fcmMessageService;
+    private final NotificationPublisher publisher;
     private final ActivityRepository activityRepository;
 
     @Scheduled(cron = "0 30 8 ? * MON-THU")
@@ -37,6 +37,6 @@ public class SendRecruitReminderScheduler {
         }
 
         String message = NotificationMessageFactory.createRecruitReminderMessage(activitiesWithVacancy);
-        fcmMessageService.sendBroadcastMessage(message);
+        publisher.broadcast(message);
     }
 }
