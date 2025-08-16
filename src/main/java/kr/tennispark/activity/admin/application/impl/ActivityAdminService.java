@@ -2,6 +2,7 @@ package kr.tennispark.activity.admin.application.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import kr.tennispark.activity.admin.application.ActivityAdminUseCase;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityInfoRepository;
 import kr.tennispark.activity.admin.infrastructure.repository.ActivityRepository;
@@ -9,13 +10,14 @@ import kr.tennispark.activity.admin.infrastructure.repository.AdminActivityAppli
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityApplicationRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.request.ManageActivityInfoRequestDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicantResponseDTO;
-import kr.tennispark.activity.admin.presentation.dto.response.GetActivityApplicationResponseDTO;
+import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseDTO;
 import kr.tennispark.activity.admin.presentation.dto.response.GetActivityResponseInfoDTO;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
+import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
-import kr.tennispark.notification.application.ActivityNotificationService;
+import kr.tennispark.notification.admin.application.ActivityNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -88,10 +90,13 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         ActivityApplication activityApplication = activityApplicationRepository.getByMemberIdAndActivityId(
                 applicantId, activityId);
 
+        if (activityApplication.getApplicationStatus().isAccepted() && !request.applicationStatus().isAccepted()) {
+            activityNotificationService.deleteNotificationSchedule(activityApplication);
+        }
         activityApplication.changeStatus(request.applicationStatus());
 
-        if (activityApplication.getApplicationStatus().isAccepted()) {
-            activityNotificationService.notifyApprovedApplication(activityApplication);
+        if (!activityApplication.getApplicationStatus().isPending()) {
+            activityNotificationService.notifyApplicationStatus(activityApplication);
         }
     }
 
@@ -118,13 +123,25 @@ public class ActivityAdminService implements ActivityAdminUseCase {
     }
 
     @Override
-    public GetActivityApplicationResponseDTO getActivityApplicationList(Integer page, Integer size) {
+    public GetActivityResponseDTO getActivityList(Integer page, Integer size) {
         LocalDate fromDate = WeekPeriod.thisWeek().start();
 
         Page<Activity> activityPage =
                 activityRepository.findFromDate(PageRequest.of(page, size), fromDate);
 
-        return GetActivityApplicationResponseDTO.of(activityPage);
+        List<Long> activityIds = activityPage.getContent().stream()
+                .map(Activity::getId)
+                .toList();
+
+        Map<Long, Long> pendingCountMap = activityApplicationRepository
+                .countPendingByActivityIds(activityIds, ApplicationStatus.PENDING)
+                .stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        AdminActivityApplicationRepository.PendingCountRow::getActivityId,
+                        AdminActivityApplicationRepository.PendingCountRow::getCnt
+                ));
+
+        return GetActivityResponseDTO.of(activityPage, pendingCountMap);
     }
 
     @Override

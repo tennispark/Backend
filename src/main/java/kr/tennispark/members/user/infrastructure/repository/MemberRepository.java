@@ -49,4 +49,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     void bulkIncreaseTennisCareer();
 
     List<Member> findByIdIn(List<Long> memberIds);
+
+    @Query("""
+                SELECT m
+                FROM Member m
+                WHERE m.status = true
+                  AND m.fcmToken IS NOT NULL
+                  AND TRIM(m.fcmToken) <> ''
+                ORDER BY m.id ASC
+            """)
+    List<Member> findAllWithValidFcmToken();
 }
