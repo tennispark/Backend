@@ -24,7 +24,7 @@ public class SendRecruitReminderScheduler {
     private final ActivityRepository activityRepository;
 
     @Scheduled(cron = "0 30 8 ? * MON-THU")
-    @Transactional(readOnly = true)
+    @Transactional
     public void sendRecruitReminder() {
         WeekPeriod period = WeekPeriod.thisWeek();
 

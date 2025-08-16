@@ -67,7 +67,8 @@ public class ActivityNotificationService {
                 member
         );
     }
-
+    
+    @Transactional
     public void deleteNotificationSchedule(ActivityApplication application) {
         Activity activity = application.getActivity();
         Member member = application.getMember();
