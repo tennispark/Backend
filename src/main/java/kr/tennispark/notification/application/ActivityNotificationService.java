@@ -33,7 +33,6 @@ public class ActivityNotificationService {
             return;
         }
 
-        // 신청 상태 승인일 때만, 승인상태에서 다른 상태로 변경되면 future 알림 삭제해야함
         publisher.notifyMembers(List.of(application.getMember()), NotificationCategory.ACTIVITY_GUIDE,
                 NotificationMessageFactory.applicationStatusMessage(application));
         if (application.getApplicationStatus().isAccepted()) {
