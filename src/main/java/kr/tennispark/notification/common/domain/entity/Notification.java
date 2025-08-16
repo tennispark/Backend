@@ -26,7 +26,9 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE notification SET status=false WHERE id=?")
 @SQLRestriction("status=true")
 @Table(indexes = {
-        @Index(name = "idx_notification_member_created", columnList = "member_id, created_at DESC")
+        @Index(name = "idx_notification_member_created", columnList = "member_id, created_at DESC"),
+        @Index(name = "idx_notification_status_created",
+                columnList = "status, created_at")
 })
 public class Notification extends BaseEntity {
 

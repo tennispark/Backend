@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.common.domain.BaseEntity;
@@ -19,6 +21,15 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
+@Table(
+        name = "notification_schedule",
+        indexes = {
+                @Index(
+                        name = "idx_nsch_status_time",
+                        columnList = "status, scheduled_time"
+                )
+        }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -33,7 +44,7 @@ public class NotificationSchedule extends BaseEntity {
     @Column(nullable = false)
     private NotificationType notificationType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "scheduled_time")
     private LocalDateTime scheduledTime;
 
     @Column(nullable = false)
