@@ -1,12 +1,12 @@
-package kr.tennispark.notification.application;
+package kr.tennispark.notification.admin.application;
 
 import java.util.Collection;
 import java.util.List;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
-import kr.tennispark.notification.domain.entity.Notification;
-import kr.tennispark.notification.domain.entity.enums.NotificationCategory;
-import kr.tennispark.notification.infrastructure.NotificationRepository;
+import kr.tennispark.notification.admin.infrastructure.NotificationRepository;
+import kr.tennispark.notification.common.domain.entity.Notification;
+import kr.tennispark.notification.common.domain.entity.enums.NotificationCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

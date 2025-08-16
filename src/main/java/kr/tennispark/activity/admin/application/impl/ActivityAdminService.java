@@ -17,7 +17,7 @@ import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.ActivityInfo;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
-import kr.tennispark.notification.application.ActivityNotificationService;
+import kr.tennispark.notification.admin.application.ActivityNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

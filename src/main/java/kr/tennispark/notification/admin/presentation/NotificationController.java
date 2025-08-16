@@ -1,9 +1,9 @@
-package kr.tennispark.notification.presentation;
+package kr.tennispark.notification.admin.presentation;
 
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
-import kr.tennispark.notification.application.NotificationPublisher;
-import kr.tennispark.notification.presentation.request.SendMessageRequestDTO;
+import kr.tennispark.notification.admin.application.NotificationPublisher;
+import kr.tennispark.notification.admin.presentation.request.SendMessageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

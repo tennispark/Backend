@@ -1,4 +1,4 @@
-package kr.tennispark.notification.infrastructure;
+package kr.tennispark.notification.admin.infrastructure;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -6,7 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.PostConstruct;
-import kr.tennispark.notification.infrastructure.exception.FirebaseInitializationException;
+import kr.tennispark.notification.admin.infrastructure.exception.FirebaseInitializationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

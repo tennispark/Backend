@@ -1,4 +1,4 @@
-package kr.tennispark.notification.domain.entity.enums;
+package kr.tennispark.notification.common.domain.entity.enums;
 
 public enum NotificationCategory {
     ANNOUNCEMENT,     // 공지(브로드캐스트/추가모집)

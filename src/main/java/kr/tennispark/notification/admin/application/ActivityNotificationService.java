@@ -1,4 +1,4 @@
-package kr.tennispark.notification.application;
+package kr.tennispark.notification.admin.application;
 
 import io.micrometer.common.util.StringUtils;
 import java.time.LocalDateTime;
@@ -7,10 +7,10 @@ import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.notification.domain.entity.NotificationSchedule;
-import kr.tennispark.notification.domain.entity.enums.NotificationCategory;
-import kr.tennispark.notification.domain.entity.enums.NotificationType;
-import kr.tennispark.notification.infrastructure.NotificationScheduleRepository;
+import kr.tennispark.notification.admin.infrastructure.NotificationScheduleRepository;
+import kr.tennispark.notification.common.domain.entity.NotificationSchedule;
+import kr.tennispark.notification.common.domain.entity.enums.NotificationCategory;
+import kr.tennispark.notification.common.domain.entity.enums.NotificationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

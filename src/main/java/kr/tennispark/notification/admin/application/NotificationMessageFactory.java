@@ -1,11 +1,11 @@
-package kr.tennispark.notification.application;
+package kr.tennispark.notification.admin.application;
 
 import java.util.List;
 import java.util.StringJoiner;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.common.utils.ActivityHeaderFormat;
-import kr.tennispark.notification.domain.entity.enums.NotificationType;
+import kr.tennispark.notification.common.domain.entity.enums.NotificationType;
 import org.springframework.stereotype.Service;
 
 @Service

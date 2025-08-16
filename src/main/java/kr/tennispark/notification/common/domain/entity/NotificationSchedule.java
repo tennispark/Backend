@@ -1,4 +1,4 @@
-package kr.tennispark.notification.domain.entity;
+package kr.tennispark.notification.common.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.notification.domain.entity.enums.NotificationType;
+import kr.tennispark.notification.common.domain.entity.enums.NotificationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

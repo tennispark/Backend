@@ -1,6 +1,6 @@
-package kr.tennispark.notification.infrastructure;
+package kr.tennispark.notification.admin.infrastructure;
 
-import kr.tennispark.notification.domain.entity.Notification;
+import kr.tennispark.notification.common.domain.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

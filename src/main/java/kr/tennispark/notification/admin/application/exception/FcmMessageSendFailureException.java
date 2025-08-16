@@ -1,4 +1,4 @@
-package kr.tennispark.notification.application.exception;
+package kr.tennispark.notification.admin.application.exception;
 
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.HttpStatus;

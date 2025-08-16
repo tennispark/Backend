@@ -1,4 +1,4 @@
-package kr.tennispark.notification.application;
+package kr.tennispark.notification.admin.application;
 
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -7,7 +7,7 @@ import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.SendResponse;
 import java.util.List;
-import kr.tennispark.notification.application.exception.FcmMessageSendFailureException;
+import kr.tennispark.notification.admin.application.exception.FcmMessageSendFailureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
