@@ -19,7 +19,7 @@ public interface NotificationScheduleRepository extends JpaRepository<Notificati
     @Query("""
                 SELECT ns FROM NotificationSchedule ns
                 JOIN FETCH ns.activity a
-                WHERE ns.scheduledTime < :time
+                WHERE ns.scheduledTime <= :time
                 AND ns.status = true
                 AND a.status = true
             """)
