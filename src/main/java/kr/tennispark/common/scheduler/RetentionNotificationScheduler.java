@@ -1,5 +1,6 @@
 package kr.tennispark.common.scheduler;
 
+import java.time.LocalDateTime;
 import kr.tennispark.notification.admin.infrastructure.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +19,10 @@ public class RetentionNotificationScheduler {
     @Value("${app.notification.retention-days:30}")
     private int retentionDays;
 
-    @Scheduled(cron = "0 10 4 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
     @Transactional
     public void purgeOldNotifications() {
-        java.time.LocalDateTime cutoff = java.time.LocalDateTime.now().minusDays(retentionDays);
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(retentionDays);
 
         int updated = notificationRepository.deleteOlderThan(cutoff);
         log.info("NotificationRetentionScheduler - soft-deleted {} notifications older than {}", updated, cutoff);
