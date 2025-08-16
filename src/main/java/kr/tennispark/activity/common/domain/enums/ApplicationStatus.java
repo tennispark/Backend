@@ -18,4 +18,8 @@ public enum ApplicationStatus {
     public boolean isAccepted() {
         return this == APPROVED;
     }
+
+    public boolean isPending() {
+        return this == PENDING;
+    }
 }

@@ -2,7 +2,9 @@ package kr.tennispark.notification.application;
 
 import io.micrometer.common.util.StringUtils;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.List;
+import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.domain.entity.NotificationSchedule;
@@ -18,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ActivityNotificationService {
 
-    private static final String MESSAGE_CONTENT = "신청하신 활동이 확정되었습니다.";
     private static final Integer ONE_DAY = 1;
     private static final Integer ONE_HOUR = 1;
 
@@ -26,15 +27,18 @@ public class ActivityNotificationService {
     private final NotificationScheduleRepository notificationScheduleRepository;
 
     @Transactional
-    public void notifyApprovedApplication(ActivityApplication application) {
+    public void notifyApplicationStatus(ActivityApplication application) {
         String fcmToken = application.getMember().getFcmToken();
         if (StringUtils.isBlank(fcmToken)) {
             return;
         }
 
         // 신청 상태 승인일 때만, 승인상태에서 다른 상태로 변경되면 future 알림 삭제해야함
-        publisher.notifyMembers(List.of(application.getMember()), NotificationCategory.ACTIVITY_GUIDE, MESSAGE_CONTENT);
-        createFutureNotification(application, application.getMember());
+        publisher.notifyMembers(List.of(application.getMember()), NotificationCategory.ACTIVITY_GUIDE,
+                NotificationMessageFactory.applicationStatusMessage(application));
+        if (application.getApplicationStatus().isAccepted()) {
+            createFutureNotification(application, application.getMember());
+        }
     }
 
     private void createFutureNotification(ActivityApplication application, Member member) {
@@ -63,5 +67,15 @@ public class ActivityNotificationService {
                 member.getFcmToken(),
                 member
         );
+    }
+
+    public void deleteNotificationSchedule(ActivityApplication application) {
+        Activity activity = application.getActivity();
+        Member member = application.getMember();
+        EnumSet<NotificationType> types = EnumSet.of(
+                NotificationType.ONE_DAY_BEFORE,
+                NotificationType.ONE_HOUR_BEFORE
+        );
+        notificationScheduleRepository.deleteByActivityAndMemberAndTypes(activity, member, types);
     }
 }

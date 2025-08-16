@@ -90,10 +90,13 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         ActivityApplication activityApplication = activityApplicationRepository.getByMemberIdAndActivityId(
                 applicantId, activityId);
 
+        if (activityApplication.getApplicationStatus().isAccepted() && !request.applicationStatus().isAccepted()) {
+            activityNotificationService.deleteNotificationSchedule(activityApplication);
+        }
         activityApplication.changeStatus(request.applicationStatus());
 
-        if (activityApplication.getApplicationStatus().isAccepted()) {
-            activityNotificationService.notifyApprovedApplication(activityApplication);
+        if (!activityApplication.getApplicationStatus().isPending()) {
+            activityNotificationService.notifyApplicationStatus(activityApplication);
         }
     }
 
