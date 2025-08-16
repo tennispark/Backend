@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.common.domain.BaseEntity;
+import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.domain.entity.enums.NotificationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,9 +39,12 @@ public class NotificationSchedule extends BaseEntity {
     @Column(nullable = false)
     private String targetToken;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     public static NotificationSchedule of(Activity activity, NotificationType type, LocalDateTime scheduledTime,
-                                          String targetToken) {
-        return new NotificationSchedule(activity, type, scheduledTime, targetToken);
+                                          String targetToken, Member member) {
+        return new NotificationSchedule(activity, type, scheduledTime, targetToken, member);
     }
 
 }
