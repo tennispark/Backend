@@ -70,7 +70,7 @@ public class ActivityAdminController {
     public ResponseEntity<ApiResult<?>> modifyActivityApplicant(
             @PathVariable Long activityId,
             @PathVariable Long applicantId,
-            @RequestBody ManageActivityApplicationRequestDTO request) {
+            @RequestBody @Valid ManageActivityApplicationRequestDTO request) {
         actUseCase.modifyActivityApplication(applicantId, activityId, request);
         return ResponseEntity.ok(ApiUtils.success());
     }

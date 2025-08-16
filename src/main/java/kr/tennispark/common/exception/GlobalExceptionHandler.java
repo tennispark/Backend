@@ -21,9 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -130,6 +132,13 @@ public class GlobalExceptionHandler {
         log.error("시스템 상태 오류: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiUtils.error(HttpStatus.INTERNAL_SERVER_ERROR, "요청 처리 중 오류가 발생했습니다."));
+    }
+
+    @ExceptionHandler({HttpRequestMethodNotSupportedException.class, NoResourceFoundException.class})
+    public ResponseEntity<ApiResult<?>> handleWrongAPIException(
+            Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiUtils.error(HttpStatus.NOT_FOUND, "존재하지 않는 API 입니다."));
     }
 
     @ExceptionHandler(Exception.class)

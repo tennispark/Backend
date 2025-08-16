@@ -1,5 +1,6 @@
 package kr.tennispark.notification.admin.presentation;
 
+import jakarta.validation.Valid;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.notification.admin.application.NotificationPublisher;
@@ -20,7 +21,7 @@ public class NotificationController {
 
     @PostMapping("/broadcast")
     public ResponseEntity<ApiResult<?>> sendBroadcastMessage(
-            @RequestBody SendMessageRequestDTO request) {
+            @RequestBody @Valid SendMessageRequestDTO request) {
         publisher.broadcast(request.content());
         return ResponseEntity.ok(ApiUtils.success());
     }
