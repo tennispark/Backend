@@ -19,6 +19,13 @@ public interface UserActivityRepository extends JpaRepository<Activity, Long> {
     @Query("select a from Activity a where a.id = :id and a.status = true and a.type = :type")
     Optional<Activity> findForUpdate(@Param("id") Long id, @Param("type") ActivityType type);
 
-    @Query("select a from Activity a where a.date >= :date and a.type = :type and a.status = true")
+    @Query("""
+                select a
+                from Activity a
+                where a.date >= :date
+                  and a.type = :type
+                  and a.status = true
+                order by a.date asc
+            """)
     List<Activity> findAllGeneralActivitiesFrom(@Param("date") LocalDate date, @Param("type") ActivityType type);
 }
