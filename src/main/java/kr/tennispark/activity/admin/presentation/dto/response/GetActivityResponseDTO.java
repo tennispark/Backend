@@ -1,5 +1,6 @@
 package kr.tennispark.activity.admin.presentation.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
 import kr.tennispark.activity.common.domain.Activity;
@@ -17,6 +18,7 @@ public record GetActivityResponseDTO(
                         activity.getId(),
                         activity.getPlace().getName(),
                         activity.getCourtName(),
+                        activity.getDate(),
                         activity.getScheduledTime().getBeginAt(),
                         activity.getScheduledTime().getEndAt(),
                         activity.getApplicantCount(),
@@ -31,6 +33,7 @@ public record GetActivityResponseDTO(
             Long id,
             String placeName,
             String courtName,
+            LocalDate date,
             LocalTime startAt,
             LocalTime endAt,
             int participantCount,
@@ -41,13 +44,15 @@ public record GetActivityResponseDTO(
                 Long id,
                 String placeName,
                 String courtName,
+                LocalDate date,
                 LocalTime startAt,
                 LocalTime endAt,
                 int participantCount,
                 int capacity,
                 int pendingCount
         ) {
-            return new ActivityDTO(id, placeName, courtName, startAt, endAt, participantCount, capacity, pendingCount);
+            return new ActivityDTO(id, placeName, courtName, date, startAt, endAt, participantCount, capacity,
+                    pendingCount);
         }
 
     }
