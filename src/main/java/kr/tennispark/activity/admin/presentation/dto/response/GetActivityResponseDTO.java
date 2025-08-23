@@ -21,7 +21,7 @@ public record GetActivityResponseDTO(
                         activity.getDate(),
                         activity.getScheduledTime().getBeginAt(),
                         activity.getScheduledTime().getEndAt(),
-                        activity.getApplicantCount(),
+                        activity.getParticipantCount(),
                         activity.getCapacity(),
                         pendingCountMap.getOrDefault(activity.getId(), 0L).intValue()
                 )

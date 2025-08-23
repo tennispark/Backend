@@ -94,6 +94,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
             activityNotificationService.deleteNotificationSchedule(activityApplication);
         }
         activityApplication.changeStatus(request.applicationStatus());
+        activityApplicationRepository.save(activityApplication);
 
         if (!activityApplication.getApplicationStatus().isPending()) {
             activityNotificationService.notifyApplicationStatus(activityApplication);

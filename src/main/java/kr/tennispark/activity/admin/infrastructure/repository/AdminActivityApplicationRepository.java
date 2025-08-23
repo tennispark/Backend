@@ -26,6 +26,7 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
             """)
     Page<ActivityApplication> findAllValidByActivity(Activity activity, Pageable pageable);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
                         SELECT aa
                         FROM ActivityApplication aa
@@ -38,7 +39,6 @@ public interface AdminActivityApplicationRepository extends JpaRepository<Activi
             """)
     Optional<ActivityApplication> findByMemberIdAndActivityId(Long memberId, Long activityId);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     default ActivityApplication getByMemberIdAndActivityId(Long memberId, Long activityId) {
         return findByMemberIdAndActivityId(memberId, activityId)
                 .orElseThrow(NoSuchActivityApplicationException::new);
