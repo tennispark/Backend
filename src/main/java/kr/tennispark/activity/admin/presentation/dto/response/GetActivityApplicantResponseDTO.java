@@ -14,6 +14,7 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
                         applicant.getMember().getName(),
                         applicant.getMember().getPhone().getNumber(),
                         applicant.getMember().getMemberShipType(),
+                        applicant.getMember().getTennisCareer(),
                         applicant.getApplicationStatus(),
                         applicant.getCreatedAt().toLocalDate()
                 )
@@ -27,6 +28,7 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
             String name,
             String phoneNumber,
             MemberShipType membershipType,
+            Integer career,
             ApplicationStatus applicationStatus,
             LocalDate applicationDate
     ) {
@@ -35,10 +37,12 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
                 String name,
                 String phoneNumber,
                 MemberShipType membershipType,
+                Integer career,
                 ApplicationStatus applicationStatus,
                 LocalDate applicationDate
         ) {
-            return new ActivityApplicantDTO(id, name, phoneNumber, membershipType, applicationStatus, applicationDate);
+            return new ActivityApplicantDTO(id, name, phoneNumber, membershipType, career, applicationStatus,
+                    applicationDate);
         }
     }
 }
