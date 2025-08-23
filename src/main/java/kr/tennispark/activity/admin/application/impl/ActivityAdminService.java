@@ -95,6 +95,7 @@ public class ActivityAdminService implements ActivityAdminUseCase {
         }
         activityApplication.changeStatus(request.applicationStatus());
         activityApplicationRepository.save(activityApplication);
+        activityRepository.save(activityApplication.getActivity());
 
         if (!activityApplication.getApplicationStatus().isPending()) {
             activityNotificationService.notifyApplicationStatus(activityApplication);
