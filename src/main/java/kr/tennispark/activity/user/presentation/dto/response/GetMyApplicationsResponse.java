@@ -1,5 +1,6 @@
 package kr.tennispark.activity.user.presentation.dto.response;
 
+import java.time.LocalDate;
 import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
@@ -20,7 +21,7 @@ public record GetMyApplicationsResponse(
 
     public record ApplicationDto(
             Long id,
-            String applicationDate,
+            LocalDate applicationDate,
             String applicationStatus,
             ActivityDto activity
     ) {
@@ -30,7 +31,7 @@ public record GetMyApplicationsResponse(
 
             return new ApplicationDto(
                     aa.getId(),
-                    KoreanFormat.date(aa.getCreatedAt().toLocalDate()),
+                    aa.getCreatedAt().toLocalDate(),
                     aa.getApplicationStatus().name(),
                     new ActivityDto(
                             KoreanFormat.date(a.getDate()),
