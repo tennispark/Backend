@@ -25,7 +25,7 @@ public interface UserActivityRepository extends JpaRepository<Activity, Long> {
                 where a.date >= :date
                   and a.type = :type
                   and a.status = true
-                order by a.date asc
+                order by a.date asc, a.scheduledTime.beginAt asc
             """)
     List<Activity> findAllGeneralActivitiesFrom(@Param("date") LocalDate date, @Param("type") ActivityType type);
 }
