@@ -1,8 +1,7 @@
 package kr.tennispark.activity.user.presentation.dto.response;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import kr.tennispark.activity.common.domain.Activity;
+import kr.tennispark.common.utils.KoreanFormat;
 
 public record AcademyDTO(
         Long id,
@@ -15,15 +14,12 @@ public record AcademyDTO(
         PlaceDTO place,
         String courtName
 ) {
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
-    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
-
     public static AcademyDTO of(Activity a) {
         return new AcademyDTO(
                 a.getId(),
-                a.getDate().format(DATE_FMT),
-                a.getScheduledTime().getBeginAt().format(TIME_FMT),
-                a.getScheduledTime().getEndAt().format(TIME_FMT),
+                KoreanFormat.date(a.getDate()),
+                KoreanFormat.time(a.getScheduledTime().getBeginAt()),
+                KoreanFormat.time(a.getScheduledTime().getEndAt()),
                 a.getParticipantCount(),
                 a.getCapacity(),
                 a.getActivityName().name(),

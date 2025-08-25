@@ -1,5 +1,6 @@
 package kr.tennispark.advertisement.admin.presentation;
 
+import jakarta.validation.Valid;
 import kr.tennispark.advertisement.admin.application.AdvertisementAdminUseCase;
 import kr.tennispark.advertisement.admin.presentation.dto.request.SaveAdvertisementRequestDTO;
 import kr.tennispark.advertisement.admin.presentation.dto.response.GetAdvertisementResponseDTO;
@@ -29,7 +30,7 @@ public class AdminAdvertisementController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResult<?>> saveAdvertisement(
-            @RequestPart SaveAdvertisementRequestDTO request,
+            @RequestPart @Valid SaveAdvertisementRequestDTO request,
             @RequestPart MultipartFile image
     ) {
         advertisementAdminUseCase.saveAdvertisement(request, image);

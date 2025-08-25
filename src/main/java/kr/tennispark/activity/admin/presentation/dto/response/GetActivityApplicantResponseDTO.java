@@ -1,5 +1,6 @@
 package kr.tennispark.activity.admin.presentation.dto.response;
 
+import java.time.LocalDate;
 import kr.tennispark.activity.common.domain.ActivityApplication;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
@@ -13,7 +14,9 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
                         applicant.getMember().getName(),
                         applicant.getMember().getPhone().getNumber(),
                         applicant.getMember().getMemberShipType(),
-                        applicant.getApplicationStatus()
+                        applicant.getMember().getTennisCareer(),
+                        applicant.getApplicationStatus(),
+                        applicant.getCreatedAt().toLocalDate()
                 )
         );
         return new GetActivityApplicantResponseDTO(applicantDTOs);
@@ -25,16 +28,21 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
             String name,
             String phoneNumber,
             MemberShipType membershipType,
-            ApplicationStatus applicationStatus
+            Integer career,
+            ApplicationStatus applicationStatus,
+            LocalDate applicationDate
     ) {
         public static ActivityApplicantDTO of(
                 Long id,
                 String name,
                 String phoneNumber,
                 MemberShipType membershipType,
-                ApplicationStatus applicationStatus
+                Integer career,
+                ApplicationStatus applicationStatus,
+                LocalDate applicationDate
         ) {
-            return new ActivityApplicantDTO(id, name, phoneNumber, membershipType, applicationStatus);
+            return new ActivityApplicantDTO(id, name, phoneNumber, membershipType, career, applicationStatus,
+                    applicationDate);
         }
     }
 }

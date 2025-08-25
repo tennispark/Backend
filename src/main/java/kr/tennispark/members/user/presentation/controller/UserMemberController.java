@@ -1,5 +1,6 @@
 package kr.tennispark.members.user.presentation.controller;
 
+import jakarta.validation.Valid;
 import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
@@ -38,7 +39,7 @@ public class UserMemberController {
     @PostMapping("/fcm-token")
     public ResponseEntity<ApiResult<?>> updateFcmToken(
             @LoginMember Member member,
-            @RequestBody UpdateFcmTokenRequestDTO request
+            @RequestBody @Valid UpdateFcmTokenRequestDTO request
     ) {
         memberService.updateFcmToken(member, request.fcmToken());
         return ResponseEntity.ok(ApiUtils.success());

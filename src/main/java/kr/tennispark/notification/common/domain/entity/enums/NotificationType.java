@@ -1,4 +1,4 @@
-package kr.tennispark.notification.domain.entity.enums;
+package kr.tennispark.notification.common.domain.entity.enums;
 
 public enum NotificationType {
     ONE_DAY_BEFORE,
