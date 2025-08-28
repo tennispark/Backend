@@ -7,6 +7,7 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.user.application.service.UserNotificationCommandService;
 import kr.tennispark.notification.user.application.service.UserNotificationQueryService;
 import kr.tennispark.notification.user.presentation.dto.GetMyNotificationResponse;
+import kr.tennispark.notification.user.presentation.dto.GetUnreadNotificationCountResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,14 @@ public class UserNotificationController {
     public ResponseEntity<ApiResult<GetMyNotificationResponse>> getMyNotifications(
             @LoginMember Member member) {
         GetMyNotificationResponse response = notificationQueryService.getMyNotifications(member);
+        return ResponseEntity.ok(ApiUtils.success(response));
+    }
+
+    @GetMapping("/unread-count")
+    public ResponseEntity<ApiResult<GetUnreadNotificationCountResponse>> getUnreadCount(
+            @LoginMember Member member
+    ) {
+        GetUnreadNotificationCountResponse response = notificationQueryService.getUnreadNotificationCount(member);
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 

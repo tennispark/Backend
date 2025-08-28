@@ -18,7 +18,16 @@ public interface UserNotificationRepository extends JpaRepository<Notification, 
                  ORDER BY n.createdAt DESC, n.id DESC
             """)
     List<Notification> findAllByMemberIdOrderByLatest(@Param("memberId") Long memberId);
-    
+
+    @Query("""
+                SELECT COUNT(n)
+                FROM Notification n
+                WHERE n.member.id = :memberId
+                  AND n.status = true
+                  AND n.readAt IS NULL
+            """)
+    long countUnreadByMemberId(@Param("memberId") Long memberId);
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
                 UPDATE notification
