@@ -5,6 +5,7 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.common.domain.entity.Notification;
 import kr.tennispark.notification.user.infrastructure.repository.UserNotificationRepository;
 import kr.tennispark.notification.user.presentation.dto.GetMyNotificationResponse;
+import kr.tennispark.notification.user.presentation.dto.GetUnreadNotificationCountResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,5 +20,10 @@ public class UserNotificationQueryService {
     public GetMyNotificationResponse getMyNotifications(Member member) {
         List<Notification> notifications = userNotificationRepository.findAllByMemberIdOrderByLatest(member.getId());
         return GetMyNotificationResponse.of(notifications);
+    }
+
+    public GetUnreadNotificationCountResponse getUnreadNotificationCount(Member member) {
+        long unreadCount = userNotificationRepository.countUnreadByMemberId(member.getId());
+        return GetUnreadNotificationCountResponse.of(unreadCount);
     }
 }

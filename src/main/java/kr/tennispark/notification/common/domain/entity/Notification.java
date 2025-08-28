@@ -9,6 +9,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.common.domain.entity.enums.NotificationCategory;
@@ -43,7 +44,16 @@ public class Notification extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String content;
 
+    @Column(name = "read_at")
+    private LocalDateTime readAt;
+
     public static Notification of(Member member, NotificationCategory category, String content) {
-        return new Notification(member, category, content);
+        return new Notification(member, category, content, null);
+    }
+
+    public void markRead(LocalDateTime now) {
+        if (this.readAt == null) {
+            this.readAt = now;
+        }
     }
 }
