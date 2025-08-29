@@ -26,7 +26,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
                 FROM Activity a
                 WHERE a.date >= :fromDate
                   AND a.status = true
-                ORDER BY a.date ASC, a.scheduledTime.beginAt ASC
+                ORDER BY a.date ASC, a.scheduledTime.beginAt ASC,  a.id ASC
             """)
     Page<Activity> findFromDate(Pageable pageable, @Param("fromDate") LocalDate fromDate);
 
