@@ -35,12 +35,16 @@ public class SendActivityNotificationScheduler {
         List<NotificationSchedule> schedules = notificationScheduleRepository.findByScheduledTimeBeforeWithActivity(
                 now);
 
+        List<Long> fetchedIds = schedules.stream().map(NotificationSchedule::getId).toList();
+        log.info("[스케줄 로그] fetched count={}, ids={}", Integer.valueOf(fetchedIds.size()), fetchedIds);
+
         if (schedules.isEmpty()) {
+            log.info("[스케줄 로그] 스케줄 없음");
             return;
         }
 
         Map<String, List<Member>> messageToTokens = new HashMap<>();
-        List<NotificationSchedule> schedulesToDelete = new ArrayList<>();
+        List<Long> schedulesToDelete = new ArrayList<>();
 
         for (NotificationSchedule schedule : schedules) {
             try {
@@ -58,14 +62,14 @@ public class SendActivityNotificationScheduler {
                         activity,
                         participantNames
                 );
-
+                log.info("[스케줄 로그] message length({})", message.length());
                 messageToTokens.computeIfAbsent(message, k -> new ArrayList<>())
                         .add(schedule.getMember());
 
-                schedulesToDelete.add(schedule);
+                schedulesToDelete.add(schedule.getId());
 
             } catch (Exception e) {
-                log.error("알림 처리 중 예외 발생: scheduleId={}", schedule.getId(), e);
+                log.error("[스케줄 로그] 알림 처리 중 예외 발생: scheduleId={}", schedule.getId(), e);
             }
         }
 
@@ -75,6 +79,24 @@ public class SendActivityNotificationScheduler {
             publisher.notifyMembers(members, NotificationCategory.MATCHING_GUIDE, entry.getKey());
         }
 
-        notificationScheduleRepository.deleteAll(schedulesToDelete);
+        if (!schedulesToDelete.isEmpty()) {
+            log.info("[스케줄 로그] softDelete request count={}, ids={}",
+                    Integer.valueOf(schedulesToDelete.size()), schedulesToDelete);
+
+            int updated = notificationScheduleRepository.softDeleteByIds(schedulesToDelete);
+            log.info("[스케줄 로그] softDelete updated={}", Integer.valueOf(updated));
+
+            // 업데이트 되지 않은(여전히 true인) 아이디 점검
+            List<NotificationSchedule> stillTrue = notificationScheduleRepository.findAllById(schedulesToDelete);
+            if (!stillTrue.isEmpty()) {
+                List<Long> remainingIds = stillTrue.stream().map(NotificationSchedule::getId).toList();
+                log.warn("[스케줄 로그]still TRUE after softDelete: count={}, ids={}",
+                        Integer.valueOf(remainingIds.size()), remainingIds);
+            } else {
+                log.info("[스케줄 로그] verification: no remaining TRUE schedules");
+            }
+        } else {
+            log.info("[스케줄 로그] nothing to softDelete");
+        }
     }
 }
