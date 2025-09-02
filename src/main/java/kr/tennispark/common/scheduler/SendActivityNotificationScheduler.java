@@ -28,7 +28,7 @@ public class SendActivityNotificationScheduler {
     private final NotificationScheduleRepository notificationScheduleRepository;
     private final AdminActivityApplicationRepository adminActivityApplicationRepository;
 
-    @Scheduled(cron = "0 */30 * * * *")
+    @Scheduled(cron = "0 */3 * * * *")
     @Transactional
     public void sendScheduledNotifications() {
         LocalDateTime now = LocalDateTime.now();
@@ -44,6 +44,7 @@ public class SendActivityNotificationScheduler {
         }
 
         Map<String, List<Member>> messageToTokens = new HashMap<>();
+        Map<String, List<Long>> messageToScheduleIds = new HashMap<>();
         List<Long> schedulesToDelete = new ArrayList<>();
 
         for (NotificationSchedule schedule : schedules) {
@@ -65,6 +66,8 @@ public class SendActivityNotificationScheduler {
                 log.info("[스케줄 로그] message length({})", message.length());
                 messageToTokens.computeIfAbsent(message, k -> new ArrayList<>())
                         .add(schedule.getMember());
+                messageToScheduleIds.computeIfAbsent(message, k -> new ArrayList<>())
+                        .add(schedule.getId());
 
                 schedulesToDelete.add(schedule.getId());
 
@@ -75,8 +78,23 @@ public class SendActivityNotificationScheduler {
 
         // 그룹핑된 메시지별 FCM 전송
         for (Map.Entry<String, List<Member>> entry : messageToTokens.entrySet()) {
+            String message = entry.getKey();
             List<Member> members = entry.getValue();
-            publisher.notifyMembers(members, NotificationCategory.MATCHING_GUIDE, entry.getKey());
+            List<Long> groupedIds = messageToScheduleIds.getOrDefault(message, java.util.List.of());
+
+            log.info("[스케줄 로그] send group msgHash={}, members={}, schedIds={}",
+                    Integer.valueOf(message.hashCode()),
+                    Integer.valueOf(members.size()), groupedIds);
+
+            try {
+                publisher.notifyMembers(members, NotificationCategory.MATCHING_GUIDE, message);
+            } catch (Exception e) {
+                // ★ 여기서 예외가 나면 지금까지의 작업이 롤백될 수 있었음(기존 구조)
+                log.error("[NSCHED] send failed msgHash={}, members={}: type={}, msg={}",
+                        java.lang.Integer.valueOf(message.hashCode()),
+                        java.lang.Integer.valueOf(members.size()),
+                        e.getClass().getName(), e.getMessage(), e);
+            }
         }
 
         if (!schedulesToDelete.isEmpty()) {
