@@ -39,4 +39,8 @@ public interface NotificationScheduleRepository extends JpaRepository<Notificati
             @Param("member") Member member,
             @Param("types") Collection<NotificationType> types
     );
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update NotificationSchedule ns set ns.status = false , ns.updatedAt = CURRENT_TIMESTAMP where ns.id in :ids")
+    int softDeleteByIds(@Param("ids") List<Long> ids);
 }
