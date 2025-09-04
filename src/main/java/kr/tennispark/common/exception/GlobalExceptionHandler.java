@@ -23,8 +23,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
@@ -90,6 +92,20 @@ public class GlobalExceptionHandler {
         }
 
         return ApiUtils.error(HttpStatus.BAD_REQUEST, "요청 데이터를 읽을 수 없습니다.");
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ApiUtils.ApiResult<Void> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException e) {
+        String message = String.format("파라미터 '%s'에 허용되지 않는 형식입니다.", e.getName());
+        return ApiUtils.error(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ApiUtils.ApiResult<Void> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException e) {
+        String message = String.format("파라미터 '%s'이 필요합니다", e.getParameterName());
+        return ApiUtils.error(HttpStatus.BAD_REQUEST, message);
     }
 
     @ExceptionHandler(JwtException.class)
