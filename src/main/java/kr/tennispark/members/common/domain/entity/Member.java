@@ -146,4 +146,17 @@ public class Member extends BaseEntity {
         delete();
         point.delete();
     }
+
+    public void updateCouponValue(Double newCoupon) {
+        if (newCoupon == null) {
+            throw new InvalidMemberException("쿠폰 수는 필수입니다.");
+        }
+        if (newCoupon < 0) {
+            throw new InvalidMemberException("쿠폰 수는 0 이상이어야 합니다.");
+        }
+        // 소숫점 1자리로 반올림해서 저장
+        this.coupon = java.math.BigDecimal.valueOf(newCoupon)
+                .setScale(1, java.math.RoundingMode.HALF_UP)
+                .doubleValue();
+    }
 }
