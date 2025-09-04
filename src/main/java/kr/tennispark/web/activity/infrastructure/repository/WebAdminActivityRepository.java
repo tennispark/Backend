@@ -3,6 +3,7 @@ package kr.tennispark.web.activity.infrastructure.repository;
 import java.time.LocalDate;
 import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
+import kr.tennispark.activity.common.domain.enums.ActivityType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,9 +16,10 @@ public interface WebAdminActivityRepository extends JpaRepository<Activity, Long
             SELECT a
             FROM Activity a
             WHERE a.date >= :fromDate
+            AND a.type = :type
               AND a.status = true
             ORDER BY a.date ASC, a.scheduledTime.beginAt ASC, a.id ASC
             """)
-    List<Activity> findFromDate(@Param("fromDate") LocalDate fromDate);
+    List<Activity> findFromDate(@Param("fromDate") LocalDate fromDate, ActivityType type);
 
 }

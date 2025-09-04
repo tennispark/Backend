@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
+import kr.tennispark.activity.common.domain.enums.ActivityType;
 import kr.tennispark.activity.common.domain.enums.ApplicationStatus;
 import kr.tennispark.activity.common.domain.vo.WeekPeriod;
 import kr.tennispark.web.activity.infrastructure.repository.WebAdminActivityApplicationRepository;
@@ -22,10 +23,10 @@ public class WebActivityApplicationQueryService {
     private final WebAdminActivityRepository activityRepository;
     private final WebAdminActivityApplicationRepository applicationRepository;
 
-    public GetWeeklyActivityApplicationsResponse getThisWeeksApplication() {
+    public GetWeeklyActivityApplicationsResponse getThisWeeksApplication(ActivityType type) {
         LocalDate fromDate = WeekPeriod.thisWeek().start();
 
-        List<Activity> activities = activityRepository.findFromDate(fromDate);
+        List<Activity> activities = activityRepository.findFromDate(fromDate, type);
 
         List<ActivityApplicationRowDTO> rows = activities.stream()
                 .map(a -> {
