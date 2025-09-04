@@ -10,7 +10,7 @@ public record ActivityApplicationRowDTO(
         String date,
         String placeName,
         String courtName,
-        int applicantCount,
+        int participantCount,
         int capacity,
         List<String> participants
 ) {
@@ -26,7 +26,7 @@ public record ActivityApplicationRowDTO(
                 a.getDate().format(MONTH_DAY),
                 a.getPlace().getName(),
                 a.getCourtName(),
-                a.getApplicantCount(),
+                a.getParticipantCount(),
                 a.getCapacity(),
                 names
         );
