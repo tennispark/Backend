@@ -31,6 +31,9 @@ public class Photos {
         this.photo3 = normalized.size() > 2 ? normalized.get(2) : null;
     }
 
+    public static Photos of(List<String> urls) {
+        return new Photos(urls);
+    }
 
     public List<String> toList() {
         List<String> list = new ArrayList<>();
