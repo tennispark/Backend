@@ -1,0 +1,13 @@
+package kr.tennispark.post.user.infrastructure.repository;
+
+import kr.tennispark.post.common.domain.entity.Post;
+import kr.tennispark.post.common.domain.exception.NoSuchPostException;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserPostRepository extends JpaRepository<Post, Long> {
+
+    default Post getById(Long postId) {
+        return findById(postId)
+                .orElseThrow(NoSuchPostException::new);
+    }
+}
