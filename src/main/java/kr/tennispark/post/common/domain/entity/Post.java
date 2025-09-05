@@ -54,29 +54,21 @@ public class Post extends BaseEntity {
     private Integer likeCount = 0;
 
     public static Post create(Member member, String title, String content,
-                              Photos photos,
-                              Boolean notificationEnabled) {
+                              Photos photos) {
         Post p = new Post();
         p.member = member;
         p.title = requireNonBlank(title);
         p.content = requireNonBlank(content);
         p.photos = photos != null ? photos : Photos.of(null);
-        if (notificationEnabled != null) {
-            p.notificationEnabled = notificationEnabled;
-        }
         return p;
     }
 
     public void update(String title, String content,
-                       Photos photos,
-                       Boolean notificationEnabled) {
+                       Photos photos) {
         this.title = requireNonBlank(title);
         this.content = requireNonBlank(content);
         if (photos != null) {
             this.photos = photos;
-        }
-        if (notificationEnabled != null) {
-            this.notificationEnabled = notificationEnabled;
         }
     }
 }
