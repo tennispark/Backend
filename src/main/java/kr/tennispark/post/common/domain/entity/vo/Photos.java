@@ -17,7 +17,7 @@ public class Photos {
     private String photo2;
     private String photo3;
 
-    public Photos(List<String> photos) {
+    private Photos(List<String> photos) {
         List<String> normalized = new ArrayList<>();
         if (photos != null) {
             for (String p : photos) {

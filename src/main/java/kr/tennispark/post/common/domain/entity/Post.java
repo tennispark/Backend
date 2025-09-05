@@ -1,7 +1,10 @@
 package kr.tennispark.post.common.domain.entity;
 
 
+import static kr.tennispark.common.domain.DomainValidator.requireNonBlank;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -9,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
+import kr.tennispark.post.common.domain.entity.vo.Photos;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,14 +38,8 @@ public class Post extends BaseEntity {
     @Column(nullable = false, length = 3000)
     private String content;
 
-    @Column(name = "photo1")
-    private String photo1;
-
-    @Column(name = "photo2")
-    private String photo2;
-
-    @Column(name = "photo3")
-    private String photo3;
+    @Embedded
+    private Photos photos;
 
     @Column(nullable = false)
     @ColumnDefault("true")
@@ -54,5 +52,32 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("0")
     private Integer likeCount = 0;
+
+    public static Post create(Member member, String title, String content,
+                              Photos photos,
+                              Boolean notificationEnabled) {
+        Post p = new Post();
+        p.member = member;
+        p.title = requireNonBlank(title);
+        p.content = requireNonBlank(content);
+        p.photos = photos != null ? photos : Photos.of(null);
+        if (notificationEnabled != null) {
+            p.notificationEnabled = notificationEnabled;
+        }
+        return p;
+    }
+
+    public void update(String title, String content,
+                       Photos photos,
+                       Boolean notificationEnabled) {
+        this.title = requireNonBlank(title);
+        this.content = requireNonBlank(content);
+        if (photos != null) {
+            this.photos = photos;
+        }
+        if (notificationEnabled != null) {
+            this.notificationEnabled = notificationEnabled;
+        }
+    }
 }
 
