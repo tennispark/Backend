@@ -7,6 +7,7 @@ import kr.tennispark.auth.admin.application.exception.UnauthorizedRoleAccessExce
 import kr.tennispark.auth.common.application.exception.ExpiredTokenException;
 import kr.tennispark.common.exception.base.DuplicateException;
 import kr.tennispark.common.exception.base.InvalidException;
+import kr.tennispark.common.exception.base.NotAuthorizedException;
 import kr.tennispark.common.exception.base.NotFoundException;
 import kr.tennispark.common.exception.base.UnsupportedTypeException;
 import kr.tennispark.common.utils.ApiUtils;
@@ -54,6 +55,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<?> handleNotAuthorizedException(NotAuthorizedException e) {
+        return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
