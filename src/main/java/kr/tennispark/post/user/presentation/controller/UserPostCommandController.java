@@ -39,7 +39,7 @@ public class UserPostCommandController {
             @Valid @RequestPart("data")
             SavePostDTO data,
 
-            @Size(max = 3)
+            @Size(max = 3, message = "사진은 최대 3장까지 업로드할 수 있습니다.")
             @RequestPart(value = "photos", required = false)
             List<MultipartFile> photos) {
         RegisterPostMultiPart request = new RegisterPostMultiPart(data, photos);
