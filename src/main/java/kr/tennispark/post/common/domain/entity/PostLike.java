@@ -3,6 +3,7 @@ package kr.tennispark.post.common.domain.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,6 +22,9 @@ import org.hibernate.annotations.ColumnDefault;
         name = "post_like",
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_post_like_post_member", columnNames = {"post_id", "member_id"})
+        },
+        indexes = {
+                @Index(name = "idx_post_like_post_member", columnList = "post_id, member_id")
         }
 )
 public class PostLike extends BaseEntity {
@@ -40,8 +44,7 @@ public class PostLike extends BaseEntity {
     private PostLike(Post post, Member member) {
         this.post = post;
         this.member = member;
-        this.liked = true;
-        post.increaseLike();
+        this.liked = false;
     }
 
     public static PostLike create(Post post, Member member) {
