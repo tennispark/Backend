@@ -26,7 +26,16 @@ public class PostResolver {
         return Photos.of(photoUrls);
     }
 
-    public List<String> uploadPhotos(List<MultipartFile> files) {
+    public Photos replacePhotos(Photos origin,
+                                List<MultipartFile> files) {
+        if (files != null && !files.isEmpty()) {
+            uploadService.deleteFiles(origin.toList());
+            return toPhotos(files);
+        }
+        return origin;
+    }
+
+    private List<String> uploadPhotos(List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             return List.of();
         }
@@ -34,4 +43,5 @@ public class PostResolver {
                 .map(file -> uploadService.uploadImageFile(file, IMAGE_PREFIX))
                 .toList();
     }
+
 }
