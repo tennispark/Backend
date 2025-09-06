@@ -71,5 +71,15 @@ public class Post extends BaseEntity {
             this.photos = photos;
         }
     }
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public void decreaseLike() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
 }
 
