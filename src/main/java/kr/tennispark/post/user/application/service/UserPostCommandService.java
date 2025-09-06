@@ -41,7 +41,7 @@ public class UserPostCommandService {
     public void deletePost(Member member, Long postId) {
         Post post = postRepository.getById(postId);
         ensureAuthor(post, member);
-
+        resolver.deleteIfExists(post.getPhotos());
         postRepository.delete(post);
     }
 

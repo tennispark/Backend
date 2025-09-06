@@ -44,4 +44,9 @@ public class PostResolver {
                 .toList();
     }
 
+    public void deleteIfExists(Photos photos) {
+        if (photos != null && photos.toList().isEmpty()) {
+            uploadService.deleteFiles(photos.toList());
+        }
+    }
 }
