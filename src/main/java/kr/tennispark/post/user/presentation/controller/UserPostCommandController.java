@@ -9,7 +9,7 @@ import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.post.user.application.service.UserPostCommandService;
+import kr.tennispark.post.user.application.service.command.UserPostCommandService;
 import kr.tennispark.post.user.presentation.dto.request.RegisterPostMultiPart;
 import kr.tennispark.post.user.presentation.dto.request.SavePostDTO;
 import kr.tennispark.post.user.presentation.dto.request.UpdatePostMultiPart;

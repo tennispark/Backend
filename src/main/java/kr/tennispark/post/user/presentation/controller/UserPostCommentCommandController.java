@@ -7,7 +7,7 @@ import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.post.user.application.service.UserPostCommentCommandService;
+import kr.tennispark.post.user.application.service.command.UserPostCommentCommandService;
 import kr.tennispark.post.user.presentation.dto.request.CreateCommentDTO;
 import kr.tennispark.post.user.presentation.dto.request.RegisterCommentMultiPart;
 import kr.tennispark.post.user.presentation.dto.request.UpdateCommentDTO;

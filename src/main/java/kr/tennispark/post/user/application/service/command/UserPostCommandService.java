@@ -1,4 +1,4 @@
-package kr.tennispark.post.user.application.service;
+package kr.tennispark.post.user.application.service.command;
 
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.post.common.domain.entity.Post;

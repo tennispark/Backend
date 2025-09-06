@@ -4,7 +4,7 @@ import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.post.user.application.service.UserPostLikeCommandService;
+import kr.tennispark.post.user.application.service.command.UserPostLikeCommandService;
 import kr.tennispark.post.user.presentation.dto.response.CreatePostLikeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
