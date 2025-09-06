@@ -1,17 +1,17 @@
-package kr.tennispark.qr.application.exception;
+package kr.tennispark.common.application.exception;
 
 import kr.tennispark.common.utils.ApiUtils;
 import org.springframework.http.HttpStatus;
 
-public class ImageUploadFailedException extends RuntimeException {
+public class S3FailedException extends RuntimeException {
 
-    private static final String MESSAGE = "이미지 업로드 실패";
+    private static final String MESSAGE = "S3 작업 실패";
 
-    public ImageUploadFailedException (final String message) {
+    public S3FailedException(final String message) {
         super(message);
     }
 
-    public ImageUploadFailedException() {
+    public S3FailedException() {
         this(MESSAGE);
     }
 
