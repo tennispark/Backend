@@ -13,6 +13,7 @@ import kr.tennispark.members.common.domain.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
@@ -20,6 +21,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 @Table(name = "post_comment")
 @SQLRestriction("status = true")
+@SQLDelete(sql = "UPDATE post_comment SET status = false WHERE id = ?")
 public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

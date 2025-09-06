@@ -14,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +29,8 @@ import org.hibernate.annotations.ColumnDefault;
                 @Index(name = "idx_post_like_post_member", columnList = "post_id, member_id")
         }
 )
+@SQLRestriction("status = true")
+@SQLDelete(sql = "UPDATE post_like SET status = false WHERE id = ?")
 public class PostLike extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
