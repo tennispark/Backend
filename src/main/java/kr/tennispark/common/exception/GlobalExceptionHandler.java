@@ -27,6 +27,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -110,6 +111,15 @@ public class GlobalExceptionHandler {
     public ApiUtils.ApiResult<Void> handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e) {
         String message = String.format("파라미터 '%s'이 필요합니다", e.getParameterName());
+        return ApiUtils.error(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ApiUtils.ApiResult<Void> handleHandlerMethodValidation(HandlerMethodValidationException e) {
+        String message = e.getAllErrors().stream()
+                .findFirst()
+                .map(err -> err.getDefaultMessage())
+                .orElse("요청 값이 올바르지 않습니다.");
         return ApiUtils.error(HttpStatus.BAD_REQUEST, message);
     }
 
