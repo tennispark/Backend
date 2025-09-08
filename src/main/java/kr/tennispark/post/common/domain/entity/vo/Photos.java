@@ -3,7 +3,9 @@ package kr.tennispark.post.common.domain.entity.vo;
 import jakarta.persistence.Embeddable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +49,20 @@ public class Photos {
             list.add(photo3);
         }
         return Collections.unmodifiableList(list);
+    }
+
+    public Map<Integer, String> toMap() {
+        Map<Integer, String> map = new LinkedHashMap<>();
+        if (photo1 != null && !photo1.isBlank()) {
+            map.put(1, photo1);
+        }
+        if (photo2 != null && !photo2.isBlank()) {
+            map.put(2, photo2);
+        }
+        if (photo3 != null && !photo3.isBlank()) {
+            map.put(3, photo3);
+        }
+        return map;
     }
 
     public String getMainImage() {

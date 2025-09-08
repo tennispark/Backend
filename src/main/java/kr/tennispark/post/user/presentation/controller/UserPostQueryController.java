@@ -33,11 +33,11 @@ public class UserPostQueryController {
     }
 
     @GetMapping("/home")
-    public ResponseEntity<Slice<PostHomeItemResponse>> getHome(
+    public ResponseEntity<ApiResult<Slice<PostHomeItemResponse>>> getHome(
             @LoginMember Member member,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(postQueryService.getHome(member, pageable));
+        return ResponseEntity.ok(ApiUtils.success(postQueryService.getHome(member, pageable)));
     }
 }

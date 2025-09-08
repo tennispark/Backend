@@ -1,7 +1,7 @@
 package kr.tennispark.post.user.presentation.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
 import kr.tennispark.post.common.domain.entity.Post;
 
 public record GetPostDetailResponse(
@@ -10,7 +10,7 @@ public record GetPostDetailResponse(
         LocalDateTime createdAt,
         String title,
         String content,
-        List<String> photos,
+        Map<Integer, String> photos,
         int likeCount,
         int commentCount,
         long viewCount,
@@ -28,7 +28,7 @@ public record GetPostDetailResponse(
                 post.getCreatedAt(),
                 post.getTitle(),
                 post.getContent(),
-                post.getPhotos() != null ? post.getPhotos().toList() : List.of(),
+                post.getPhotos() != null ? post.getPhotos().toMap() : null,
                 post.getLikeCount(),
                 post.getCommentCount(),
                 viewCount,
