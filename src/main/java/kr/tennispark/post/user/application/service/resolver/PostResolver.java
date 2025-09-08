@@ -1,6 +1,7 @@
 package kr.tennispark.post.user.application.service.resolver;
 
 import java.util.List;
+import java.util.Objects;
 import kr.tennispark.common.application.S3UploadService;
 import kr.tennispark.post.common.domain.entity.vo.Photos;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,39 @@ public class PostResolver {
             return toPhotos(files);
         }
         return origin;
+    }
+
+    public Photos applyDeleteAndAppend(Photos origin,
+                                       List<Integer> deleteList,
+                                       List<MultipartFile> newFiles) {
+        Photos beforePhotos = (origin == null) ? Photos.of(null) : origin;
+        Photos afterDelete = beforePhotos.deleteByIndices(deleteList);
+        List<String> before = beforePhotos.toList();
+        List<String> after = afterDelete.toList();
+
+        if (!before.isEmpty()) {
+            List<String> removed = before.stream()
+                    .filter(url -> !after.contains(url))
+                    .distinct()
+                    .toList();
+            if (!removed.isEmpty()) {
+                uploadService.deleteFiles(removed);
+            }
+        }
+
+        int capacity = Math.max(0, 3 - afterDelete.count());
+        if (capacity == 0 || newFiles == null || newFiles.isEmpty()) {
+            return afterDelete;
+        }
+
+        List<String> uploaded = newFiles.stream()
+                .filter(Objects::nonNull)
+                .filter(f -> !f.isEmpty())
+                .limit(capacity)
+                .map(f -> uploadService.uploadImageFile(f, IMAGE_PREFIX))
+                .toList();
+
+        return afterDelete.append(uploaded);
     }
 
     private List<String> uploadPhotos(List<MultipartFile> files) {

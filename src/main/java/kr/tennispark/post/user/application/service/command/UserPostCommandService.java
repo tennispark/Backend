@@ -33,7 +33,7 @@ public class UserPostCommandService {
         String title = request.data().title();
         String content = request.data().content();
 
-        Photos photos = resolver.replacePhotos(post.getPhotos(), request.photos());
+        Photos photos = resolver.applyDeleteAndAppend(post.getPhotos(), request.data().deleteList(), request.photos());
         post.update(title, content, photos);
 
     }

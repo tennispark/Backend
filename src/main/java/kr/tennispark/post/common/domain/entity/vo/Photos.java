@@ -2,6 +2,7 @@ package kr.tennispark.post.common.domain.entity.vo;
 
 import jakarta.persistence.Embeddable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Photos {
+
+    private static final int MAX = 3;
 
     private String photo1;
     private String photo2;
@@ -67,5 +70,46 @@ public class Photos {
 
     public String getMainImage() {
         return photo1;
+    }
+
+    public int count() {
+        return toList().size();
+    }
+
+    public Photos deleteByIndices(Collection<Integer> indices) {
+        String[] slots = {photo1, photo2, photo3};
+        if (indices != null) {
+            for (Integer idx : indices) {
+                if (idx != null && idx >= 1 && idx <= 3) {
+                    slots[idx - 1] = null;
+                }
+            }
+        }
+
+        List<String> kept = new ArrayList<>(3);
+        for (String s : slots) {
+            if (s != null && !s.isBlank()) {
+                kept.add(s);
+            }
+        }
+        System.out.println("kept = " + kept.size());
+        return new Photos(kept);
+    }
+
+    public Photos append(List<String> urls) {
+        if (urls == null || urls.isEmpty()) {
+            return this;
+        }
+        List<String> base = new ArrayList<>(this.toList());
+        for (String u : urls) {
+            if (u == null || u.trim().isEmpty()) {
+                continue;
+            }
+            if (base.size() >= MAX) {
+                break;
+            }
+            base.add(u.trim());
+        }
+        return new Photos(base);
     }
 }
