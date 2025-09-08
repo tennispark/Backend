@@ -48,4 +48,8 @@ public class Photos {
         }
         return Collections.unmodifiableList(list);
     }
+
+    public String getMainImage() {
+        return photo1;
+    }
 }
