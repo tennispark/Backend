@@ -1,5 +1,8 @@
 package kr.tennispark.post.user.presentation.controller;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
+import jakarta.validation.constraints.Size;
 import kr.tennispark.common.annotation.LoginMember;
 import kr.tennispark.common.utils.ApiUtils;
 import kr.tennispark.common.utils.ApiUtils.ApiResult;
@@ -7,15 +10,16 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.post.user.application.service.query.UserPostQueryService;
 import kr.tennispark.post.user.presentation.dto.response.GetPostDetailResponse;
 import kr.tennispark.post.user.presentation.dto.response.PostHomeItemResponse;
+import kr.tennispark.post.user.presentation.dto.response.SearchPostsPageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,9 +39,20 @@ public class UserPostQueryController {
     @GetMapping("/home")
     public ResponseEntity<ApiResult<Slice<PostHomeItemResponse>>> getHome(
             @LoginMember Member member,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 20, sort = "createdAt", direction = DESC)
             Pageable pageable
     ) {
         return ResponseEntity.ok(ApiUtils.success(postQueryService.getHome(member, pageable)));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResult<SearchPostsPageResponse>> search(
+            @RequestParam("keyword")
+            @Size(min = 2, message = "검색어는 2자 이상이어야 합니다.")
+            String keyword,
+            @LoginMember Member member,
+            @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(ApiUtils.success(postQueryService.search(member, keyword, pageable)));
     }
 }

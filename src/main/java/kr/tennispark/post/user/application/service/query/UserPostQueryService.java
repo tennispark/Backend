@@ -7,12 +7,15 @@ import java.util.Set;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.post.common.domain.entity.Post;
 import kr.tennispark.post.common.domain.entity.PostLike;
+import kr.tennispark.post.user.application.exception.InvalidSearchKeywordException;
 import kr.tennispark.post.user.application.service.redis.PostViewCountService;
 import kr.tennispark.post.user.infrastructure.repository.UserPostLikeRepository;
 import kr.tennispark.post.user.infrastructure.repository.UserPostRepository;
 import kr.tennispark.post.user.presentation.dto.response.GetPostDetailResponse;
 import kr.tennispark.post.user.presentation.dto.response.PostHomeItemResponse;
+import kr.tennispark.post.user.presentation.dto.response.SearchPostsPageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -65,6 +68,21 @@ public class UserPostQueryService {
                 .toList();
 
         return new SliceImpl<>(items, pageable, slice.hasNext());
+    }
+
+    public SearchPostsPageResponse search(Member loginMember, String keyword, Pageable pageable) {
+        String q = keyword == null ? "" : keyword.trim();
+        if (q.length() < 2) {
+            throw new InvalidSearchKeywordException();
+        }
+
+        Page<Post> page = postRepository
+                .findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(q, q, pageable);
+
+        List<Long> ids = page.getContent().stream().map(Post::getId).toList();
+        Map<Long, Long> viewMap = ids.isEmpty() ? Map.of() : viewCountService.getBulk(ids);
+
+        return SearchPostsPageResponse.of(page, viewMap);
     }
 
 }

@@ -1,5 +1,7 @@
 package kr.tennispark.common.config;
 
+import static kr.tennispark.common.constant.JwtConstants.ADMIN_ROLE_VALUE;
+
 import kr.tennispark.auth.admin.infrastructure.config.AdminProps;
 import kr.tennispark.common.security.CustomAuthenticationEntryPoint;
 import kr.tennispark.common.security.JwtToAdminAuthenticationConverter;
@@ -42,7 +44,7 @@ public class SecurityConfig {
                                 "/api/admin/auth/token/refresh",
                                 "/api/admin/auth/logout"
                         ).permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().hasRole(ADMIN_ROLE_VALUE))
                 .exceptionHandling(eh -> eh
                         .accessDeniedHandler(accessDeniedHandler)
                         .authenticationEntryPoint(authenticationEntryPoint))
@@ -66,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
                         .requestMatchers("/api/members/auth/**").permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .exceptionHandling(eh -> eh
                         .accessDeniedHandler(accessDeniedHandler)
                         .authenticationEntryPoint(authenticationEntryPoint))
