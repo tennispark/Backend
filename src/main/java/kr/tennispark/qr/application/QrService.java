@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import javax.imageio.ImageIO;
+import kr.tennispark.common.application.S3UploadService;
 import kr.tennispark.qr.application.exception.BadQrCreateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
