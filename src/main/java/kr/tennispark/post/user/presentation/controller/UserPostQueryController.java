@@ -10,7 +10,7 @@ import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.post.user.application.service.query.UserPostQueryService;
 import kr.tennispark.post.user.presentation.dto.response.GetPostDetailResponse;
 import kr.tennispark.post.user.presentation.dto.response.PostHomeItemResponse;
-import kr.tennispark.post.user.presentation.dto.response.SearchPostsPageResponse;
+import kr.tennispark.post.user.presentation.dto.response.SliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -37,22 +37,24 @@ public class UserPostQueryController {
     }
 
     @GetMapping("/home")
-    public ResponseEntity<ApiResult<Slice<PostHomeItemResponse>>> getHome(
+    public ResponseEntity<ApiResult<SliceResponse<PostHomeItemResponse>>> getHome(
             @LoginMember Member member,
             @PageableDefault(size = 20, sort = "createdAt", direction = DESC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(ApiUtils.success(postQueryService.getHome(member, pageable)));
+        Slice<PostHomeItemResponse> result = postQueryService.getHome(member, pageable);
+        return ResponseEntity.ok(ApiUtils.success(SliceResponse.of(result)));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResult<SearchPostsPageResponse>> search(
+    public ResponseEntity<ApiResult<SliceResponse<PostHomeItemResponse>>> search(
             @RequestParam("keyword")
             @Size(min = 2, message = "검색어는 2자 이상이어야 합니다.")
             String keyword,
             @LoginMember Member member,
             @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable
     ) {
-        return ResponseEntity.ok(ApiUtils.success(postQueryService.search(member, keyword, pageable)));
+        Slice<PostHomeItemResponse> result = postQueryService.search(member, keyword, pageable);
+        return ResponseEntity.ok(ApiUtils.success(SliceResponse.of(result)));
     }
 }
