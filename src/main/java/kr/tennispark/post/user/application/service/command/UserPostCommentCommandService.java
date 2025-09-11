@@ -22,12 +22,14 @@ public class UserPostCommentCommandService {
     private final UserPostRepository postRepository;
     private final UserCommentRepository commentRepository;
     private final CommentResolver resolver;
+    private final UserCommunityNotificationService notificationService;
 
     public void createComment(Member member, Long postId, RegisterCommentMultiPart request) {
         Post post = postRepository.getById(postId);
         String photoUrl = resolver.toNewPhotoUrl(request.photo());
         Comment comment = Comment.create(post, member, request.data().content(), photoUrl);
-        commentRepository.save(comment);
+        Comment saveComment = commentRepository.save(comment);
+        notificationService.notifyCommentCreated(saveComment);
     }
 
     public void updateComment(Member member, Long postId, Long commentId, UpdateCommentMultiPart request) {

@@ -8,6 +8,7 @@ import kr.tennispark.post.user.application.service.resolver.PostResolver;
 import kr.tennispark.post.user.infrastructure.repository.UserPostRepository;
 import kr.tennispark.post.user.presentation.dto.request.RegisterPostMultiPart;
 import kr.tennispark.post.user.presentation.dto.request.UpdatePostMultiPart;
+import kr.tennispark.post.user.presentation.dto.response.GetNotificationEnabledResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,15 @@ public class UserPostCommandService {
         resolver.deleteIfExists(post.getPhotos());
         postRepository.delete(post);
     }
+
+    public GetNotificationEnabledResponse toggleNotification(Member member, Long postId) {
+        Post post = postRepository.getById(postId);
+        ensureAuthor(post, member);
+
+        boolean nowEnabled = post.toggleNotificationEnabled();
+        return GetNotificationEnabledResponse.of(nowEnabled);
+    }
+
 
     private void ensureAuthor(Post post, Member loginMember) {
         if (!post.getMember().getId().equals(loginMember.getId())) {

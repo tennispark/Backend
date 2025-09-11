@@ -91,5 +91,14 @@ public class Post extends BaseEntity {
             this.commentCount--;
         }
     }
+
+    public boolean toggleNotificationEnabled() {
+        if (notificationEnabled) {
+            notificationEnabled = false;
+        } else {
+            notificationEnabled = true;
+        }
+        return notificationEnabled;
+    }
 }
 

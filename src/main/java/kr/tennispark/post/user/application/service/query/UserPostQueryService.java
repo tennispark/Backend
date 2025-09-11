@@ -13,9 +13,7 @@ import kr.tennispark.post.user.infrastructure.repository.UserPostLikeRepository;
 import kr.tennispark.post.user.infrastructure.repository.UserPostRepository;
 import kr.tennispark.post.user.presentation.dto.response.GetPostDetailResponse;
 import kr.tennispark.post.user.presentation.dto.response.PostHomeItemResponse;
-import kr.tennispark.post.user.presentation.dto.response.SearchPostsPageResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -46,43 +44,66 @@ public class UserPostQueryService {
         return GetPostDetailResponse.of(post, viewCount, likedByMe, authoredByMe);
     }
 
-    @Transactional(readOnly = true)
     public Slice<PostHomeItemResponse> getHome(Member loginMember, Pageable pageable) {
         Slice<Post> slice = postRepository.findAllByOrderByCreatedAtDesc(pageable);
-        List<Post> posts = slice.getContent();
-
-        List<Long> postIds = posts.stream().map(Post::getId).toList();
-        Long loginMemberId = (loginMember == null) ? null : loginMember.getId();
-
-        Map<Long, Long> viewMap = postIds.isEmpty() ? Map.of() : viewCountService.getBulk(postIds);
-        Set<Long> likedIds = (loginMemberId == null || postIds.isEmpty())
-                ? Set.of() : new HashSet<>(likeRepository.findLikedPostIds(loginMemberId, postIds));
-
-        List<PostHomeItemResponse> items = posts.stream()
-                .map(p -> PostHomeItemResponse.of(
-                        p,
-                        viewMap.getOrDefault(p.getId(), 0L),
-                        loginMemberId != null && likedIds.contains(p.getId()),
-                        loginMemberId != null && p.getMember() != null && loginMemberId.equals(p.getMember().getId())
-                ))
-                .toList();
-
-        return new SliceImpl<>(items, pageable, slice.hasNext());
+        return toHomeSlice(slice, toMemberId(loginMember), pageable);
     }
 
-    public SearchPostsPageResponse search(Member loginMember, String keyword, Pageable pageable) {
+    public Slice<PostHomeItemResponse> search(Member member, String keyword, Pageable pageable) {
         String q = keyword == null ? "" : keyword.trim();
         if (q.length() < 2) {
             throw new InvalidSearchKeywordException();
         }
+        Slice<Post> slice = postRepository
+                .findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(q, q, pageable);
+        return toHomeSlice(slice, toMemberId(member), pageable);
+    }
 
-        Page<Post> page = postRepository
-                .findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(q, q, pageable);
+    private Slice<PostHomeItemResponse> toHomeSlice(Slice<Post> slice, Long loginMemberId, Pageable pageable) {
+        List<Post> posts = slice.getContent();
+        if (posts.isEmpty()) {
+            return new SliceImpl<>(List.of(), pageable, slice.hasNext());
+        }
 
-        List<Long> ids = page.getContent().stream().map(Post::getId).toList();
-        Map<Long, Long> viewMap = ids.isEmpty() ? Map.of() : viewCountService.getBulk(ids);
+        List<Long> postIds = posts.stream().map(Post::getId).toList();
 
-        return SearchPostsPageResponse.of(page, viewMap);
+        Map<Long, Long> viewMap = loadViewCounts(postIds);
+        Set<Long> likedIds = loadLikedIds(loginMemberId, postIds);
+
+        List<PostHomeItemResponse> items = assembleItems(posts, viewMap, likedIds, loginMemberId);
+
+        return new SliceImpl<>(items, pageable, slice.hasNext());
+    }
+
+    private Long toMemberId(Member member) {
+        return (member == null) ? null : member.getId();
+    }
+
+    private Map<Long, Long> loadViewCounts(List<Long> postIds) {
+        return postIds.isEmpty() ? Map.of() : viewCountService.getBulk(postIds);
+    }
+
+    private Set<Long> loadLikedIds(Long loginMemberId, List<Long> postIds) {
+        if (loginMemberId == null || postIds.isEmpty()) {
+            return Set.of();
+        }
+        return new HashSet<>(likeRepository.findLikedPostIds(loginMemberId, postIds));
+    }
+
+    private List<PostHomeItemResponse> assembleItems(List<Post> posts,
+                                                     Map<Long, Long> viewMap,
+                                                     Set<Long> likedIds,
+                                                     Long loginMemberId) {
+        return posts.stream()
+                .map(p -> PostHomeItemResponse.of(
+                        p,
+                        viewMap.getOrDefault(p.getId(), 0L),
+                        loginMemberId != null && likedIds.contains(p.getId()),
+                        loginMemberId != null
+                                && p.getMember() != null
+                                && loginMemberId.equals(p.getMember().getId())
+                ))
+                .toList();
     }
 
 }

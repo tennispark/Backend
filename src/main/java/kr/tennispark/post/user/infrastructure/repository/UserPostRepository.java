@@ -2,7 +2,6 @@ package kr.tennispark.post.user.infrastructure.repository;
 
 import kr.tennispark.post.common.domain.entity.Post;
 import kr.tennispark.post.common.domain.exception.NoSuchPostException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -19,7 +18,7 @@ public interface UserPostRepository extends JpaRepository<Post, Long> {
     Slice<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @EntityGraph(attributePaths = "member")
-    Page<Post> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
+    Slice<Post> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(
             String titleKeyword,
             String contentKeyword,
             Pageable pageable

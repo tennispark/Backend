@@ -7,6 +7,7 @@ import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
 import kr.tennispark.notification.admin.infrastructure.NotificationRepository;
 import kr.tennispark.notification.common.domain.entity.Notification;
 import kr.tennispark.notification.common.domain.entity.enums.NotificationCategory;
+import kr.tennispark.post.common.domain.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,23 @@ public class NotificationPublisher {
                 .toList();
         fcm.sendMessage(tokens, content);
     }
+
+    public void notifyMemberForCommunity(
+            Member member,
+            String content,
+            Post post
+    ) {
+        if (member == null || member.isDeleted()) {
+            return;
+        }
+        Notification notification = Notification.ofCommunity(member, content, post);
+        notificationRepo.save(notification);
+
+        if (member.getFcmToken() != null) {
+            fcm.sendMessage(List.of(member.getFcmToken()), content);
+        }
+    }
+
 
     @Transactional
     public void broadcast(String content) {
