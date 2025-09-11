@@ -13,10 +13,12 @@ import kr.tennispark.post.user.application.service.command.UserPostCommandServic
 import kr.tennispark.post.user.presentation.dto.request.RegisterPostMultiPart;
 import kr.tennispark.post.user.presentation.dto.request.SavePostDTO;
 import kr.tennispark.post.user.presentation.dto.request.UpdatePostMultiPart;
+import kr.tennispark.post.user.presentation.dto.response.GetNotificationEnabledResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,5 +72,14 @@ public class UserPostCommandController {
             @LoginMember Member member) {
         postCommandService.deletePost(member, id);
         return ResponseEntity.ok(ApiUtils.success());
+    }
+
+    @PatchMapping("/{id}/notifications")
+    public ResponseEntity<ApiResult<GetNotificationEnabledResponse>> toggleNotification(
+            @PathVariable Long id,
+            @LoginMember Member member
+    ) {
+        GetNotificationEnabledResponse response = postCommandService.toggleNotification(member, id);
+        return ResponseEntity.ok(ApiUtils.success(response));
     }
 }
