@@ -14,7 +14,8 @@ public record PostHomeItemResponse(
         int commentCount,
         long viewCount,
         boolean likedByMe,
-        boolean authoredByMe
+        boolean authoredByMe,
+        Boolean notificationEnabled
 ) {
     public static PostHomeItemResponse of(Post post,
                                           long viewCount,
@@ -36,7 +37,8 @@ public record PostHomeItemResponse(
                 post.getCommentCount(),
                 viewCount,
                 likedByMe,
-                authoredByMe
+                authoredByMe,
+                authoredByMe ? post.isNotificationEnabled() : null
         );
     }
 }
