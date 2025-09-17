@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.notification.common.domain.entity.enums.NotificationCategory;
+import kr.tennispark.post.common.domain.entity.Post;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,8 +48,16 @@ public class Notification extends BaseEntity {
     @Column(name = "read_at")
     private LocalDateTime readAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     public static Notification of(Member member, NotificationCategory category, String content) {
-        return new Notification(member, category, content, null);
+        return new Notification(member, category, content, null, null);
+    }
+
+    public static Notification ofCommunity(Member member, String content, Post post) {
+        return new Notification(member, NotificationCategory.COMMUNITY, content, null, post);
     }
 
     public void markRead(LocalDateTime now) {

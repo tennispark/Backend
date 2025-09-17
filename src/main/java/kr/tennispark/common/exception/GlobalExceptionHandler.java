@@ -7,6 +7,7 @@ import kr.tennispark.auth.admin.application.exception.UnauthorizedRoleAccessExce
 import kr.tennispark.auth.common.application.exception.ExpiredTokenException;
 import kr.tennispark.common.exception.base.DuplicateException;
 import kr.tennispark.common.exception.base.InvalidException;
+import kr.tennispark.common.exception.base.NotAuthorizedException;
 import kr.tennispark.common.exception.base.NotFoundException;
 import kr.tennispark.common.exception.base.UnsupportedTypeException;
 import kr.tennispark.common.utils.ApiUtils;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -54,6 +56,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
     }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<?> handleNotAuthorizedException(NotAuthorizedException e) {
+        return ResponseEntity.status(e.status()).body(ApiUtils.error(e.status(), e.getMessage()));
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -105,6 +111,15 @@ public class GlobalExceptionHandler {
     public ApiUtils.ApiResult<Void> handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e) {
         String message = String.format("파라미터 '%s'이 필요합니다", e.getParameterName());
+        return ApiUtils.error(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ApiUtils.ApiResult<Void> handleHandlerMethodValidation(HandlerMethodValidationException e) {
+        String message = e.getAllErrors().stream()
+                .findFirst()
+                .map(err -> err.getDefaultMessage())
+                .orElse("요청 값이 올바르지 않습니다.");
         return ApiUtils.error(HttpStatus.BAD_REQUEST, message);
     }
 

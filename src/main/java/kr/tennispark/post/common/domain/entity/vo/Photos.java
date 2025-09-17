@@ -2,8 +2,11 @@ package kr.tennispark.post.common.domain.entity.vo;
 
 import jakarta.persistence.Embeddable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +16,13 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Photos {
 
+    private static final int MAX = 3;
+
     private String photo1;
     private String photo2;
     private String photo3;
 
-    public Photos(List<String> photos) {
+    private Photos(List<String> photos) {
         List<String> normalized = new ArrayList<>();
         if (photos != null) {
             for (String p : photos) {
@@ -47,5 +52,64 @@ public class Photos {
             list.add(photo3);
         }
         return Collections.unmodifiableList(list);
+    }
+
+    public Map<Integer, String> toMap() {
+        Map<Integer, String> map = new LinkedHashMap<>();
+        if (photo1 != null && !photo1.isBlank()) {
+            map.put(1, photo1);
+        }
+        if (photo2 != null && !photo2.isBlank()) {
+            map.put(2, photo2);
+        }
+        if (photo3 != null && !photo3.isBlank()) {
+            map.put(3, photo3);
+        }
+        return map;
+    }
+
+    public String getMainImage() {
+        return photo1;
+    }
+
+    public int count() {
+        return toList().size();
+    }
+
+    public Photos deleteByIndices(Collection<Integer> indices) {
+        String[] slots = {photo1, photo2, photo3};
+        if (indices != null) {
+            for (Integer idx : indices) {
+                if (idx != null && idx >= 1 && idx <= 3) {
+                    slots[idx - 1] = null;
+                }
+            }
+        }
+
+        List<String> kept = new ArrayList<>(3);
+        for (String s : slots) {
+            if (s != null && !s.isBlank()) {
+                kept.add(s);
+            }
+        }
+        System.out.println("kept = " + kept.size());
+        return new Photos(kept);
+    }
+
+    public Photos append(List<String> urls) {
+        if (urls == null || urls.isEmpty()) {
+            return this;
+        }
+        List<String> base = new ArrayList<>(this.toList());
+        for (String u : urls) {
+            if (u == null || u.trim().isEmpty()) {
+                continue;
+            }
+            if (base.size() >= MAX) {
+                break;
+            }
+            base.add(u.trim());
+        }
+        return new Photos(base);
     }
 }
