@@ -2,8 +2,8 @@ package kr.tennispark.activity.user.application.service;
 
 import kr.tennispark.activity.common.domain.ActivityCertification;
 import kr.tennispark.activity.user.infrastructure.repository.ActivityCertificationRepository;
+import kr.tennispark.common.application.S3UploadService;
 import kr.tennispark.members.common.domain.entity.Member;
-import kr.tennispark.qr.application.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

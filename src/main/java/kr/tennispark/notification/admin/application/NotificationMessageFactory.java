@@ -22,6 +22,8 @@ public class NotificationMessageFactory {
     private static final String CANCEL_MESSAGE_SUFFIX = " 활동 신청이 거절되었습니다.";
     private static final String WAITING_MESSAGE_SUFFIX = " 활동 신청이 대기 상태로 변경되었습니다.";
 
+    private static final String COMMUNITY_COMMENT_MESSAGE = "%s님이 [%s] 게시물에 댓글을 작성했습니다.";
+
     public static String applicationStatusMessage(ActivityApplication app) {
         String head = ActivityHeaderFormat.header(app.getActivity());
         String suffix = switch (app.getApplicationStatus()) {
@@ -69,5 +71,9 @@ public class NotificationMessageFactory {
 
     private static String joinNames(List<String> names) {
         return String.join(DELIMITER, names);
+    }
+
+    public static String communityCommentCreatedMessage(String commenterName, String postTitle) {
+        return String.format(COMMUNITY_COMMENT_MESSAGE, commenterName, postTitle);
     }
 }

@@ -6,7 +6,7 @@ import kr.tennispark.advertisement.admin.presentation.dto.request.SaveAdvertisem
 import kr.tennispark.advertisement.admin.presentation.dto.response.GetAdvertisementResponseDTO;
 import kr.tennispark.advertisement.common.domain.entity.Advertisement;
 import kr.tennispark.advertisement.common.domain.entity.enums.Position;
-import kr.tennispark.qr.application.S3UploadService;
+import kr.tennispark.common.application.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
