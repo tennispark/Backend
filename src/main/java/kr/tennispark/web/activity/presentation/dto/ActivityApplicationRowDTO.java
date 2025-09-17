@@ -4,11 +4,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import kr.tennispark.activity.common.domain.Activity;
 import kr.tennispark.activity.common.domain.ActivityApplication;
+import kr.tennispark.activity.common.domain.enums.ActivityName;
 
 public record ActivityApplicationRowDTO(
         Long activityId,
         String date,
         String placeName,
+        ActivityName courtType,
         String courtName,
         int participantCount,
         int capacity,
@@ -25,6 +27,7 @@ public record ActivityApplicationRowDTO(
                 a.getId(),
                 a.getDate().format(MONTH_DAY),
                 a.getPlace().getName(),
+                a.getActivityName(),
                 a.getCourtName(),
                 a.getParticipantCount(),
                 a.getCapacity(),
