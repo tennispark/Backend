@@ -1,6 +1,8 @@
 package kr.tennispark.post.user.presentation.controller;
 
 import kr.tennispark.common.annotation.LoginMember;
+import kr.tennispark.common.utils.ApiUtils;
+import kr.tennispark.common.utils.ApiUtils.ApiResult;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.post.user.application.service.query.UserCommentQueryService;
 import kr.tennispark.post.user.presentation.dto.response.GetCommentResponse;
@@ -19,10 +21,10 @@ public class UserPostCommentQueryController {
     private final UserCommentQueryService userCommentQueryService;
 
     @GetMapping
-    public ResponseEntity<GetCommentResponse> getCommentsForPost(
+    public ResponseEntity<ApiResult<GetCommentResponse>> getCommentsForPost(
             @PathVariable Long postId,
             @LoginMember Member member
     ) {
-        return ResponseEntity.ok(userCommentQueryService.getCommentsForPost(postId, member));
+        return ResponseEntity.ok(ApiUtils.success(userCommentQueryService.getCommentsForPost(postId, member)));
     }
 }
