@@ -5,10 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import kr.tennispark.common.domain.BaseEntity;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.membership.common.domain.entity.enums.ActivityDuration;
@@ -16,7 +14,6 @@ import kr.tennispark.membership.common.domain.entity.enums.CourtType;
 import kr.tennispark.membership.common.domain.entity.enums.MembershipStatus;
 import kr.tennispark.membership.common.domain.entity.enums.MembershipType;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -57,7 +54,7 @@ public class Membership extends BaseEntity {
     private ActivityDuration period;
 
     private Membership(Member member, String recommender, String reason, MembershipType membershipType, CourtType court,
-                      ActivityDuration period) {
+                       ActivityDuration period) {
         this.member = member;
         this.recommender = recommender;
         this.reason = reason;
@@ -68,7 +65,16 @@ public class Membership extends BaseEntity {
 
     public static Membership of(
             Member member, String recommender, String reason, MembershipType membershipType, CourtType court,
-            ActivityDuration period){
-       return new Membership(member, recommender, reason, membershipType, court,period);
+            ActivityDuration period) {
+        return new Membership(member, recommender, reason, membershipType, court, period);
+    }
+
+    public void update(String recommender, String reason, CourtType court,
+                       ActivityDuration period) {
+        this.recommender = recommender;
+        this.reason = reason;
+        this.membershipType = MembershipType.EXISTING;
+        this.courtType = court;
+        this.period = period;
     }
 }

@@ -3,7 +3,6 @@ package kr.tennispark.membership.application.service;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
 import kr.tennispark.members.user.infrastructure.repository.MemberRepository;
-import kr.tennispark.membership.application.exception.MembershipAlreadyExistsException;
 import kr.tennispark.membership.common.domain.entity.Membership;
 import kr.tennispark.membership.infrastructure.repository.MembershipRepository;
 import kr.tennispark.membership.user.presentation.dto.request.RegisterMembershipRequest;
@@ -21,19 +20,20 @@ public class MembershipService {
 
     @Transactional
     public void registerMembership(Member member, RegisterMembershipRequest request) {
-        if (membershipRepository.existsByMember(member)) {
-            throw new MembershipAlreadyExistsException();
-        }
-
-        Membership membership = Membership.of(
-                member,
-                request.recommender(),
-                request.reason(),
-                request.membershipType(),
-                request.courtType(),
-                request.period()
-        );
-
+        Membership membership = membershipRepository.findByMember(member)
+                .map(m -> {
+                    m.update(request.recommender(), request.reason(), request.courtType(),
+                            request.period());
+                    return m;
+                })
+                .orElseGet(() -> Membership.of(
+                        member,
+                        request.recommender(),
+                        request.reason(),
+                        request.membershipType(),
+                        request.courtType(),
+                        request.period()
+                ));
         member.updateMemberShipType(MemberShipType.MEMBERSHIP);
 
         memberRepository.save(member);
