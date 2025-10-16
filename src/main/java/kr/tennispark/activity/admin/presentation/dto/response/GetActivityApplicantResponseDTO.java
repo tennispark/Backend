@@ -16,7 +16,8 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
                         applicant.getMember().getMemberShipType(),
                         applicant.getMember().getTennisCareer(),
                         applicant.getApplicationStatus(),
-                        applicant.getCreatedAt().toLocalDate()
+                        applicant.getCreatedAt().toLocalDate(),
+                        applicant.getActivity().getActivityName().name()
                 )
         );
         return new GetActivityApplicantResponseDTO(applicantDTOs);
@@ -30,7 +31,8 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
             MemberShipType membershipType,
             Integer career,
             ApplicationStatus applicationStatus,
-            LocalDate applicationDate
+            LocalDate applicationDate,
+            String courtType
     ) {
         public static ActivityApplicantDTO of(
                 Long id,
@@ -39,10 +41,11 @@ public record GetActivityApplicantResponseDTO(Page<ActivityApplicantDTO> applica
                 MemberShipType membershipType,
                 Integer career,
                 ApplicationStatus applicationStatus,
-                LocalDate applicationDate
+                LocalDate applicationDate,
+                String courtType
         ) {
             return new ActivityApplicantDTO(id, name, phoneNumber, membershipType, career, applicationStatus,
-                    applicationDate);
+                    applicationDate, courtType);
         }
     }
 }
