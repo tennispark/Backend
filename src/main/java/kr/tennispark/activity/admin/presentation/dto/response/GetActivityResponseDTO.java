@@ -40,7 +40,7 @@ public record GetActivityResponseDTO(
             int participantCount,
             int capacity,
             int pendingCount,
-            String activityName  //코트타입 추가
+            String activityName
     ) {
         public static ActivityDTO of(
                 Long id,
