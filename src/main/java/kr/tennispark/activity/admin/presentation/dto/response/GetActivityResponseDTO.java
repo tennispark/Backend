@@ -23,7 +23,8 @@ public record GetActivityResponseDTO(
                         activity.getScheduledTime().getEndAt(),
                         activity.getParticipantCount(),
                         activity.getCapacity(),
-                        pendingCountMap.getOrDefault(activity.getId(), 0L).intValue()
+                        pendingCountMap.getOrDefault(activity.getId(), 0L).intValue(),
+                        activity.getActivityName().name()
                 )
         );
         return new GetActivityResponseDTO(applications);
@@ -38,7 +39,8 @@ public record GetActivityResponseDTO(
             LocalTime endAt,
             int participantCount,
             int capacity,
-            int pendingCount
+            int pendingCount,
+            String activityName
     ) {
         public static ActivityDTO of(
                 Long id,
@@ -49,10 +51,11 @@ public record GetActivityResponseDTO(
                 LocalTime endAt,
                 int participantCount,
                 int capacity,
-                int pendingCount
+                int pendingCount,
+                String activityName
         ) {
             return new ActivityDTO(id, placeName, courtName, date, startAt, endAt, participantCount, capacity,
-                    pendingCount);
+                    pendingCount, activityName);
         }
 
     }
