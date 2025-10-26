@@ -83,7 +83,7 @@ public class NotificationMessageFactory {
         return String.format(COMMUNITY_COMMENT_MESSAGE, commenterName, postTitle);
     }
 
-    // ★ 핵심: 정시는 "20시", 분이 있으면 "20시 30분"
+    // ★ 핵심: 정시는 "20시", 분이 있으면 "20시 30분으로 분까지 표시"
     private static String formatKoreanTime(LocalTime t) {
         int h = t.getHour();
         int m = t.getMinute();
