@@ -12,6 +12,7 @@ public enum ActivityName {
     RALLY(ActivityType.GENERAL),
     STUDY(ActivityType.GENERAL),
     BEGINNER(ActivityType.GENERAL),
+    LESSON(ActivityType.GENERAL),
 
     // 아카데미
     LEVEL1(ActivityType.ACADEMY),
