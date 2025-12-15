@@ -45,8 +45,9 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    /* ✅ 핵심 수정 포인트 */
     public boolean existsMemberByPhone(String phoneNumber) {
-        return memberRepository.existsByPhone_Number(phoneNumber);
+        return memberRepository.existsByPhone(Phone.of(phoneNumber));
     }
 
     public GetMemberMatchRecordResponse getMemberMatchRecord(Member member) {
@@ -57,7 +58,14 @@ public class MemberService {
         int matchPoint = member.getMatchPoint();
         long ranking = rankingRepository.getRank(member.getId());
 
-        return GetMemberMatchRecordResponse.of(wins, draws, losses, matchPoint, ranking, member.getCoupon());
+        return GetMemberMatchRecordResponse.of(
+                wins,
+                draws,
+                losses,
+                matchPoint,
+                ranking,
+                member.getCoupon()
+        );
     }
 
     @Transactional
