@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import kr.tennispark.members.common.domain.entity.Member;
 import kr.tennispark.members.common.domain.entity.enums.MemberShipType;
+import kr.tennispark.members.common.domain.entity.vo.Phone;
 import kr.tennispark.members.common.domain.exception.NoSuchMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,7 +15,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    boolean existsByPhone_Number(String number);
+    /* ✅ 핵심 수정: VO 기준 조회 */
+    boolean existsByPhone(Phone phone);
+    Optional<Member> findByPhone(Phone phone);
+
+    /* ❗ 레거시 (사용 금지, 삭제는 선택) */
+    // boolean existsByPhone_Number(String number);
+    // Optional<Member> findByPhone_Number(String number);
 
     List<Member> findByNameContaining(String name);
 
@@ -23,8 +30,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    Optional<Member> findByPhone_Number(String number);
-
     int countByMemberShipType(MemberShipType memberShipType);
 
     @Query("""
@@ -32,7 +37,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             FROM Member m 
             WHERE m.status = true
             ORDER BY m.matchPoint DESC
-            LIMIT 1
             """)
     Optional<Member> findTopScorerMember();
 
@@ -40,7 +44,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             SELECT SUM(m.matchPoint)
             FROM Member m
             WHERE m.id = :memberId
-            AND m.status = true
+              AND m.status = true
             """)
     Integer sumScoreByMemberId(@Param("memberId") Long memberId);
 
@@ -51,12 +55,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByIdIn(List<Long> memberIds);
 
     @Query("""
-                SELECT m
-                FROM Member m
-                WHERE m.status = true
-                  AND m.fcmToken IS NOT NULL
-                  AND TRIM(m.fcmToken) <> ''
-                ORDER BY m.id ASC
+            SELECT m
+            FROM Member m
+            WHERE m.status = true
+              AND m.fcmToken IS NOT NULL
+              AND TRIM(m.fcmToken) <> ''
+            ORDER BY m.id ASC
             """)
     List<Member> findAllWithValidFcmToken();
 }
