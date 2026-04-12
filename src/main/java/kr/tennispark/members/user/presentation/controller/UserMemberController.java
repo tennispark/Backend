@@ -26,7 +26,10 @@ public class UserMemberController {
 
     @GetMapping("/name/me")
     public ResponseEntity<ApiResult<GetMyNameResponse>> getMyName(@LoginMember Member member) {
-        GetMyNameResponse response = new GetMyNameResponse(member.getName());
+        GetMyNameResponse response = new GetMyNameResponse(
+                member.getName(),
+                member.getMemberShipType().name()  // ✅ 수정
+        );
         return ResponseEntity.ok(ApiUtils.success(response));
     }
 

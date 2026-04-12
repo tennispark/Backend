@@ -22,7 +22,13 @@ public class UserPointService {
 
     public GetMemberPointResponse getMemberPoint(Member member) {
         Point point = pointRepository.getByMemberId(member.getId());
-        return new GetMemberPointResponse(point.getTotalPoint());
+
+        // getTotalPoint()가 Double이므로 int로 변환 (소수점 없다는 전제)
+        int points = point.getTotalPoint().intValue();
+
+        Double coupon = member.getCoupon();
+
+        return GetMemberPointResponse.of(points, coupon);
     }
 
     public GetMemberPointHistoryResponse getMemberPointHistory(Member member) {
