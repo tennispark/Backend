@@ -20,16 +20,19 @@ public class AdminAuthService {
     private final AdminTokenService tokenService;
 
     public AdminLoginResponse login(AdminLoginRequest request) {
-        if (!props.id().equals(request.id()) || !encoder.matches(request.password(), props.password())) {
-            throw new AdminLoginFailedException();
-        }
+        AdminProps.AdminAccount account = props.admins().stream()
+                .filter(a -> a.id().equals(request.id()))
+                .filter(a -> encoder.matches(request.password(), a.password()))
+                .findFirst()
+                .orElseThrow(AdminLoginFailedException::new);
+
         TokenDTO tokens = tokenService.issueTokensFor();
-        return AdminLoginResponse.of(tokens.accessToken(), tokens.refreshToken());
+        return AdminLoginResponse.of(tokens.accessToken(), tokens.refreshToken(), account.role(), account.region());
     }
 
     public AdminLoginResponse reissueLoginTokens(String refreshToken) {
         TokenDTO tokens = tokenService.reissueTokens(refreshToken);
-        return AdminLoginResponse.of(tokens.accessToken(), tokens.refreshToken());
+        return AdminLoginResponse.of(tokens.accessToken(), tokens.refreshToken(), null, null);
     }
 
     public void logout(String refreshToken) {
